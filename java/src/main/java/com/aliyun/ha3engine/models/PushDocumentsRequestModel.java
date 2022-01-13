@@ -3,7 +3,7 @@ package com.aliyun.ha3engine.models;
 
 import com.aliyun.tea.*;
 
-public class SearchResponseModel extends TeaModel {
+public class PushDocumentsRequestModel extends TeaModel {
     // headers
     @NameInMap("headers")
     public java.util.Map<String, String> headers;
@@ -11,14 +11,14 @@ public class SearchResponseModel extends TeaModel {
     // body
     @NameInMap("body")
     @Validation(required = true)
-    public String body;
+    public java.util.List<java.util.Map<String, ?>> body;
 
-    public static SearchResponseModel build(java.util.Map<String, ?> map) throws Exception {
-        SearchResponseModel self = new SearchResponseModel();
+    public static PushDocumentsRequestModel build(java.util.Map<String, ?> map) throws Exception {
+        PushDocumentsRequestModel self = new PushDocumentsRequestModel();
         return TeaModel.build(map, self);
     }
 
-    public SearchResponseModel setHeaders(java.util.Map<String, String> headers) {
+    public PushDocumentsRequestModel setHeaders(java.util.Map<String, String> headers) {
         this.headers = headers;
         return this;
     }
@@ -26,11 +26,11 @@ public class SearchResponseModel extends TeaModel {
         return this.headers;
     }
 
-    public SearchResponseModel setBody(String body) {
+    public PushDocumentsRequestModel setBody(java.util.List<java.util.Map<String, ?>> body) {
         this.body = body;
         return this;
     }
-    public String getBody() {
+    public java.util.List<java.util.Map<String, ?>> getBody() {
         return this.body;
     }
 

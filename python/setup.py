@@ -24,20 +24,24 @@ from setuptools import setup, find_packages
 """
 setup module for alibabacloud_ha3engine.
 
-Created on 12/05/2021
+Created on 12/01/2022
 
 @author: Alibaba Cloud SDK
 """
 
 PACKAGE = "alibabacloud_ha3engine"
-NAME = "alibabacloud_ha3engine"
-DESCRIPTION = "Alibaba Cloud Ha3Engine SDK Library for Python"
+NAME = "alibabacloud_ha3engine" or "alibabacloud-package"
+DESCRIPTION = "Alibaba Cloud Ha3engine SDK Library for Python"
 AUTHOR = "Alibaba Cloud SDK"
-AUTHOR_EMAIL = "siyun.sy@alibaba-inc.com"
-URL = "https://github.com/aliyun/alibabacloud-ha3engine-sdk"
+AUTHOR_EMAIL = "sdk-team@alibabacloud.com"
+URL = "https://github.com/aliyun/alibabacloud-ha3-sdk"
 VERSION = __import__(PACKAGE).__version__
 REQUIRES = [
-    "alibabacloud_tea_util>=0.3.3, <1.0.0"
+    "alibabacloud_tea_util>=0.3.5, <1.0.0",
+    "alibabacloud_darabonba_string>=0.0.4, <1.0.0",
+    "alibabacloud_darabonba_encode_util>=0.0.1, <1.0.0",
+    "alibabacloud_tea_console>=0.0.1, <1.0.0",
+    "alibabacloud_darabonba_map>=0.0.1, <1.0.0"
 ]
 
 LONG_DESCRIPTION = ''

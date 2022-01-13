@@ -1,0 +1,73 @@
+{
+  "scope": "alibabacloud",
+  "name": "ha3engine",
+  "version": "1.0.0",
+  "main": "./main.dara",
+  "libraries": {
+    "Assert":"darabonba:Assert:*",
+    "Util": "darabonba:Util:*",
+    "String": "darabonba:String:*",
+    "EncodeUtil": "darabonba:EncodeUtil:*",
+    "Map": "darabonba:Map:*"
+  },
+  "maintainers": [
+    {
+      "name": "Alibaba Cloud SDK",
+      "email": "sdk-team@alibabacloud.com"
+    }
+  ],
+  "releases": {
+    "java": "com.aliyun:ha3engine:1.1.0",
+    "go": "github.com/alibabacloud-go/ha3engine/client:v1.1.0",
+    "csharp": "AlibabaCloud.SDK.Ha3engine:1.1.0",
+    "ts": "@alicloud/ha3engine:^1.1.0",
+    "php": "alibabacloud/ha3engine:^1.1.0",
+    "python": "alibabacloud_ha3engine:1.1.0"
+  },
+  "csharp": {
+    "className": "Client",
+    "namespace": "AlibabaCloud.SDK.Ha3engine",
+    "packageInfo": {
+      "name": "Ha3engine-sdk",
+      "title": "alibabacloud-sdk",
+      "description": "Alibaba Cloud Ha3engine SDK Library for .NET",
+      "company": "Alibaba Cloud, Inc"
+    }
+  },
+  "php": {
+    "package": "AlibabaCloud.SDK.Ha3engine",
+    "clientName": "Ha3engine",
+    "packageInfo": {
+      "name": "alibabacloud/ha3engine",
+      "desc": "Alibaba Cloud Ha3engine SDK Library for PHP",
+      "github": "https://github.com/aliyun/alibabacloud-ha3-sdk"
+    }
+  },
+  "java": {
+    "package": "com.aliyun.ha3engine",
+    "className": "Client",
+    "packageInfo": {
+      "description": "Alibaba Cloud Ha3engine SDK for Java",
+      "github": "https://github.com/aliyun/alibabacloud-ha3-sdk",
+      "licenseName": "The Apache License, Version 2.0",
+      "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0.txt",
+      "developerId": "aliyunproducts",
+      "developerName": "Alibaba Cloud SDK",
+      "developerEmail": "sdk-team@alibabacloud.com",
+      "groupId": "com.aliyun",
+			"artifactId": "aliyun-sdk-ha3engine",
+			"version": "1.1.0"
+    }
+  },
+  "python": {
+    "package": "alibabacloud_ha3engine",
+    "clientName": "client",
+    "packageInfo": {
+      "name": "alibabacloud_ha3engine",
+      "desc": "Alibaba Cloud Ha3engine SDK Library for Python",
+      "github": "https://github.com/aliyun/alibabacloud-ha3-sdk",
+      "author": "Alibaba Cloud SDK",
+      "email": "sdk-team@alibabacloud.com"
+    }
+  }
+}
