@@ -1,10 +1,9 @@
 {
   "scope": "alibabacloud",
   "name": "ha3engine",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "./main.dara",
   "libraries": {
-    "Assert":"darabonba:Assert:*",
     "Util": "darabonba:Util:*",
     "String": "darabonba:String:*",
     "EncodeUtil": "darabonba:EncodeUtil:*",
@@ -55,8 +54,8 @@
       "developerName": "Alibaba Cloud SDK",
       "developerEmail": "sdk-team@alibabacloud.com",
       "groupId": "com.aliyun",
-			"artifactId": "aliyun-sdk-ha3engine",
-			"version": "1.1.0"
+      "artifactId": "aliyun-sdk-ha3engine",
+      "version": "1.1.0"
     }
   },
   "python": {

@@ -8,7 +8,7 @@
   <name>aliyun-sdk-ha3engine</name>
   <description>Alibaba Cloud Ha3engine SDK for Java
     </description>
-  <url></url>
+  <url>https://github.com/aliyun/alibabacloud-ha3-sdk</url>
   <licenses>
     <license>
       <name>The Apache License, Version 2.0</name>

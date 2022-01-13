@@ -11,7 +11,6 @@ from typing import Dict, Any, List
 from alibabacloud_ha3engine import models as ha_3engine_models
 from alibabacloud_tea_util.client import Client as UtilClient
 from alibabacloud_tea_util import models as util_models
-from alibabacloud_tea_console.client import Client as ConsoleClient
 from alibabacloud_darabonba_string.client import Client as StringClient
 from alibabacloud_darabonba_map.client import Client as MapClient
 
@@ -116,7 +115,6 @@ class Client:
                         'body': UtilClient.to_jsonstring(rawbody_map),
                         'headers': _response.headers
                     }
-                ConsoleClient.log(obj_str)
                 return {
                     'body': obj_str,
                     'headers': _response.headers
@@ -204,7 +202,6 @@ class Client:
                         'body': UtilClient.to_jsonstring(rawbody_map),
                         'headers': _response.headers
                     }
-                ConsoleClient.log(obj_str)
                 return {
                     'body': obj_str,
                     'headers': _response.headers
