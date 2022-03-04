@@ -381,20 +381,20 @@ public class Client {
         }
 
         if (com.aliyun.teautil.Common.isUnset(Clause.start)) {
-            Clause.start = "";
+            Clause.start = null;
         }
 
         if (com.aliyun.teautil.Common.isUnset(Clause.hit)) {
-            Clause.hit = "";
+            Clause.hit = null;
         }
 
         if (com.aliyun.teautil.Common.isUnset(Clause.format)) {
-            Clause.format = "";
+            Clause.format = null;
         }
 
-        tempClauseString = "start:" + com.aliyun.teautil.Common.defaultString(Clause.start, "1") + "";
+        tempClauseString = "start:" + com.aliyun.teautil.Common.defaultString(Clause.start, "0") + "";
         tempClauseString = "" + tempClauseString + ",hit:" + com.aliyun.teautil.Common.defaultString(Clause.hit, "10") + "";
-        tempClauseString = "" + tempClauseString + ",format:" + com.aliyun.teautil.Common.defaultString(com.aliyun.darabonbastring.Client.toLower(Clause.format), "json") + "";
+        tempClauseString = "" + tempClauseString + ",format:" + com.aliyun.darabonbastring.Client.toLower(com.aliyun.teautil.Common.defaultString(Clause.format, "json")) + "";
         if (!com.aliyun.teautil.Common.isUnset(Clause.customConfig)) {
             for (String keyField : com.aliyun.darabonba.map.Client.keySet(Clause.customConfig)) {
                 String fieldValue = Clause.customConfig.get(keyField);
@@ -480,7 +480,7 @@ public class Client {
     /**
      * 支持新增、更新、删除 等操作，以及对应批量操作
      */
-    public PushDocumentsResponseModel pushDocumens(String dataSourceName, String keyField, PushDocumentsRequestModel request) throws Exception {
+    public PushDocumentsResponseModel pushDocuments(String dataSourceName, String keyField, PushDocumentsRequestModel request) throws Exception {
         RuntimeOptions runtime = RuntimeOptions.build(TeaConverter.buildMap(
             new TeaPair("connectTimeout", 5000),
             new TeaPair("readTimeout", 10000),
