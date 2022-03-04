@@ -396,14 +396,14 @@ class Client:
                 'message': "'HaQueryconfigClause' can not be unset"
             })
         if UtilClient.is_unset(clause.start):
-            clause.start = ''
+            clause.start = None
         if UtilClient.is_unset(clause.hit):
-            clause.hit = ''
+            clause.hit = None
         if UtilClient.is_unset(clause.format):
-            clause.format = ''
-        temp_clause_string = f"start:{UtilClient.default_string(clause.start, '1')}"
+            clause.format = None
+        temp_clause_string = f"start:{UtilClient.default_string(clause.start, '0')}"
         temp_clause_string = f"{temp_clause_string},hit:{UtilClient.default_string(clause.hit, '10')}"
-        temp_clause_string = f"{temp_clause_string},format:{UtilClient.default_string(StringClient.to_lower(clause.format), 'json')}"
+        temp_clause_string = f"{temp_clause_string},format:{StringClient.to_lower(UtilClient.default_string(clause.format, 'json'))}"
         if not UtilClient.is_unset(clause.custom_config):
             for key_field in MapClient.key_set(clause.custom_config):
                 field_value = clause.custom_config.get(key_field)
@@ -531,7 +531,7 @@ class Client:
             await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, runtime)
         )
 
-    def push_documens(
+    def push_documents(
         self,
         data_source_name: str,
         key_field: str,
@@ -552,7 +552,7 @@ class Client:
         }
         return self.push_document_ex(data_source_name, request, runtime)
 
-    async def push_documens_async(
+    async def push_documents_async(
         self,
         data_source_name: str,
         key_field: str,
