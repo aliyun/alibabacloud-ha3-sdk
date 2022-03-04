@@ -281,20 +281,20 @@ function buildHaQueryconfigClauseStr(Clause: HaQueryconfigClause): string {
   }
   if (Util.isUnset(Clause.start))
 {
-  Clause.start = '';
+  Clause.start = null;
 }
   if (Util.isUnset(Clause.hit))
 {
-  Clause.hit = '';
+  Clause.hit = null;
 }
   if (Util.isUnset(Clause.format))
 {
-  Clause.format = '';
+  Clause.format = null;
 }
 
-  tempClauseString = `start:${Util.defaultString(Clause.start, '1')}`;
+  tempClauseString = `start:${Util.defaultString(Clause.start, '0')}`;
   tempClauseString = `${tempClauseString},hit:${Util.defaultString(Clause.hit, '10')}`;
-  tempClauseString = `${tempClauseString},format:${Util.defaultString(String.toLower(Clause.format), 'json')}`;
+  tempClauseString = `${tempClauseString},format:${String.toLower(Util.defaultString(Clause.format, 'json'))}`;
 
   if (!Util.isUnset(Clause.customConfig)) {
     for (var keyField : Map.keySet(Clause.customConfig)) {
@@ -450,7 +450,7 @@ async function pushDocumentEx(dataSourceName: string, request: PushDocumentsRequ
 /**
  * 支持新增、更新、删除 等操作，以及对应批量操作
  */
-async function pushDocumens(dataSourceName: string, keyField: string, request: PushDocumentsRequestModel): PushDocumentsResponseModel {
+async function pushDocuments(dataSourceName: string, keyField: string, request: PushDocumentsRequestModel): PushDocumentsResponseModel {
   var runtime = new Util.RuntimeOptions{
     connectTimeout = 5000,
     readTimeout = 10000,
