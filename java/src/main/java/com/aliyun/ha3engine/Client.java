@@ -97,8 +97,17 @@ public class Client {
 
                 String objStr = com.aliyun.teautil.Common.readAsString(response_.body);
                 if (com.aliyun.teautil.Common.is4xx(response_.statusCode) || com.aliyun.teautil.Common.is5xx(response_.statusCode)) {
+                    Object rawMsg = null;
+                    try {
+                        rawMsg = com.aliyun.teautil.Common.parseJSON(objStr);
+                    } catch (TeaException err) {
+                        rawMsg = objStr;
+                    } catch (Exception _err) {
+                        TeaException err = new TeaException(_err.getMessage(), _err);
+                        rawMsg = objStr;
+                    }
                     java.util.Map<String, Object> rawMap = TeaConverter.buildMap(
-                        new TeaPair("errors", com.aliyun.teautil.Common.parseJSON(objStr))
+                        new TeaPair("errors", rawMsg)
                     );
                     throw new TeaException(TeaConverter.buildMap(
                         new TeaPair("message", response_.statusMessage),
@@ -467,6 +476,13 @@ public class Client {
             new TeaPair("ignoreSSL", false),
             new TeaPair("maxIdleConns", 50)
         ));
+        return this.SearchWithOptions(request, runtime);
+    }
+
+    /**
+     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求,及传入运行时参数.
+     */
+    public SearchResponseModel SearchWithOptions(SearchRequestModel request, RuntimeOptions runtime) throws Exception {
         return this.SearchEx(request, runtime);
     }
 
@@ -488,6 +504,13 @@ public class Client {
             new TeaPair("ignoreSSL", false),
             new TeaPair("maxIdleConns", 50)
         ));
+        return this.pushDocumentsWithOptions(dataSourceName, keyField, request, runtime);
+    }
+
+    /**
+     * 支持新增、更新、删除 等操作，以及对应批量操作,及传入运行时参数.
+     */
+    public PushDocumentsResponseModel pushDocumentsWithOptions(String dataSourceName, String keyField, PushDocumentsRequestModel request, RuntimeOptions runtime) throws Exception {
         request.headers = TeaConverter.buildMap(
             new TeaPair("X-Opensearch-Swift-PK-Field", keyField)
         );

@@ -98,8 +98,13 @@ class Client:
                 _response = TeaCore.do_action(_request, _runtime)
                 obj_str = UtilClient.read_as_string(_response.body)
                 if UtilClient.is_4xx(_response.status_code) or UtilClient.is_5xx(_response.status_code):
+                    raw_msg = None
+                    try:
+                        raw_msg = UtilClient.parse_json(obj_str)
+                    except Exception as err:
+                        raw_msg = obj_str
                     raw_map = {
-                        'errors': UtilClient.parse_json(obj_str)
+                        'errors': raw_msg
                     }
                     raise TeaException({
                         'message': _response.status_message,
@@ -185,8 +190,13 @@ class Client:
                 _response = await TeaCore.async_do_action(_request, _runtime)
                 obj_str = await UtilClient.read_as_string_async(_response.body)
                 if UtilClient.is_4xx(_response.status_code) or UtilClient.is_5xx(_response.status_code):
+                    raw_msg = None
+                    try:
+                        raw_msg = UtilClient.parse_json(obj_str)
+                    except Exception as err:
+                        raw_msg = obj_str
                     raw_map = {
-                        'errors': UtilClient.parse_json(obj_str)
+                        'errors': raw_msg
                     }
                     raise TeaException({
                         'message': _response.status_message,
@@ -485,7 +495,7 @@ class Client:
             ignore_ssl=False,
             max_idle_conns=50
         )
-        return self.search_ex(request, runtime)
+        return self.search_with_options(request, runtime)
 
     async def search_async(
         self,
@@ -501,6 +511,26 @@ class Client:
             ignore_ssl=False,
             max_idle_conns=50
         )
+        return await self.search_with_options_async(request, runtime)
+
+    def search_with_options(
+        self,
+        request: ha_3engine_models.SearchRequestModel,
+        runtime: util_models.RuntimeOptions,
+    ) -> ha_3engine_models.SearchResponseModel:
+        """
+        系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求,及传入运行时参数.
+        """
+        return self.search_ex(request, runtime)
+
+    async def search_with_options_async(
+        self,
+        request: ha_3engine_models.SearchRequestModel,
+        runtime: util_models.RuntimeOptions,
+    ) -> ha_3engine_models.SearchResponseModel:
+        """
+        系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求,及传入运行时参数.
+        """
         return await self.search_ex_async(request, runtime)
 
     def push_document_ex(
@@ -547,10 +577,7 @@ class Client:
             ignore_ssl=False,
             max_idle_conns=50
         )
-        request.headers = {
-            'X-Opensearch-Swift-PK-Field': key_field
-        }
-        return self.push_document_ex(data_source_name, request, runtime)
+        return self.push_documents_with_options(data_source_name, key_field, request, runtime)
 
     async def push_documents_async(
         self,
@@ -568,6 +595,33 @@ class Client:
             ignore_ssl=False,
             max_idle_conns=50
         )
+        return await self.push_documents_with_options_async(data_source_name, key_field, request, runtime)
+
+    def push_documents_with_options(
+        self,
+        data_source_name: str,
+        key_field: str,
+        request: ha_3engine_models.PushDocumentsRequestModel,
+        runtime: util_models.RuntimeOptions,
+    ) -> ha_3engine_models.PushDocumentsResponseModel:
+        """
+        支持新增、更新、删除 等操作，以及对应批量操作,及传入运行时参数.
+        """
+        request.headers = {
+            'X-Opensearch-Swift-PK-Field': key_field
+        }
+        return self.push_document_ex(data_source_name, request, runtime)
+
+    async def push_documents_with_options_async(
+        self,
+        data_source_name: str,
+        key_field: str,
+        request: ha_3engine_models.PushDocumentsRequestModel,
+        runtime: util_models.RuntimeOptions,
+    ) -> ha_3engine_models.PushDocumentsResponseModel:
+        """
+        支持新增、更新、删除 等操作，以及对应批量操作,及传入运行时参数.
+        """
         request.headers = {
             'X-Opensearch-Swift-PK-Field': key_field
         }

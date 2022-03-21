@@ -561,8 +561,29 @@ func (client *Client) _request(method *string, pathname *string, query map[strin
 			}
 
 			if tea.BoolValue(util.Is4xx(response_.StatusCode)) || tea.BoolValue(util.Is5xx(response_.StatusCode)) {
+				var rawMsg interface{}
+				_, tryErr := func() (_r map[string]interface{}, _e error) {
+					defer func() {
+						if r := tea.Recover(recover()); r != nil {
+							_e = r
+						}
+					}()
+					rawMsg = util.ParseJSON(objStr)
+
+					return nil, nil
+				}()
+
+				if tryErr != nil {
+					var err = &tea.SDKError{}
+					if _t, ok := tryErr.(*tea.SDKError); ok {
+						err = _t
+					} else {
+						err.Message = tea.String(tryErr.Error())
+					}
+					rawMsg = objStr
+				}
 				rawMap := map[string]interface{}{
-					"errors": util.ParseJSON(objStr),
+					"errors": rawMsg,
 				}
 				_err = tea.NewSDKError(map[string]interface{}{
 					"message": tea.StringValue(response_.StatusMessage),
@@ -956,6 +977,19 @@ func (client *Client) Search(request *SearchRequestModel) (_result *SearchRespon
 		MaxIdleConns:   tea.Int(50),
 	}
 	_result = &SearchResponseModel{}
+	_body, _err := client.SearchWithOptions(request, runtime)
+	if _err != nil {
+		return _result, _err
+	}
+	_result = _body
+	return _result, _err
+}
+
+/**
+ * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求,及传入运行时参数.
+ */
+func (client *Client) SearchWithOptions(request *SearchRequestModel, runtime *util.RuntimeOptions) (_result *SearchResponseModel, _err error) {
+	_result = &SearchResponseModel{}
 	_body, _err := client.SearchEx(request, runtime)
 	if _err != nil {
 		return _result, _err
@@ -988,6 +1022,19 @@ func (client *Client) PushDocuments(dataSourceName *string, keyField *string, re
 		IgnoreSSL:      tea.Bool(false),
 		MaxIdleConns:   tea.Int(50),
 	}
+	_result = &PushDocumentsResponseModel{}
+	_body, _err := client.PushDocumentsWithOptions(dataSourceName, keyField, request, runtime)
+	if _err != nil {
+		return _result, _err
+	}
+	_result = _body
+	return _result, _err
+}
+
+/**
+ * 支持新增、更新、删除 等操作，以及对应批量操作,及传入运行时参数.
+ */
+func (client *Client) PushDocumentsWithOptions(dataSourceName *string, keyField *string, request *PushDocumentsRequestModel, runtime *util.RuntimeOptions) (_result *PushDocumentsResponseModel, _err error) {
 	request.Headers = map[string]*string{
 		"X-Opensearch-Swift-PK-Field": keyField,
 	}
