@@ -427,6 +427,13 @@ async function Search(request: SearchRequestModel): SearchResponseModel {
     ignoreSSL = false,
     maxIdleConns = 50
   };
+  return SearchWithOptions(request, runtime);
+}
+
+/**
+ * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求,及传入运行时参数.
+ */
+async function SearchWithOptions(request: SearchRequestModel, runtime: Util.RuntimeOptions): SearchResponseModel {
   return SearchEx(request, runtime);
 }
 
@@ -458,6 +465,13 @@ async function pushDocuments(dataSourceName: string, keyField: string, request: 
     ignoreSSL = false,
     maxIdleConns = 50
   };
+  return pushDocumentsWithOptions(dataSourceName, keyField, request, runtime);
+}
+
+/**
+ * 支持新增、更新、删除 等操作，以及对应批量操作,及传入运行时参数.
+ */
+async function pushDocumentsWithOptions(dataSourceName: string, keyField: string, request: PushDocumentsRequestModel, runtime: Util.RuntimeOptions): PushDocumentsResponseModel {
   request.headers = {
     X-Opensearch-Swift-PK-Field = keyField
   };
@@ -489,8 +503,14 @@ api _request(method: string, pathname: string, query: map[string]any, headers: m
   var objStr = Util.readAsString(__response.body);
 
   if (Util.is4xx(__response.statusCode) || Util.is5xx(__response.statusCode)) {
+    var rawMsg:any = null;
+      try {
+        rawMsg = Util.parseJSON(objStr);
+      } catch(err){
+        rawMsg = objStr;
+      }
     var rawMap: map[string]any = {
-      errors = Util.parseJSON(objStr)
+      errors = rawMsg
     };
     throw {
       message = __response.statusMessage,
