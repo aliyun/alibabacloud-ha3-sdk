@@ -2,7 +2,10 @@
 package com.aliyun.ha3engine;
 
 import com.aliyun.tea.*;
-import com.aliyun.tea.interceptor.*;
+import com.aliyun.tea.interceptor.InterceptorChain;
+import com.aliyun.tea.interceptor.RuntimeOptionsInterceptor;
+import com.aliyun.tea.interceptor.RequestInterceptor;
+import com.aliyun.tea.interceptor.ResponseInterceptor;
 import com.aliyun.ha3engine.models.*;
 import com.aliyun.teautil.*;
 import com.aliyun.teautil.models.*;
@@ -20,6 +23,7 @@ public class Client {
     public String _userAgent;
     public String _credential;
     public String _domainsuffix;
+    public String _httpProxy;
     public Client(Config config) throws Exception {
         if (com.aliyun.teautil.Common.isUnset(TeaModel.buildMap(config))) {
             throw new TeaException(TeaConverter.buildMap(
@@ -34,6 +38,7 @@ public class Client {
         this._protocol = config.protocol;
         this._userAgent = config.userAgent;
         this._domainsuffix = "ha.aliyuncs.com";
+        this._httpProxy = config.httpProxy;
     }
 
     public java.util.Map<String, ?> _request(String method, String pathname, java.util.Map<String, ?> query, java.util.Map<String, String> headers, Object body, RuntimeOptions runtime) throws Exception {
@@ -105,7 +110,7 @@ public class Client {
                     } catch (Exception _err) {
                         TeaException err = new TeaException(_err.getMessage(), _err);
                         rawMsg = objStr;
-                    }
+                    }                    
                     java.util.Map<String, Object> rawMap = TeaConverter.buildMap(
                         new TeaPair("errors", rawMsg)
                     );
@@ -123,6 +128,113 @@ public class Client {
                     );
                     return TeaConverter.buildMap(
                         new TeaPair("body", com.aliyun.teautil.Common.toJSONString(rawbodyMap)),
+                        new TeaPair("headers", response_.headers)
+                    );
+                }
+
+                return TeaConverter.buildMap(
+                    new TeaPair("body", objStr),
+                    new TeaPair("headers", response_.headers)
+                );
+            } catch (Exception e) {
+                if (Tea.isRetryable(e)) {
+                    _lastException = e;
+                    continue;
+                }
+                throw e;
+            }
+        }
+        throw new TeaUnretryableException(_lastRequest, _lastException);
+    }
+
+    public java.util.Map<String, ?> _request_search_bytes(String method, String pathname, java.util.Map<String, ?> query, java.util.Map<String, String> headers, Object body, RuntimeOptions runtime) throws Exception {
+        java.util.Map<String, Object> runtime_ = TeaConverter.buildMap(
+            new TeaPair("timeouted", "retry"),
+            new TeaPair("readTimeout", runtime.readTimeout),
+            new TeaPair("connectTimeout", runtime.connectTimeout),
+            new TeaPair("httpProxy", runtime.httpProxy),
+            new TeaPair("httpsProxy", runtime.httpsProxy),
+            new TeaPair("noProxy", runtime.noProxy),
+            new TeaPair("maxIdleConns", runtime.maxIdleConns),
+            new TeaPair("retry", TeaConverter.buildMap(
+                new TeaPair("retryable", runtime.autoretry),
+                new TeaPair("maxAttempts", com.aliyun.teautil.Common.defaultNumber(runtime.maxAttempts, 5))
+            )),
+            new TeaPair("backoff", TeaConverter.buildMap(
+                new TeaPair("policy", com.aliyun.teautil.Common.defaultString(runtime.backoffPolicy, "no")),
+                new TeaPair("period", com.aliyun.teautil.Common.defaultNumber(runtime.backoffPeriod, 1))
+            )),
+            new TeaPair("ignoreSSL", runtime.ignoreSSL)
+        );
+
+        TeaRequest _lastRequest = null;
+        Exception _lastException = null;
+        long _now = System.currentTimeMillis();
+        int _retryTimes = 0;
+        while (Tea.allowRetry((java.util.Map<String, Object>) runtime_.get("retry"), _retryTimes, _now)) {
+            if (_retryTimes > 0) {
+                int backoffTime = Tea.getBackoffTime(runtime_.get("backoff"), _retryTimes);
+                if (backoffTime > 0) {
+                    Tea.sleep(backoffTime);
+                }
+            }
+            _retryTimes = _retryTimes + 1;
+            try {
+                TeaRequest request_ = new TeaRequest();
+                request_.protocol = com.aliyun.teautil.Common.defaultString(_protocol, "HTTP");
+                request_.method = method;
+                request_.pathname = pathname;
+                request_.headers = TeaConverter.merge(String.class,
+                    TeaConverter.buildMap(
+                        new TeaPair("user-agent", this.getUserAgent()),
+                        new TeaPair("host", com.aliyun.teautil.Common.defaultString(_endpoint, "" + _instanceId + "." + _domainsuffix + "")),
+                        new TeaPair("authorization", "Basic " + _credential + ""),
+                        new TeaPair("content-type", "application/json; charset=utf-8")
+                    ),
+                    headers
+                );
+                if (!com.aliyun.teautil.Common.isUnset(query)) {
+                    request_.query = com.aliyun.teautil.Common.stringifyMapValue(query);
+                    request_.headers.put("X-Opensearch-Request-ID", com.aliyun.teautil.Common.getNonce());
+                }
+
+                if (!com.aliyun.teautil.Common.isUnset(body)) {
+                    request_.headers.put("X-Opensearch-Swift-Request-ID", com.aliyun.teautil.Common.getNonce());
+                    request_.body = Tea.toReadable(com.aliyun.teautil.Common.toJSONString(body));
+                }
+
+                _lastRequest = request_;
+                TeaResponse response_ = Tea.doAction(request_, runtime_, interceptorChain);
+
+                byte[] objStr = com.aliyun.teautil.Common.readAsBytes(response_.body);
+                if (com.aliyun.teautil.Common.is4xx(response_.statusCode) || com.aliyun.teautil.Common.is5xx(response_.statusCode)) {
+                    String errorMsg = com.aliyun.teautil.Common.toString(objStr);
+                    Object rawMsg = null;
+                    try {
+                        rawMsg = com.aliyun.teautil.Common.parseJSON(errorMsg);
+                    } catch (TeaException err) {
+                        rawMsg = errorMsg;
+                    } catch (Exception _err) {
+                        TeaException err = new TeaException(_err.getMessage(), _err);
+                        rawMsg = errorMsg;
+                    }                    
+                    java.util.Map<String, Object> rawMap = TeaConverter.buildMap(
+                        new TeaPair("errors", rawMsg)
+                    );
+                    throw new TeaException(TeaConverter.buildMap(
+                        new TeaPair("message", response_.statusMessage),
+                        new TeaPair("data", rawMap),
+                        new TeaPair("code", response_.statusCode)
+                    ));
+                }
+
+                if (com.aliyun.teautil.Common.isUnset(objStr)) {
+                    java.util.Map<String, Object> rawbodyMap = TeaConverter.buildMap(
+                        new TeaPair("status", response_.statusMessage),
+                        new TeaPair("code", response_.statusCode)
+                    );
+                    return TeaConverter.buildMap(
+                        new TeaPair("body", rawbodyMap),
                         new TeaPair("headers", response_.headers)
                     );
                 }
@@ -474,7 +586,8 @@ public class Client {
             new TeaPair("readTimeout", 10000),
             new TeaPair("autoretry", false),
             new TeaPair("ignoreSSL", false),
-            new TeaPair("maxIdleConns", 50)
+            new TeaPair("maxIdleConns", 50),
+            new TeaPair("httpProxy", _httpProxy)
         ));
         return this.SearchWithOptions(request, runtime);
     }
@@ -502,7 +615,8 @@ public class Client {
             new TeaPair("readTimeout", 10000),
             new TeaPair("autoretry", false),
             new TeaPair("ignoreSSL", false),
-            new TeaPair("maxIdleConns", 50)
+            new TeaPair("maxIdleConns", 50),
+            new TeaPair("httpProxy", _httpProxy)
         ));
         return this.pushDocumentsWithOptions(dataSourceName, keyField, request, runtime);
     }
@@ -515,5 +629,34 @@ public class Client {
             new TeaPair("X-Opensearch-Swift-PK-Field", keyField)
         );
         return this.pushDocumentEx(dataSourceName, request, runtime);
+    }
+
+    /**
+     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
+     */
+    public SearchBytesResponseModel SearchBytesEx(SearchRequestModel request, RuntimeOptions runtime) throws Exception {
+        return TeaModel.toModel(this._request_search_bytes("GET", "/query", TeaModel.buildMap(request.query), request.headers, null, runtime), new SearchBytesResponseModel());
+    }
+
+    /**
+     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
+     */
+    public SearchBytesResponseModel SearchBytes(SearchRequestModel request) throws Exception {
+        RuntimeOptions runtime = RuntimeOptions.build(TeaConverter.buildMap(
+            new TeaPair("connectTimeout", 5000),
+            new TeaPair("readTimeout", 10000),
+            new TeaPair("autoretry", false),
+            new TeaPair("ignoreSSL", false),
+            new TeaPair("maxIdleConns", 50),
+            new TeaPair("httpProxy", _httpProxy)
+        ));
+        return this.SearchBytesWithOptions(request, runtime);
+    }
+
+    /**
+     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求,及传入运行时参数.
+     */
+    public SearchBytesResponseModel SearchBytesWithOptions(SearchRequestModel request, RuntimeOptions runtime) throws Exception {
+        return this.SearchBytesEx(request, runtime);
     }
 }
