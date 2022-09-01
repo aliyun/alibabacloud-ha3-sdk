@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.aliyun</groupId>
   <artifactId>aliyun-sdk-ha3engine</artifactId>
-  <version>1.3.1</version>
+  <version>1.3.2</version>
   <packaging>jar</packaging>
   <name>aliyun-sdk-ha3engine</name>
   <description>Alibaba Cloud Ha3engine SDK for Java
@@ -41,7 +41,7 @@
     <dependency>
       <groupId>com.aliyun</groupId>
       <artifactId>tea-util</artifactId>
-      <version>0.2.13</version>
+      <version>0.2.14</version>
     </dependency>
     <dependency>
       <groupId>com.aliyun</groupId>
