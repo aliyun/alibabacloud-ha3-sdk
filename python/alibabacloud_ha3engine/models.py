@@ -13,6 +13,7 @@ class Config(TeaModel):
         access_user_name: str = None,
         access_pass_word: str = None,
         user_agent: str = None,
+        http_proxy: str = None,
     ):
         self.endpoint = endpoint
         self.instance_id = instance_id
@@ -20,6 +21,7 @@ class Config(TeaModel):
         self.access_user_name = access_user_name
         self.access_pass_word = access_pass_word
         self.user_agent = user_agent
+        self.http_proxy = http_proxy
 
     def validate(self):
         pass
@@ -42,6 +44,8 @@ class Config(TeaModel):
             result['accessPassWord'] = self.access_pass_word
         if self.user_agent is not None:
             result['userAgent'] = self.user_agent
+        if self.http_proxy is not None:
+            result['httpProxy'] = self.http_proxy
         return result
 
     def from_map(self, m: dict = None):
@@ -58,6 +62,8 @@ class Config(TeaModel):
             self.access_pass_word = m.get('accessPassWord')
         if m.get('userAgent') is not None:
             self.user_agent = m.get('userAgent')
+        if m.get('httpProxy') is not None:
+            self.http_proxy = m.get('httpProxy')
         return self
 
 
@@ -587,6 +593,41 @@ class PushDocumentsResponseModel(TeaModel):
         self,
         headers: Dict[str, str] = None,
         body: str = None,
+    ):
+        # headers
+        self.headers = headers
+        # body
+        self.body = body
+
+    def validate(self):
+        self.validate_required(self.body, 'body')
+
+    def to_map(self):
+        _map = super().to_map()
+        if _map is not None:
+            return _map
+
+        result = dict()
+        if self.headers is not None:
+            result['headers'] = self.headers
+        if self.body is not None:
+            result['body'] = self.body
+        return result
+
+    def from_map(self, m: dict = None):
+        m = m or dict()
+        if m.get('headers') is not None:
+            self.headers = m.get('headers')
+        if m.get('body') is not None:
+            self.body = m.get('body')
+        return self
+
+
+class SearchBytesResponseModel(TeaModel):
+    def __init__(
+        self,
+        headers: Dict[str, str] = None,
+        body: bytes = None,
     ):
         # headers
         self.headers = headers

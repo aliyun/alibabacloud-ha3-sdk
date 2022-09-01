@@ -22,6 +22,7 @@ class Client:
     _user_agent: str = None
     _credential: str = None
     _domainsuffix: str = None
+    _http_proxy: str = None
 
     def __init__(
         self, 
@@ -38,6 +39,7 @@ class Client:
         self._protocol = config.protocol
         self._user_agent = config.user_agent
         self._domainsuffix = 'ha.aliyuncs.com'
+        self._http_proxy = config.http_proxy
 
     def _request(
         self,
@@ -210,6 +212,192 @@ class Client:
                     }
                     return {
                         'body': UtilClient.to_jsonstring(rawbody_map),
+                        'headers': _response.headers
+                    }
+                return {
+                    'body': obj_str,
+                    'headers': _response.headers
+                }
+            except Exception as e:
+                if TeaCore.is_retryable(e):
+                    _last_exception = e
+                    continue
+                raise e
+        raise UnretryableException(_last_request, _last_exception)
+
+    def _request_search_bytes(
+        self,
+        method: str,
+        pathname: str,
+        query: Dict[str, Any],
+        headers: Dict[str, str],
+        body: Any,
+        runtime: util_models.RuntimeOptions,
+    ) -> Dict[str, Any]:
+        runtime.validate()
+        _runtime = {
+            'timeouted': 'retry',
+            'readTimeout': runtime.read_timeout,
+            'connectTimeout': runtime.connect_timeout,
+            'httpProxy': runtime.http_proxy,
+            'httpsProxy': runtime.https_proxy,
+            'noProxy': runtime.no_proxy,
+            'maxIdleConns': runtime.max_idle_conns,
+            'retry': {
+                'retryable': runtime.autoretry,
+                'maxAttempts': UtilClient.default_number(runtime.max_attempts, 5)
+            },
+            'backoff': {
+                'policy': UtilClient.default_string(runtime.backoff_policy, 'no'),
+                'period': UtilClient.default_number(runtime.backoff_period, 1)
+            },
+            'ignoreSSL': runtime.ignore_ssl
+        }
+        _last_request = None
+        _last_exception = None
+        _now = time.time()
+        _retry_times = 0
+        while TeaCore.allow_retry(_runtime.get('retry'), _retry_times, _now):
+            if _retry_times > 0:
+                _backoff_time = TeaCore.get_backoff_time(_runtime.get('backoff'), _retry_times)
+                if _backoff_time > 0:
+                    TeaCore.sleep(_backoff_time)
+            _retry_times = _retry_times + 1
+            try:
+                _request = TeaRequest()
+                _request.protocol = UtilClient.default_string(self._protocol, 'HTTP')
+                _request.method = method
+                _request.pathname = pathname
+                _request.headers = TeaCore.merge({
+                    'user-agent': self.get_user_agent(),
+                    'host': UtilClient.default_string(self._endpoint, f'{self._instance_id}.{self._domainsuffix}'),
+                    'authorization': f'Basic {self._credential}',
+                    'content-type': 'application/json; charset=utf-8'
+                }, headers)
+                if not UtilClient.is_unset(query):
+                    _request.query = UtilClient.stringify_map_value(query)
+                    _request.headers['X-Opensearch-Request-ID'] = UtilClient.get_nonce()
+                if not UtilClient.is_unset(body):
+                    _request.headers['X-Opensearch-Swift-Request-ID'] = UtilClient.get_nonce()
+                    _request.body = UtilClient.to_jsonstring(body)
+                _last_request = _request
+                _response = TeaCore.do_action(_request, _runtime)
+                obj_str = UtilClient.read_as_bytes(_response.body)
+                if UtilClient.is_4xx(_response.status_code) or UtilClient.is_5xx(_response.status_code):
+                    error_msg = UtilClient.to_string(obj_str)
+                    raw_msg = None
+                    try:
+                        raw_msg = UtilClient.parse_json(error_msg)
+                    except Exception as err:
+                        raw_msg = error_msg
+                    raw_map = {
+                        'errors': raw_msg
+                    }
+                    raise TeaException({
+                        'message': _response.status_message,
+                        'data': raw_map,
+                        'code': _response.status_code
+                    })
+                if UtilClient.is_unset(obj_str):
+                    rawbody_map = {
+                        'status': _response.status_message,
+                        'code': _response.status_code
+                    }
+                    return {
+                        'body': rawbody_map,
+                        'headers': _response.headers
+                    }
+                return {
+                    'body': obj_str,
+                    'headers': _response.headers
+                }
+            except Exception as e:
+                if TeaCore.is_retryable(e):
+                    _last_exception = e
+                    continue
+                raise e
+        raise UnretryableException(_last_request, _last_exception)
+
+    async def _request_search_bytes_async(
+        self,
+        method: str,
+        pathname: str,
+        query: Dict[str, Any],
+        headers: Dict[str, str],
+        body: Any,
+        runtime: util_models.RuntimeOptions,
+    ) -> Dict[str, Any]:
+        runtime.validate()
+        _runtime = {
+            'timeouted': 'retry',
+            'readTimeout': runtime.read_timeout,
+            'connectTimeout': runtime.connect_timeout,
+            'httpProxy': runtime.http_proxy,
+            'httpsProxy': runtime.https_proxy,
+            'noProxy': runtime.no_proxy,
+            'maxIdleConns': runtime.max_idle_conns,
+            'retry': {
+                'retryable': runtime.autoretry,
+                'maxAttempts': UtilClient.default_number(runtime.max_attempts, 5)
+            },
+            'backoff': {
+                'policy': UtilClient.default_string(runtime.backoff_policy, 'no'),
+                'period': UtilClient.default_number(runtime.backoff_period, 1)
+            },
+            'ignoreSSL': runtime.ignore_ssl
+        }
+        _last_request = None
+        _last_exception = None
+        _now = time.time()
+        _retry_times = 0
+        while TeaCore.allow_retry(_runtime.get('retry'), _retry_times, _now):
+            if _retry_times > 0:
+                _backoff_time = TeaCore.get_backoff_time(_runtime.get('backoff'), _retry_times)
+                if _backoff_time > 0:
+                    TeaCore.sleep(_backoff_time)
+            _retry_times = _retry_times + 1
+            try:
+                _request = TeaRequest()
+                _request.protocol = UtilClient.default_string(self._protocol, 'HTTP')
+                _request.method = method
+                _request.pathname = pathname
+                _request.headers = TeaCore.merge({
+                    'user-agent': self.get_user_agent(),
+                    'host': UtilClient.default_string(self._endpoint, f'{self._instance_id}.{self._domainsuffix}'),
+                    'authorization': f'Basic {self._credential}',
+                    'content-type': 'application/json; charset=utf-8'
+                }, headers)
+                if not UtilClient.is_unset(query):
+                    _request.query = UtilClient.stringify_map_value(query)
+                    _request.headers['X-Opensearch-Request-ID'] = UtilClient.get_nonce()
+                if not UtilClient.is_unset(body):
+                    _request.headers['X-Opensearch-Swift-Request-ID'] = UtilClient.get_nonce()
+                    _request.body = UtilClient.to_jsonstring(body)
+                _last_request = _request
+                _response = await TeaCore.async_do_action(_request, _runtime)
+                obj_str = await UtilClient.read_as_bytes_async(_response.body)
+                if UtilClient.is_4xx(_response.status_code) or UtilClient.is_5xx(_response.status_code):
+                    error_msg = UtilClient.to_string(obj_str)
+                    raw_msg = None
+                    try:
+                        raw_msg = UtilClient.parse_json(error_msg)
+                    except Exception as err:
+                        raw_msg = error_msg
+                    raw_map = {
+                        'errors': raw_msg
+                    }
+                    raise TeaException({
+                        'message': _response.status_message,
+                        'data': raw_map,
+                        'code': _response.status_code
+                    })
+                if UtilClient.is_unset(obj_str):
+                    rawbody_map = {
+                        'status': _response.status_message,
+                        'code': _response.status_code
+                    }
+                    return {
+                        'body': rawbody_map,
                         'headers': _response.headers
                     }
                 return {
@@ -493,7 +681,8 @@ class Client:
             read_timeout=10000,
             autoretry=False,
             ignore_ssl=False,
-            max_idle_conns=50
+            max_idle_conns=50,
+            http_proxy=self._http_proxy
         )
         return self.search_with_options(request, runtime)
 
@@ -509,7 +698,8 @@ class Client:
             read_timeout=10000,
             autoretry=False,
             ignore_ssl=False,
-            max_idle_conns=50
+            max_idle_conns=50,
+            http_proxy=self._http_proxy
         )
         return await self.search_with_options_async(request, runtime)
 
@@ -575,7 +765,8 @@ class Client:
             read_timeout=10000,
             autoretry=False,
             ignore_ssl=False,
-            max_idle_conns=50
+            max_idle_conns=50,
+            http_proxy=self._http_proxy
         )
         return self.push_documents_with_options(data_source_name, key_field, request, runtime)
 
@@ -593,7 +784,8 @@ class Client:
             read_timeout=10000,
             autoretry=False,
             ignore_ssl=False,
-            max_idle_conns=50
+            max_idle_conns=50,
+            http_proxy=self._http_proxy
         )
         return await self.push_documents_with_options_async(data_source_name, key_field, request, runtime)
 
@@ -626,3 +818,83 @@ class Client:
             'X-Opensearch-Swift-PK-Field': key_field
         }
         return await self.push_document_ex_async(data_source_name, request, runtime)
+
+    def search_bytes_ex(
+        self,
+        request: ha_3engine_models.SearchRequestModel,
+        runtime: util_models.RuntimeOptions,
+    ) -> ha_3engine_models.SearchBytesResponseModel:
+        """
+        系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
+        """
+        return TeaCore.from_map(
+            ha_3engine_models.SearchBytesResponseModel(),
+            self._request_search_bytes('GET', f'/query', TeaCore.to_map(request.query), request.headers, None, runtime)
+        )
+
+    async def search_bytes_ex_async(
+        self,
+        request: ha_3engine_models.SearchRequestModel,
+        runtime: util_models.RuntimeOptions,
+    ) -> ha_3engine_models.SearchBytesResponseModel:
+        """
+        系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
+        """
+        return TeaCore.from_map(
+            ha_3engine_models.SearchBytesResponseModel(),
+            await self._request_search_bytes_async('GET', f'/query', TeaCore.to_map(request.query), request.headers, None, runtime)
+        )
+
+    def search_bytes(
+        self,
+        request: ha_3engine_models.SearchRequestModel,
+    ) -> ha_3engine_models.SearchBytesResponseModel:
+        """
+        系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
+        """
+        runtime = util_models.RuntimeOptions(
+            connect_timeout=5000,
+            read_timeout=10000,
+            autoretry=False,
+            ignore_ssl=False,
+            max_idle_conns=50,
+            http_proxy=self._http_proxy
+        )
+        return self.search_bytes_with_options(request, runtime)
+
+    async def search_bytes_async(
+        self,
+        request: ha_3engine_models.SearchRequestModel,
+    ) -> ha_3engine_models.SearchBytesResponseModel:
+        """
+        系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
+        """
+        runtime = util_models.RuntimeOptions(
+            connect_timeout=5000,
+            read_timeout=10000,
+            autoretry=False,
+            ignore_ssl=False,
+            max_idle_conns=50,
+            http_proxy=self._http_proxy
+        )
+        return await self.search_bytes_with_options_async(request, runtime)
+
+    def search_bytes_with_options(
+        self,
+        request: ha_3engine_models.SearchRequestModel,
+        runtime: util_models.RuntimeOptions,
+    ) -> ha_3engine_models.SearchBytesResponseModel:
+        """
+        系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求,及传入运行时参数.
+        """
+        return self.search_bytes_ex(request, runtime)
+
+    async def search_bytes_with_options_async(
+        self,
+        request: ha_3engine_models.SearchRequestModel,
+        runtime: util_models.RuntimeOptions,
+    ) -> ha_3engine_models.SearchBytesResponseModel:
+        """
+        系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求,及传入运行时参数.
+        """
+        return await self.search_bytes_ex_async(request, runtime)

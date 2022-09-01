@@ -22,6 +22,9 @@ public class Config extends TeaModel {
     @NameInMap("userAgent")
     public String userAgent;
 
+    @NameInMap("httpProxy")
+    public String httpProxy;
+
     public static Config build(java.util.Map<String, ?> map) throws Exception {
         Config self = new Config();
         return TeaModel.build(map, self);
@@ -73,6 +76,14 @@ public class Config extends TeaModel {
     }
     public String getUserAgent() {
         return this.userAgent;
+    }
+
+    public Config setHttpProxy(String httpProxy) {
+        this.httpProxy = httpProxy;
+        return this;
+    }
+    public String getHttpProxy() {
+        return this.httpProxy;
     }
 
 }
