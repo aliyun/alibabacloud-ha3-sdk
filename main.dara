@@ -102,21 +102,13 @@ function buildHaSearchQuery(haquery: HaQuery): string {
     }
   }
 
-if (!Util.isUnset(haquery.sort)) {
+  if (!Util.isUnset(haquery.sort)) {
     var sortStr: string = buildHaQuerySortClauseStr(haquery.sort);
 
     if (!Util.empty(sortStr)) {
       tempString = `${tempString}&&sort=${sortStr}`;
     }
   }
-
-
-
-
-
-
-
-
   if (!Util.isUnset(haquery.aggregate)) {
     var aggregateClauseStr: string = buildHaQueryAggregateClauseStr(haquery.aggregate);
 
@@ -125,8 +117,6 @@ if (!Util.isUnset(haquery.sort)) {
     }
   }
 
-
-
   if (!Util.isUnset(haquery.distinct)) {
     var distinctClauseStr: string = buildHaQueryDistinctClauseStr(haquery.distinct);
 
@@ -134,11 +124,11 @@ if (!Util.isUnset(haquery.sort)) {
       tempString = `${tempString}&&distinct=${distinctClauseStr}`;
     }
   }
-var kvpairs: string = buildSearcKvPairClauseStr(haquery.kvpairs);
+  var kvpairs: string = buildSearcKvPairClauseStr(haquery.kvpairs);
 
-    if (!Util.empty(kvpairs)) {
-      tempString = `${tempString}&&kvpairs=${kvpairs}`;
-    }
+  if (!Util.empty(kvpairs)) {
+    tempString = `${tempString}&&kvpairs=${kvpairs}`;
+  }
 
   return tempString;
 }
@@ -147,14 +137,12 @@ function buildHaQueryAggregateClauseStr(Clause: [ HaQueryAggregateClause ]): str
   var tempClauseString: string = '';
   for (var AggregateClause : Clause) {
     var tempAggregateClauseString: string = '';
-         if (Util.isUnset(AggregateClause.groupKey) || Util.isUnset(AggregateClause.aggFun)) {
-    throw {
-      name = 'ParameterMissing',
-      message = '\'HaQueryAggregateClause.groupKey/aggFun\' can not be unset'
-    };
-  }
-
-
+    if (Util.isUnset(AggregateClause.groupKey) || Util.isUnset(AggregateClause.aggFun)) {
+        throw {
+          name = 'ParameterMissing',
+          message = '\'HaQueryAggregateClause.groupKey/aggFun\' can not be unset'
+        };
+    }
 
     if (!Util.empty(AggregateClause.groupKey) && !Util.empty(AggregateClause.aggFun)) {
       var groupKeyTrimed: string = String.trim(AggregateClause.groupKey);
@@ -189,7 +177,7 @@ function buildHaQueryAggregateClauseStr(Clause: [ HaQueryAggregateClause ]): str
 
     if (!Util.empty(tempClauseString)) {
       tempClauseString = `${tempClauseString};${tempAggregateClauseString}`;
-    }else{
+    } else {
       tempClauseString = `${tempAggregateClauseString}`;
     }
   }
@@ -201,12 +189,12 @@ function buildHaQueryDistinctClauseStr(Clause: [ HaQueryDistinctClause ]): strin
   var tempClauseString: string = '';
   for (var DistinctClause : Clause) {
     var tempDistinctClauseString: string = '';
-      if (Util.isUnset(DistinctClause.distKey)) {
-    throw {
-      name = 'ParameterMissing',
-      message = '\'HaQueryDistinctClause.distKey\' can not be unset'
-    };
-  }
+    if (Util.isUnset(DistinctClause.distKey)) {
+        throw {
+          name = 'ParameterMissing',
+          message = '\'HaQueryDistinctClause.distKey\' can not be unset'
+        };
+    }
 
     if (!Util.empty(DistinctClause.distKey)) {
       var distKeyTrimed: string = String.trim(DistinctClause.distKey);
@@ -245,14 +233,12 @@ function buildHaQueryDistinctClauseStr(Clause: [ HaQueryDistinctClause ]): strin
 
     if (!Util.empty(tempClauseString)) {
       tempClauseString = `${tempClauseString};${tempDistinctClauseString}`;
-    }else{
+    } else {
       tempClauseString = `${tempDistinctClauseString}`;
     }
   }
   return tempClauseString;
 }
-
-
 
 function buildHaQuerySortClauseStr(Clause: [ HaQuerySortClause ]): string {
   var tempClauseString: string = '';
@@ -264,7 +250,7 @@ function buildHaQuerySortClauseStr(Clause: [ HaQuerySortClause ]): string {
       if (!Util.empty(fieldValueTrimed) && !Util.empty(keyFieldTrimed)) {
         if (Util.empty(tempClauseString)) {
           tempClauseString = `${fieldValueTrimed}${keyFieldTrimed}`;
-        }else{
+        } else {
           tempClauseString = `${tempClauseString};${fieldValueTrimed}${keyFieldTrimed}`;
         }
       }
@@ -282,18 +268,15 @@ function buildHaQueryconfigClauseStr(Clause: HaQueryconfigClause): string {
       message = '\'HaQueryconfigClause\' can not be unset'
     };
   }
-  if (Util.isUnset(Clause.start))
-{
-  Clause.start = null;
-}
-  if (Util.isUnset(Clause.hit))
-{
-  Clause.hit = null;
-}
-  if (Util.isUnset(Clause.format))
-{
-  Clause.format = null;
-}
+  if (Util.isUnset(Clause.start)) {
+    Clause.start = null;
+  }
+  if (Util.isUnset(Clause.hit)) {
+    Clause.hit = null;
+  }
+  if (Util.isUnset(Clause.format)) {
+    Clause.format = null;
+  }
 
   tempClauseString = `start:${Util.defaultString(Clause.start, '0')}`;
   tempClauseString = `${tempClauseString},hit:${Util.defaultString(Clause.hit, '10')}`;
@@ -306,11 +289,11 @@ function buildHaQueryconfigClauseStr(Clause: HaQueryconfigClause): string {
       if (!Util.empty(fieldValue)) {
         var fieldValueTrimed: string = String.trim(fieldValue);
         var keyFieldTrimed: string = String.trim(keyField);
-        if (!Util.empty(tempClauseString)){
-        tempClauseString = `${tempClauseString},${keyFieldTrimed}:${fieldValueTrimed}`;
-      }else{
-        tempClauseString = `${keyFieldTrimed}:${fieldValueTrimed}`;
-      }
+        if (!Util.empty(tempClauseString)) {
+          tempClauseString = `${tempClauseString},${keyFieldTrimed}:${fieldValueTrimed}`;
+        } else {
+          tempClauseString = `${keyFieldTrimed}:${fieldValueTrimed}`;
+        }
       }
     }
   }
@@ -325,11 +308,10 @@ function buildSQLSearchQuery(sqlquery: SQLQuery): string {
     };
   }
   var tempString: string = `query=${sqlquery.query}`;
-var kvpairs: string = buildSearcKvPairClauseStr(sqlquery.kvpairs);
-if (!Util.empty(kvpairs)) {
-      tempString = `${tempString}&&kvpair=${kvpairs}`;
-    }
-
+  var kvpairs: string = buildSearcKvPairClauseStr(sqlquery.kvpairs);
+  if (!Util.empty(kvpairs)) {
+    tempString = `${tempString}&&kvpair=${kvpairs}`;
+  }
   return tempString;
 }
 
@@ -338,7 +320,6 @@ function buildSearcKvPairClauseStr(kvPair: map[string]string): string {
   if (!Util.isUnset(kvPair)){
   for (var keyField : Map.keySet(kvPair)) {
     var fieldValue: string = kvPair[keyField];
-
     if (!Util.empty(fieldValue)) {
       var fieldValueTrimed: string = String.trim(fieldValue);
       var keyFieldTrimed: string = String.trim(keyField);
@@ -404,7 +385,8 @@ model SearchQuery {
 
 model SearchRequestModel {
   headers?: map[string]string(description='headers', name='headers'),
-  query: SearchQuery(description='query', name='query')
+  query: SearchQuery(description='query', name='query'),
+  body?: string(name='body', description='body')
 }
 
 model SearchResponseModel {
@@ -412,33 +394,45 @@ model SearchResponseModel {
   body: string(description='body', name='body')
 }
 
-/**
- * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
- */
-async function SearchEx(request: SearchRequestModel, runtime: Util.RuntimeOptions): SearchResponseModel {
-  return _request('GET', `/query`, request.query, request.headers, null, runtime);
+model SearchBytesResponseModel {
+  headers?: map[string]string(description='headers', name='headers'),
+  body: bytes(description='body', name='body')
 }
 
 /**
- * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
+ * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索
+ * 支持ha3的query和sql查询语法
+ * 返回数据的body为String格式
  */
 async function Search(request: SearchRequestModel): SearchResponseModel {
-  var runtime = new Util.RuntimeOptions{
-    connectTimeout = 5000,
-    readTimeout = 10000,
-    autoretry = false,
-    ignoreSSL = false,
-    maxIdleConns = 50,
-    httpProxy = @httpProxy
-  };
-  return SearchWithOptions(request, runtime);
+  return _request('GET', `/query`, request.query, request.headers, null, buildRuntimeOptions());
 }
 
 /**
- * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求,及传入运行时参数.
+ * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索
+ * 支持ha3的json查询语法
+ * 返回数据的body为String格式
  */
-async function SearchWithOptions(request: SearchRequestModel, runtime: Util.RuntimeOptions): SearchResponseModel {
-  return SearchEx(request, runtime);
+async function SearchRest(request: SearchRequestModel, indexName: string): SearchResponseModel {
+  return _request('POST', `/${indexName}/search`, null, request.headers, request.body, buildRuntimeOptions());
+}
+
+/**
+ * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求
+ * 支持ha3的query和sql查询语法
+ * 返回数据的body为byte[]格式
+ */
+async function SearchBytes(request: SearchRequestModel): SearchBytesResponseModel {
+  return _request_search_bytes('GET', `/query`, request.query, request.headers, null, buildRuntimeOptions());
+}
+
+/**
+ * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求
+ * 支持ha3的json查询语法
+ * 返回数据的body为byte[]格式
+ */
+async function SearchRestBytes(request: SearchRequestModel, indexName: string): SearchBytesResponseModel {
+  return _request_search_bytes('POST', `/${indexName}/search`, null, request.headers, request.body, buildRuntimeOptions());
 }
 
 model PushDocumentsRequestModel {
@@ -454,33 +448,11 @@ model PushDocumentsResponseModel {
 /**
  * 支持新增、更新、删除 等操作，以及对应批量操作
  */
-async function pushDocumentEx(dataSourceName: string, request: PushDocumentsRequestModel, runtime: Util.RuntimeOptions): PushDocumentsResponseModel {
-  return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, runtime);
-}
-
-/**
- * 支持新增、更新、删除 等操作，以及对应批量操作
- */
 async function pushDocuments(dataSourceName: string, keyField: string, request: PushDocumentsRequestModel): PushDocumentsResponseModel {
-  var runtime = new Util.RuntimeOptions{
-    connectTimeout = 5000,
-    readTimeout = 10000,
-    autoretry = false,
-    ignoreSSL = false,
-    maxIdleConns = 50,
-    httpProxy = @httpProxy
-  };
-  return pushDocumentsWithOptions(dataSourceName, keyField, request, runtime);
-}
-
-/**
- * 支持新增、更新、删除 等操作，以及对应批量操作,及传入运行时参数.
- */
-async function pushDocumentsWithOptions(dataSourceName: string, keyField: string, request: PushDocumentsRequestModel, runtime: Util.RuntimeOptions): PushDocumentsResponseModel {
   request.headers = {
     X-Opensearch-Swift-PK-Field = keyField
   };
-  return pushDocumentEx(dataSourceName, request, runtime);
+  return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, buildRuntimeOptions());
 }
 
 api _request(method: string, pathname: string, query: map[string]any, headers: map[string]string, body: any, runtime: Util.RuntimeOptions): map[string]any {
@@ -557,43 +529,6 @@ api _request(method: string, pathname: string, query: map[string]any, headers: m
   ignoreSSL = runtime.ignoreSSL
 }
 
-
-
-model SearchBytesResponseModel {
-  headers?: map[string]string(description='headers', name='headers'),
-  body: bytes(description='body', name='body')
-}
-
-/**
- * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
- */
-async function SearchBytesEx(request: SearchRequestModel, runtime: Util.RuntimeOptions): SearchBytesResponseModel {
-  return _request_search_bytes('GET', `/query`, request.query, request.headers, null, runtime);
-}
-
-/**
- * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
- */
-async function SearchBytes(request: SearchRequestModel): SearchBytesResponseModel {
-  var runtime = new Util.RuntimeOptions{
-    connectTimeout = 5000,
-    readTimeout = 10000,
-    autoretry = false,
-    ignoreSSL = false,
-    maxIdleConns = 50,
-    httpProxy = @httpProxy
-  };
-  return SearchBytesWithOptions(request, runtime);
-}
-
-/**
- * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求,及传入运行时参数.
- */
-async function SearchBytesWithOptions(request: SearchRequestModel, runtime: Util.RuntimeOptions): SearchBytesResponseModel {
-  return SearchBytesEx(request, runtime);
-}
-
-
 api _request_search_bytes(method: string, pathname: string, query: map[string]any, headers: map[string]string, body: any, runtime: Util.RuntimeOptions): map[string]any {
   __request.protocol = Util.defaultString(@protocol, 'HTTP');
   __request.method = method;
@@ -667,5 +602,19 @@ api _request_search_bytes(method: string, pathname: string, query: map[string]an
     period = Util.defaultNumber(runtime.backoffPeriod, 1)
   },
   ignoreSSL = runtime.ignoreSSL
+}
+
+/**
+ * 构建RuntimeOptions
+ */
+async function buildRuntimeOptions(): Util.RuntimeOptions {
+  return new Util.RuntimeOptions{
+     connectTimeout = 5000,
+     readTimeout = 10000,
+     autoretry = false,
+     ignoreSSL = false,
+     maxIdleConns = 50,
+     httpProxy = @httpProxy
+  };
 }
 

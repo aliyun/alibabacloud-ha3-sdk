@@ -571,78 +571,56 @@ public class Client {
     }
 
     /**
-     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
-     */
-    public SearchResponseModel SearchEx(SearchRequestModel request, RuntimeOptions runtime) throws Exception {
-        return TeaModel.toModel(this._request("GET", "/query", TeaModel.buildMap(request.query), request.headers, null, runtime), new SearchResponseModel());
-    }
-
-    /**
-     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
+     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索
+     * 支持ha3的query和sql查询语法
+     * 返回数据的body为String格式
      */
     public SearchResponseModel Search(SearchRequestModel request) throws Exception {
-        RuntimeOptions runtime = RuntimeOptions.build(TeaConverter.buildMap(
-            new TeaPair("connectTimeout", 5000),
-            new TeaPair("readTimeout", 10000),
-            new TeaPair("autoretry", false),
-            new TeaPair("ignoreSSL", false),
-            new TeaPair("maxIdleConns", 50),
-            new TeaPair("httpProxy", _httpProxy)
-        ));
-        return this.SearchWithOptions(request, runtime);
+        return TeaModel.toModel(this._request("GET", "/query", TeaModel.buildMap(request.query), request.headers, null, this.buildRuntimeOptions()), new SearchResponseModel());
     }
 
     /**
-     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求,及传入运行时参数.
+     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索
+     * 支持ha3的json查询语法
+     * 返回数据的body为String格式
      */
-    public SearchResponseModel SearchWithOptions(SearchRequestModel request, RuntimeOptions runtime) throws Exception {
-        return this.SearchEx(request, runtime);
+    public SearchResponseModel SearchRest(SearchRequestModel request, String indexName) throws Exception {
+        return TeaModel.toModel(this._request("POST", "/" + indexName + "/search", null, request.headers, request.body, this.buildRuntimeOptions()), new SearchResponseModel());
     }
 
     /**
-     * 支持新增、更新、删除 等操作，以及对应批量操作
+     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求
+     * 支持ha3的query和sql查询语法
+     * 返回数据的body为byte[]格式
      */
-    public PushDocumentsResponseModel pushDocumentEx(String dataSourceName, PushDocumentsRequestModel request, RuntimeOptions runtime) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, runtime), new PushDocumentsResponseModel());
+    public SearchBytesResponseModel SearchBytes(SearchRequestModel request) throws Exception {
+        return TeaModel.toModel(this._request_search_bytes("GET", "/query", TeaModel.buildMap(request.query), request.headers, null, this.buildRuntimeOptions()), new SearchBytesResponseModel());
+    }
+
+    /**
+     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求
+     * 支持ha3的json查询语法
+     * 返回数据的body为byte[]格式
+     */
+    public SearchBytesResponseModel SearchRestBytes(SearchRequestModel request, String indexName) throws Exception {
+        return TeaModel.toModel(this._request_search_bytes("POST", "/" + indexName + "/search", null, request.headers, request.body, this.buildRuntimeOptions()), new SearchBytesResponseModel());
     }
 
     /**
      * 支持新增、更新、删除 等操作，以及对应批量操作
      */
     public PushDocumentsResponseModel pushDocuments(String dataSourceName, String keyField, PushDocumentsRequestModel request) throws Exception {
-        RuntimeOptions runtime = RuntimeOptions.build(TeaConverter.buildMap(
-            new TeaPair("connectTimeout", 5000),
-            new TeaPair("readTimeout", 10000),
-            new TeaPair("autoretry", false),
-            new TeaPair("ignoreSSL", false),
-            new TeaPair("maxIdleConns", 50),
-            new TeaPair("httpProxy", _httpProxy)
-        ));
-        return this.pushDocumentsWithOptions(dataSourceName, keyField, request, runtime);
-    }
-
-    /**
-     * 支持新增、更新、删除 等操作，以及对应批量操作,及传入运行时参数.
-     */
-    public PushDocumentsResponseModel pushDocumentsWithOptions(String dataSourceName, String keyField, PushDocumentsRequestModel request, RuntimeOptions runtime) throws Exception {
         request.headers = TeaConverter.buildMap(
             new TeaPair("X-Opensearch-Swift-PK-Field", keyField)
         );
-        return this.pushDocumentEx(dataSourceName, request, runtime);
+        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, this.buildRuntimeOptions()), new PushDocumentsResponseModel());
     }
 
     /**
-     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
+     * 构建RuntimeOptions
      */
-    public SearchBytesResponseModel SearchBytesEx(SearchRequestModel request, RuntimeOptions runtime) throws Exception {
-        return TeaModel.toModel(this._request_search_bytes("GET", "/query", TeaModel.buildMap(request.query), request.headers, null, runtime), new SearchBytesResponseModel());
-    }
-
-    /**
-     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求。
-     */
-    public SearchBytesResponseModel SearchBytes(SearchRequestModel request) throws Exception {
-        RuntimeOptions runtime = RuntimeOptions.build(TeaConverter.buildMap(
+    public RuntimeOptions buildRuntimeOptions() throws Exception {
+        return RuntimeOptions.build(TeaConverter.buildMap(
             new TeaPair("connectTimeout", 5000),
             new TeaPair("readTimeout", 10000),
             new TeaPair("autoretry", false),
@@ -650,13 +628,5 @@ public class Client {
             new TeaPair("maxIdleConns", 50),
             new TeaPair("httpProxy", _httpProxy)
         ));
-        return this.SearchBytesWithOptions(request, runtime);
-    }
-
-    /**
-     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求,及传入运行时参数.
-     */
-    public SearchBytesResponseModel SearchBytesWithOptions(SearchRequestModel request, RuntimeOptions runtime) throws Exception {
-        return this.SearchBytesEx(request, runtime);
     }
 }
