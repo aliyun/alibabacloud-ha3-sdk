@@ -13,6 +13,10 @@ public class SearchRequestModel extends TeaModel {
     @Validation(required = true)
     public SearchQuery query;
 
+    // body
+    @NameInMap("body")
+    public String body;
+
     public static SearchRequestModel build(java.util.Map<String, ?> map) throws Exception {
         SearchRequestModel self = new SearchRequestModel();
         return TeaModel.build(map, self);
@@ -32,6 +36,14 @@ public class SearchRequestModel extends TeaModel {
     }
     public SearchQuery getQuery() {
         return this.query;
+    }
+
+    public SearchRequestModel setBody(String body) {
+        this.body = body;
+        return this;
+    }
+    public String getBody() {
+        return this.body;
     }
 
 }
