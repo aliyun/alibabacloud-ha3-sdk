@@ -355,7 +355,7 @@ public class Client {
 
         }
 
-        String kvpairs = this.buildSearcKvPairClauseStr(haquery.kvpairs);
+        String kvpairs = this.buildSearcKvPairClauseStr(haquery.kvpairs, ",");
         if (!com.aliyun.teautil.Common.empty(kvpairs)) {
             tempString = "" + tempString + "&&kvpairs=" + kvpairs + "";
         }
@@ -545,7 +545,7 @@ public class Client {
         }
 
         String tempString = "query=" + sqlquery.query + "";
-        String kvpairs = this.buildSearcKvPairClauseStr(sqlquery.kvpairs);
+        String kvpairs = this.buildSearcKvPairClauseStr(sqlquery.kvpairs, ";");
         if (!com.aliyun.teautil.Common.empty(kvpairs)) {
             tempString = "" + tempString + "&&kvpair=" + kvpairs + "";
         }
@@ -553,7 +553,7 @@ public class Client {
         return tempString;
     }
 
-    public String buildSearcKvPairClauseStr(java.util.Map<String, String> kvPair) throws Exception {
+    public String buildSearcKvPairClauseStr(java.util.Map<String, String> kvPair, String separator) throws Exception {
         String tempkvpairsString = "__ops_request_id:" + com.aliyun.teautil.Common.getNonce() + "";
         if (!com.aliyun.teautil.Common.isUnset(kvPair)) {
             for (String keyField : com.aliyun.darabonba.map.Client.keySet(kvPair)) {
@@ -561,7 +561,7 @@ public class Client {
                 if (!com.aliyun.teautil.Common.empty(fieldValue)) {
                     String fieldValueTrimed = com.aliyun.darabonbastring.Client.trim(fieldValue);
                     String keyFieldTrimed = com.aliyun.darabonbastring.Client.trim(keyField);
-                    tempkvpairsString = "" + tempkvpairsString + "," + keyFieldTrimed + ":" + fieldValueTrimed + "";
+                    tempkvpairsString = "" + tempkvpairsString + "" + separator + "" + keyFieldTrimed + ":" + fieldValueTrimed + "";
                 }
 
             }

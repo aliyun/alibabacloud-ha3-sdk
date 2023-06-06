@@ -124,7 +124,7 @@ function buildHaSearchQuery(haquery: HaQuery): string {
       tempString = `${tempString}&&distinct=${distinctClauseStr}`;
     }
   }
-  var kvpairs: string = buildSearcKvPairClauseStr(haquery.kvpairs);
+  var kvpairs: string = buildSearcKvPairClauseStr(haquery.kvpairs, ",");
 
   if (!Util.empty(kvpairs)) {
     tempString = `${tempString}&&kvpairs=${kvpairs}`;
@@ -308,14 +308,14 @@ function buildSQLSearchQuery(sqlquery: SQLQuery): string {
     };
   }
   var tempString: string = `query=${sqlquery.query}`;
-  var kvpairs: string = buildSearcKvPairClauseStr(sqlquery.kvpairs);
+  var kvpairs: string = buildSearcKvPairClauseStr(sqlquery.kvpairs, ";");
   if (!Util.empty(kvpairs)) {
     tempString = `${tempString}&&kvpair=${kvpairs}`;
   }
   return tempString;
 }
 
-function buildSearcKvPairClauseStr(kvPair: map[string]string): string {
+function buildSearcKvPairClauseStr(kvPair: map[string]string, separator: string): string {
   var tempkvpairsString: string = `__ops_request_id:${Util.getNonce()}`;
   if (!Util.isUnset(kvPair)){
   for (var keyField : Map.keySet(kvPair)) {
@@ -323,7 +323,7 @@ function buildSearcKvPairClauseStr(kvPair: map[string]string): string {
     if (!Util.empty(fieldValue)) {
       var fieldValueTrimed: string = String.trim(fieldValue);
       var keyFieldTrimed: string = String.trim(keyField);
-      tempkvpairsString = `${tempkvpairsString},${keyFieldTrimed}:${fieldValueTrimed}`;
+      tempkvpairsString = `${tempkvpairsString}${separator}${keyFieldTrimed}:${fieldValueTrimed}`;
     }
   }}
   return tempkvpairsString;
