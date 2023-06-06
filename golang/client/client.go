@@ -881,7 +881,7 @@ func (client *Client) BuildHaSearchQuery (haquery *HaQuery) (_result *string) {
 
   }
 
-  kvpairs := client.BuildSearcKvPairClauseStr(haquery.Kvpairs)
+  kvpairs := client.BuildSearcKvPairClauseStr(haquery.Kvpairs, tea.String(","))
   if !tea.BoolValue(util.Empty(kvpairs)) {
     tempString = tea.String(tea.StringValue(tempString) + "&&kvpairs=" + tea.StringValue(kvpairs))
   }
@@ -1080,7 +1080,7 @@ func (client *Client) BuildSQLSearchQuery (sqlquery *SQLQuery) (_result *string)
   }
 
   tempString := tea.String("query=" + tea.StringValue(sqlquery.Query))
-  kvpairs := client.BuildSearcKvPairClauseStr(sqlquery.Kvpairs)
+  kvpairs := client.BuildSearcKvPairClauseStr(sqlquery.Kvpairs, tea.String(";"))
   if !tea.BoolValue(util.Empty(kvpairs)) {
     tempString = tea.String(tea.StringValue(tempString) + "&&kvpair=" + tea.StringValue(kvpairs))
   }
@@ -1089,7 +1089,7 @@ func (client *Client) BuildSQLSearchQuery (sqlquery *SQLQuery) (_result *string)
   return _result
 }
 
-func (client *Client) BuildSearcKvPairClauseStr (kvPair map[string]*string) (_result *string) {
+func (client *Client) BuildSearcKvPairClauseStr (kvPair map[string]*string, separator *string) (_result *string) {
   tempkvpairsString := tea.String("__ops_request_id:" + tea.StringValue(util.GetNonce()))
   if !tea.BoolValue(util.IsUnset(kvPair)) {
     for _, keyField := range map_.KeySet(kvPair) {
@@ -1097,7 +1097,7 @@ func (client *Client) BuildSearcKvPairClauseStr (kvPair map[string]*string) (_re
       if !tea.BoolValue(util.Empty(fieldValue)) {
         fieldValueTrimed := string_.Trim(fieldValue)
         keyFieldTrimed := string_.Trim(keyField)
-        tempkvpairsString = tea.String(tea.StringValue(tempkvpairsString) + "," + tea.StringValue(keyFieldTrimed) + ":" + tea.StringValue(fieldValueTrimed))
+        tempkvpairsString = tea.String(tea.StringValue(tempkvpairsString) + tea.StringValue(separator) + tea.StringValue(keyFieldTrimed) + ":" + tea.StringValue(fieldValueTrimed))
       }
 
     }
