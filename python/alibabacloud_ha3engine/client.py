@@ -486,7 +486,7 @@ class Client:
             distinct_clause_str = self.build_ha_query_distinct_clause_str(haquery.distinct)
             if not UtilClient.empty(distinct_clause_str):
                 temp_string = f'{temp_string}&&distinct={distinct_clause_str}'
-        kvpairs = self.build_searc_kv_pair_clause_str(haquery.kvpairs)
+        kvpairs = self.build_searc_kv_pair_clause_str(haquery.kvpairs, ',')
         if not UtilClient.empty(kvpairs):
             temp_string = f'{temp_string}&&kvpairs={kvpairs}'
         return temp_string
@@ -624,7 +624,7 @@ class Client:
                 'message': "'SQLQuery.query' can not be unset"
             })
         temp_string = f'query={sqlquery.query}'
-        kvpairs = self.build_searc_kv_pair_clause_str(sqlquery.kvpairs)
+        kvpairs = self.build_searc_kv_pair_clause_str(sqlquery.kvpairs, ';')
         if not UtilClient.empty(kvpairs):
             temp_string = f'{temp_string}&&kvpair={kvpairs}'
         return temp_string
@@ -632,6 +632,7 @@ class Client:
     def build_searc_kv_pair_clause_str(
         self,
         kv_pair: Dict[str, str],
+        separator: str,
     ) -> str:
         tempkvpairs_string = f'__ops_request_id:{UtilClient.get_nonce()}'
         if not UtilClient.is_unset(kv_pair):
@@ -640,7 +641,7 @@ class Client:
                 if not UtilClient.empty(field_value):
                     field_value_trimed = StringClient.trim(field_value)
                     key_field_trimed = StringClient.trim(key_field)
-                    tempkvpairs_string = f'{tempkvpairs_string},{key_field_trimed}:{field_value_trimed}'
+                    tempkvpairs_string = f'{tempkvpairs_string}{separator}{key_field_trimed}:{field_value_trimed}'
         return tempkvpairs_string
 
     def search(
