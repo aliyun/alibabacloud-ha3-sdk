@@ -617,6 +617,18 @@ public class Client {
     }
 
     /**
+     * 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
+     */
+    public PushDocumentsResponseModel pushDocumentsWithSwift(String dataSourceName, String keyField, String topic, String swift, PushDocumentsRequestModel request) throws Exception {
+        request.headers = TeaConverter.buildMap(
+            new TeaPair("X-Opensearch-Swift-PK-Field", keyField),
+            new TeaPair("X-Opensearch-Swift-Topic", topic),
+            new TeaPair("X-Opensearch-Swift-Swift", swift)
+        );
+        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, this.buildRuntimeOptions()), new PushDocumentsResponseModel());
+    }
+
+    /**
      * 构建RuntimeOptions
      */
     public RuntimeOptions buildRuntimeOptions() throws Exception {

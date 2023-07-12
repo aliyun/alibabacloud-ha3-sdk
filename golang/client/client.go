@@ -1209,6 +1209,29 @@ func (client *Client) PushDocuments (dataSourceName *string, keyField *string, r
 }
 
 /**
+ * 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
+ */
+func (client *Client) PushDocumentsWithSwift (dataSourceName *string, keyField *string, topic *string, swift *string, request *PushDocumentsRequestModel) (_result *PushDocumentsResponseModel, _err error) {
+  request.Headers = map[string]*string{
+    "X-Opensearch-Swift-PK-Field": keyField,
+    "X-Opensearch-Swift-Topic": topic,
+    "X-Opensearch-Swift-Swift": swift,
+  }
+  _result = &PushDocumentsResponseModel{}
+  buildRuntimeOptionsTmp, err := client.BuildRuntimeOptions()
+  if err != nil {
+    _err = err
+    return _result, _err
+  }
+  _body, _err := client._request(tea.String("POST"), tea.String("/update/" + tea.StringValue(dataSourceName) + "/actions/bulk"), nil, request.Headers, request.Body, buildRuntimeOptionsTmp)
+  if _err != nil {
+    return _result, _err
+  }
+  _err = tea.Convert(_body, &_result)
+  return _result, _err
+}
+
+/**
  * 构建RuntimeOptions
  */
 func (client *Client) BuildRuntimeOptions () (_result *util.RuntimeOptions, _err error) {

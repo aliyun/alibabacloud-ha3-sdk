@@ -455,6 +455,18 @@ async function pushDocuments(dataSourceName: string, keyField: string, request: 
   return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, buildRuntimeOptions());
 }
 
+/**
+ * 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
+ */
+async function pushDocumentsWithSwift(dataSourceName: string, keyField: string, topic: string, swift: string, request: PushDocumentsRequestModel): PushDocumentsResponseModel {
+  request.headers = {
+    X-Opensearch-Swift-PK-Field = keyField,
+    X-Opensearch-Swift-Topic = topic,
+    X-Opensearch-Swift-Swift = swift
+  };
+  return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, buildRuntimeOptions());
+}
+
 api _request(method: string, pathname: string, query: map[string]any, headers: map[string]string, body: any, runtime: Util.RuntimeOptions): map[string]any {
   __request.protocol = Util.defaultString(@protocol, 'HTTP');
   __request.method = method;
