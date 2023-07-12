@@ -794,6 +794,48 @@ class Client:
             await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, await self.build_runtime_options_async())
         )
 
+    def push_documents_with_swift(
+        self,
+        data_source_name: str,
+        key_field: str,
+        topic: str,
+        swift: str,
+        request: ha_3engine_models.PushDocumentsRequestModel,
+    ) -> ha_3engine_models.PushDocumentsResponseModel:
+        """
+        用于内网环境的新增、更新、删除 等操作，以及对应批量操作
+        """
+        request.headers = {
+            'X-Opensearch-Swift-PK-Field': key_field,
+            'X-Opensearch-Swift-Topic': topic,
+            'X-Opensearch-Swift-Swift': swift
+        }
+        return TeaCore.from_map(
+            ha_3engine_models.PushDocumentsResponseModel(),
+            self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self.build_runtime_options())
+        )
+
+    async def push_documents_with_swift_async(
+        self,
+        data_source_name: str,
+        key_field: str,
+        topic: str,
+        swift: str,
+        request: ha_3engine_models.PushDocumentsRequestModel,
+    ) -> ha_3engine_models.PushDocumentsResponseModel:
+        """
+        用于内网环境的新增、更新、删除 等操作，以及对应批量操作
+        """
+        request.headers = {
+            'X-Opensearch-Swift-PK-Field': key_field,
+            'X-Opensearch-Swift-Topic': topic,
+            'X-Opensearch-Swift-Swift': swift
+        }
+        return TeaCore.from_map(
+            ha_3engine_models.PushDocumentsResponseModel(),
+            await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, await self.build_runtime_options_async())
+        )
+
     def build_runtime_options(self) -> util_models.RuntimeOptions:
         """
         构建RuntimeOptions
