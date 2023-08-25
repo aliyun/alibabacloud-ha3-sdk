@@ -102,7 +102,7 @@ class SearchResponseModel(TeaModel):
         return self
 
 
-class SearchVectorRequestModel(TeaModel):
+class QueryRequestModel(TeaModel):
     def __init__(
         self,
         table_name: str = None,
@@ -201,7 +201,7 @@ class SearchVectorRequestModel(TeaModel):
         return self
 
 
-class SearchFetchRequestModel(TeaModel):
+class FetchRequestModel(TeaModel):
     def __init__(
         self,
         table_name: str = None,

@@ -76,7 +76,7 @@ model SearchResponseModel {
   body: string(description='body', name='body')
 }
 
-model SearchVectorRequestModel {
+model QueryRequestModel {
   tableName: string(name='tableName', description='数据源名'),
   vector: [ float ](name='vector', description='向量数据'),
   namespace?: string(name='namespace', description='查询向量的空间'),
@@ -90,7 +90,7 @@ model SearchVectorRequestModel {
   vectorCount?: integer(name='vectorCount', description='vector字段中包含的向量个数')
 }
 
-model SearchFetchRequestModel {
+model FetchRequestModel {
   tableName: string(name='tableName', description='数据源名'),
   ids: [ string ](name='ids', description='主键列表')
 }
@@ -98,21 +98,21 @@ model SearchFetchRequestModel {
 /**
  * 向量查询
  */
-async function searchVector(request: SearchVectorRequestModel): SearchResponseModel {
+async function query(request: QueryRequestModel): SearchResponseModel {
   return _request('POST', `/vector-service/query`, null, null, Util.toJSONString(request), buildRuntimeOptions());
 }
 
 /**
  * 查询数据
  */
-async function searchFetch(request: SearchFetchRequestModel): SearchResponseModel {
+async function fetch(request: FetchRequestModel): SearchResponseModel {
   return _request('POST', `/vector-service/fetch`, null, null, Util.toJSONString(request), buildRuntimeOptions());
 }
 
 /**
  * 文档统计
  */
-async function searchStats(tableName: string): SearchResponseModel {
+async function stats(tableName: string): SearchResponseModel {
   var body: map[string]any = {
         tableName = tableName};
   return _request('POST', `/vector-service/stats`, null, null, Util.toJSONString(body), buildRuntimeOptions());

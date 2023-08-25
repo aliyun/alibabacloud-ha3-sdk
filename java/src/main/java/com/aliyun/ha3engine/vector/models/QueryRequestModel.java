@@ -3,7 +3,7 @@ package com.aliyun.ha3engine.vector.models;
 
 import com.aliyun.tea.*;
 
-public class SearchVectorRequestModel extends TeaModel {
+public class QueryRequestModel extends TeaModel {
     // 数据源名
     @NameInMap("tableName")
     @Validation(required = true)
@@ -50,12 +50,12 @@ public class SearchVectorRequestModel extends TeaModel {
     @NameInMap("vectorCount")
     public Integer vectorCount;
 
-    public static SearchVectorRequestModel build(java.util.Map<String, ?> map) throws Exception {
-        SearchVectorRequestModel self = new SearchVectorRequestModel();
+    public static QueryRequestModel build(java.util.Map<String, ?> map) throws Exception {
+        QueryRequestModel self = new QueryRequestModel();
         return TeaModel.build(map, self);
     }
 
-    public SearchVectorRequestModel setTableName(String tableName) {
+    public QueryRequestModel setTableName(String tableName) {
         this.tableName = tableName;
         return this;
     }
@@ -63,7 +63,7 @@ public class SearchVectorRequestModel extends TeaModel {
         return this.tableName;
     }
 
-    public SearchVectorRequestModel setVector(java.util.List<Float> vector) {
+    public QueryRequestModel setVector(java.util.List<Float> vector) {
         this.vector = vector;
         return this;
     }
@@ -71,7 +71,7 @@ public class SearchVectorRequestModel extends TeaModel {
         return this.vector;
     }
 
-    public SearchVectorRequestModel setNamespace(String namespace) {
+    public QueryRequestModel setNamespace(String namespace) {
         this.namespace = namespace;
         return this;
     }
@@ -79,7 +79,7 @@ public class SearchVectorRequestModel extends TeaModel {
         return this.namespace;
     }
 
-    public SearchVectorRequestModel setTopK(Integer topK) {
+    public QueryRequestModel setTopK(Integer topK) {
         this.topK = topK;
         return this;
     }
@@ -87,7 +87,7 @@ public class SearchVectorRequestModel extends TeaModel {
         return this.topK;
     }
 
-    public SearchVectorRequestModel setIncludeVector(Boolean includeVector) {
+    public QueryRequestModel setIncludeVector(Boolean includeVector) {
         this.includeVector = includeVector;
         return this;
     }
@@ -95,7 +95,7 @@ public class SearchVectorRequestModel extends TeaModel {
         return this.includeVector;
     }
 
-    public SearchVectorRequestModel setOutputFields(java.util.List<String> outputFields) {
+    public QueryRequestModel setOutputFields(java.util.List<String> outputFields) {
         this.outputFields = outputFields;
         return this;
     }
@@ -103,7 +103,7 @@ public class SearchVectorRequestModel extends TeaModel {
         return this.outputFields;
     }
 
-    public SearchVectorRequestModel setOrder(String order) {
+    public QueryRequestModel setOrder(String order) {
         this.order = order;
         return this;
     }
@@ -111,7 +111,7 @@ public class SearchVectorRequestModel extends TeaModel {
         return this.order;
     }
 
-    public SearchVectorRequestModel setSearchParams(String searchParams) {
+    public QueryRequestModel setSearchParams(String searchParams) {
         this.searchParams = searchParams;
         return this;
     }
@@ -119,7 +119,7 @@ public class SearchVectorRequestModel extends TeaModel {
         return this.searchParams;
     }
 
-    public SearchVectorRequestModel setFilter(String filter) {
+    public QueryRequestModel setFilter(String filter) {
         this.filter = filter;
         return this;
     }
@@ -127,7 +127,7 @@ public class SearchVectorRequestModel extends TeaModel {
         return this.filter;
     }
 
-    public SearchVectorRequestModel setScoreThreshold(Float scoreThreshold) {
+    public QueryRequestModel setScoreThreshold(Float scoreThreshold) {
         this.scoreThreshold = scoreThreshold;
         return this;
     }
@@ -135,7 +135,7 @@ public class SearchVectorRequestModel extends TeaModel {
         return this.scoreThreshold;
     }
 
-    public SearchVectorRequestModel setVectorCount(Integer vectorCount) {
+    public QueryRequestModel setVectorCount(Integer vectorCount) {
         this.vectorCount = vectorCount;
         return this;
     }

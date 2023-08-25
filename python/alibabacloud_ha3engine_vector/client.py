@@ -263,9 +263,9 @@ class Client:
         realm_str = f'{access_user_name_str}:{access_pass_word_str}'
         return Encoder.base_64encode_to_string(StringClient.to_bytes(realm_str, 'UTF-8'))
 
-    def search_vector(
+    def query(
         self,
-        request: ha_3engine_vector_models.SearchVectorRequestModel,
+        request: ha_3engine_vector_models.QueryRequestModel,
     ) -> ha_3engine_vector_models.SearchResponseModel:
         """
         向量查询
@@ -275,9 +275,9 @@ class Client:
             self._request('POST', f'/vector-service/query', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), self.build_runtime_options())
         )
 
-    async def search_vector_async(
+    async def query_async(
         self,
-        request: ha_3engine_vector_models.SearchVectorRequestModel,
+        request: ha_3engine_vector_models.QueryRequestModel,
     ) -> ha_3engine_vector_models.SearchResponseModel:
         """
         向量查询
@@ -287,9 +287,9 @@ class Client:
             await self._request_async('POST', f'/vector-service/query', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), await self.build_runtime_options_async())
         )
 
-    def search_fetch(
+    def fetch(
         self,
-        request: ha_3engine_vector_models.SearchFetchRequestModel,
+        request: ha_3engine_vector_models.FetchRequestModel,
     ) -> ha_3engine_vector_models.SearchResponseModel:
         """
         查询数据
@@ -299,9 +299,9 @@ class Client:
             self._request('POST', f'/vector-service/fetch', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), self.build_runtime_options())
         )
 
-    async def search_fetch_async(
+    async def fetch_async(
         self,
-        request: ha_3engine_vector_models.SearchFetchRequestModel,
+        request: ha_3engine_vector_models.FetchRequestModel,
     ) -> ha_3engine_vector_models.SearchResponseModel:
         """
         查询数据
@@ -311,7 +311,7 @@ class Client:
             await self._request_async('POST', f'/vector-service/fetch', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), await self.build_runtime_options_async())
         )
 
-    def search_stats(
+    def stats(
         self,
         table_name: str,
     ) -> ha_3engine_vector_models.SearchResponseModel:
@@ -326,7 +326,7 @@ class Client:
             self._request('POST', f'/vector-service/stats', None, None, UtilClient.to_jsonstring(body), self.build_runtime_options())
         )
 
-    async def search_stats_async(
+    async def stats_async(
         self,
         table_name: str,
     ) -> ha_3engine_vector_models.SearchResponseModel:
