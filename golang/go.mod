@@ -1,4 +1,4 @@
-module github.com/alibabacloud-go/ha3engine-vector
+module github.com/aliyun/alibabacloud-ha3-sdk/golang
 
 require (
 	github.com/alibabacloud-go/tea-utils v1.4.3

@@ -22,7 +22,7 @@ import os
 from setuptools import setup, find_packages
 
 """
-setup module for alibabacloud-ha3engine-vector.
+setup module for alibabacloud_ha3engine_vector.
 
 Created on 25/08/2023
 
@@ -30,11 +30,11 @@ Created on 25/08/2023
 """
 
 PACKAGE = "alibabacloud_ha3engine_vector"
-NAME = "alibabacloud-ha3engine-vector" or "alibabacloud-package"
+NAME = "alibabacloud_ha3engine_vector" or "alibabacloud-package"
 DESCRIPTION = "Alibaba Cloud Ha3engine-Vector SDK Library for Python"
 AUTHOR = "Alibaba Cloud SDK"
 AUTHOR_EMAIL = "sdk-team@alibabacloud.com"
-URL = "https://github.com/aliyun/alibabacloud-ha3-vector-sdk"
+URL = "https://github.com/aliyun/alibabacloud-ha3-sdk"
 VERSION = __import__(PACKAGE).__version__
 REQUIRES = [
     "alibabacloud_tea_util>=0.3.11, <1.0.0",
