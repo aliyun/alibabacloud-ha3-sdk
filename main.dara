@@ -98,21 +98,21 @@ model SearchFetchRequestModel {
 /**
  * 向量查询
  */
-async function SearchVector(request: SearchVectorRequestModel): SearchResponseModel {
+async function searchVector(request: SearchVectorRequestModel): SearchResponseModel {
   return _request('POST', `/vector-service/query`, null, null, Util.toJSONString(request), buildRuntimeOptions());
 }
 
 /**
  * 查询数据
  */
-async function SearchFetch(request: SearchFetchRequestModel): SearchResponseModel {
+async function searchFetch(request: SearchFetchRequestModel): SearchResponseModel {
   return _request('POST', `/vector-service/fetch`, null, null, Util.toJSONString(request), buildRuntimeOptions());
 }
 
 /**
  * 文档统计
  */
-async function SearchStats(tableName: string): SearchResponseModel {
+async function searchStats(tableName: string): SearchResponseModel {
   var body: map[string]any = {
         tableName = tableName};
   return _request('POST', `/vector-service/stats`, null, null, Util.toJSONString(body), buildRuntimeOptions());
