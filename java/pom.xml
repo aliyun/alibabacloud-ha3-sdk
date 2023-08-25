@@ -7,6 +7,7 @@
   <packaging>jar</packaging>
   <name>aliyun-sdk-ha3engine-vector</name>
   <description>Alibaba Cloud Ha3engine-Vector SDK for Java</description>
+  <url>https://github.com/aliyun/alibabacloud-ha3-sdk</url>
   <licenses>
     <license>
       <name>The Apache License, Version 2.0</name>

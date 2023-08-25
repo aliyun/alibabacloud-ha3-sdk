@@ -17,13 +17,17 @@
   ],
   "releases": {
     "java": "com.aliyun:ha3engine-vector:1.0.0",
-    "go": "alibabacloud_ha3engine-vector:1.0.0",
+    "go": "github.com/alibabacloud-go/ha3engine/client:v1.0.0",
     "python": "alibabacloud_ha3engine-vector:1.0.0"
   },
   "java": {
     "package": "com.aliyun.ha3engine.vector",
     "className": "Client",
     "packageInfo": {
+      "description": "Alibaba Cloud Ha3engine-Vector SDK for Java",
+      "url": "https://github.com/aliyun/alibabacloud-ha3-sdk",
+      "github": "https://github.com/aliyun/alibabacloud-ha3-sdk",
+      "licenseName": "The Apache License, Version 2.0",
       "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0.txt",
       "developerId": "aliyunproducts",
       "developerName": "Alibaba Cloud SDK",
@@ -37,9 +41,9 @@
     "package": "alibabacloud_ha3engine_vector",
     "clientName": "client",
     "packageInfo": {
-      "name": "alibabacloud-ha3engine-vector",
+      "name": "alibabacloud_ha3engine_vector",
       "desc": "Alibaba Cloud Ha3engine-Vector SDK Library for Python",
-      "github": "https://github.com/aliyun/alibabacloud-ha3-vector-sdk",
+      "github": "https://github.com/aliyun/alibabacloud-ha3-sdk",
       "author": "Alibaba Cloud SDK",
       "email": "sdk-team@alibabacloud.com"
     }
