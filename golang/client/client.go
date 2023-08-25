@@ -87,7 +87,7 @@ func (s *SearchResponseModel) SetBody(v string) *SearchResponseModel {
   return s
 }
 
-type SearchVectorRequestModel struct {
+type QueryRequestModel struct {
   // 数据源名
   TableName *string `json:"tableName,omitempty" xml:"tableName,omitempty" require:"true"`
   // 向量数据
@@ -112,90 +112,90 @@ type SearchVectorRequestModel struct {
   VectorCount *int `json:"vectorCount,omitempty" xml:"vectorCount,omitempty"`
 }
 
-func (s SearchVectorRequestModel) String() string {
+func (s QueryRequestModel) String() string {
   return tea.Prettify(s)
 }
 
-func (s SearchVectorRequestModel) GoString() string {
+func (s QueryRequestModel) GoString() string {
   return s.String()
 }
 
-func (s *SearchVectorRequestModel) SetTableName(v string) *SearchVectorRequestModel {
+func (s *QueryRequestModel) SetTableName(v string) *QueryRequestModel {
   s.TableName = &v
   return s
 }
 
-func (s *SearchVectorRequestModel) SetVector(v []*float32) *SearchVectorRequestModel {
+func (s *QueryRequestModel) SetVector(v []*float32) *QueryRequestModel {
   s.Vector = v
   return s
 }
 
-func (s *SearchVectorRequestModel) SetNamespace(v string) *SearchVectorRequestModel {
+func (s *QueryRequestModel) SetNamespace(v string) *QueryRequestModel {
   s.Namespace = &v
   return s
 }
 
-func (s *SearchVectorRequestModel) SetTopK(v int) *SearchVectorRequestModel {
+func (s *QueryRequestModel) SetTopK(v int) *QueryRequestModel {
   s.TopK = &v
   return s
 }
 
-func (s *SearchVectorRequestModel) SetIncludeVector(v bool) *SearchVectorRequestModel {
+func (s *QueryRequestModel) SetIncludeVector(v bool) *QueryRequestModel {
   s.IncludeVector = &v
   return s
 }
 
-func (s *SearchVectorRequestModel) SetOutputFields(v []*string) *SearchVectorRequestModel {
+func (s *QueryRequestModel) SetOutputFields(v []*string) *QueryRequestModel {
   s.OutputFields = v
   return s
 }
 
-func (s *SearchVectorRequestModel) SetOrder(v string) *SearchVectorRequestModel {
+func (s *QueryRequestModel) SetOrder(v string) *QueryRequestModel {
   s.Order = &v
   return s
 }
 
-func (s *SearchVectorRequestModel) SetSearchParams(v string) *SearchVectorRequestModel {
+func (s *QueryRequestModel) SetSearchParams(v string) *QueryRequestModel {
   s.SearchParams = &v
   return s
 }
 
-func (s *SearchVectorRequestModel) SetFilter(v string) *SearchVectorRequestModel {
+func (s *QueryRequestModel) SetFilter(v string) *QueryRequestModel {
   s.Filter = &v
   return s
 }
 
-func (s *SearchVectorRequestModel) SetScoreThreshold(v float32) *SearchVectorRequestModel {
+func (s *QueryRequestModel) SetScoreThreshold(v float32) *QueryRequestModel {
   s.ScoreThreshold = &v
   return s
 }
 
-func (s *SearchVectorRequestModel) SetVectorCount(v int) *SearchVectorRequestModel {
+func (s *QueryRequestModel) SetVectorCount(v int) *QueryRequestModel {
   s.VectorCount = &v
   return s
 }
 
-type SearchFetchRequestModel struct {
+type FetchRequestModel struct {
   // 数据源名
   TableName *string `json:"tableName,omitempty" xml:"tableName,omitempty" require:"true"`
   // 主键列表
   Ids []*string `json:"ids,omitempty" xml:"ids,omitempty" require:"true" type:"Repeated"`
 }
 
-func (s SearchFetchRequestModel) String() string {
+func (s FetchRequestModel) String() string {
   return tea.Prettify(s)
 }
 
-func (s SearchFetchRequestModel) GoString() string {
+func (s FetchRequestModel) GoString() string {
   return s.String()
 }
 
-func (s *SearchFetchRequestModel) SetTableName(v string) *SearchFetchRequestModel {
+func (s *FetchRequestModel) SetTableName(v string) *FetchRequestModel {
   s.TableName = &v
   return s
 }
 
-func (s *SearchFetchRequestModel) SetIds(v []*string) *SearchFetchRequestModel {
+func (s *FetchRequestModel) SetIds(v []*string) *FetchRequestModel {
   s.Ids = v
   return s
 }
@@ -452,7 +452,7 @@ func (client *Client) GetRealmSignStr (accessUserName *string, accessPassWord *s
 /**
  * 向量查询
  */
-func (client *Client) SearchVector (request *SearchVectorRequestModel) (_result *SearchResponseModel, _err error) {
+func (client *Client) Query (request *QueryRequestModel) (_result *SearchResponseModel, _err error) {
   _result = &SearchResponseModel{}
   buildRuntimeOptionsTmp, err := client.BuildRuntimeOptions()
   if err != nil {
@@ -470,7 +470,7 @@ func (client *Client) SearchVector (request *SearchVectorRequestModel) (_result 
 /**
  * 查询数据
  */
-func (client *Client) SearchFetch (request *SearchFetchRequestModel) (_result *SearchResponseModel, _err error) {
+func (client *Client) Fetch (request *FetchRequestModel) (_result *SearchResponseModel, _err error) {
   _result = &SearchResponseModel{}
   buildRuntimeOptionsTmp, err := client.BuildRuntimeOptions()
   if err != nil {
@@ -488,7 +488,7 @@ func (client *Client) SearchFetch (request *SearchFetchRequestModel) (_result *S
 /**
  * 文档统计
  */
-func (client *Client) SearchStats (tableName *string) (_result *SearchResponseModel, _err error) {
+func (client *Client) Stats (tableName *string) (_result *SearchResponseModel, _err error) {
   body := map[string]interface{}{
     "tableName": tea.StringValue(tableName),
   }

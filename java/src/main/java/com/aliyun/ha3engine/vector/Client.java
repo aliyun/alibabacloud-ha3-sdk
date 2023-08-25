@@ -197,21 +197,21 @@ public class Client {
     /**
      * 向量查询
      */
-    public SearchResponseModel searchVector(SearchVectorRequestModel request) throws Exception {
+    public SearchResponseModel query(QueryRequestModel request) throws Exception {
         return TeaModel.toModel(this._request("POST", "/vector-service/query", null, null, com.aliyun.teautil.Common.toJSONString(TeaModel.buildMap(request)), this.buildRuntimeOptions()), new SearchResponseModel());
     }
 
     /**
      * 查询数据
      */
-    public SearchResponseModel searchFetch(SearchFetchRequestModel request) throws Exception {
+    public SearchResponseModel fetch(FetchRequestModel request) throws Exception {
         return TeaModel.toModel(this._request("POST", "/vector-service/fetch", null, null, com.aliyun.teautil.Common.toJSONString(TeaModel.buildMap(request)), this.buildRuntimeOptions()), new SearchResponseModel());
     }
 
     /**
      * 文档统计
      */
-    public SearchResponseModel searchStats(String tableName) throws Exception {
+    public SearchResponseModel stats(String tableName) throws Exception {
         java.util.Map<String, Object> body = TeaConverter.buildMap(
             new TeaPair("tableName", tableName)
         );
