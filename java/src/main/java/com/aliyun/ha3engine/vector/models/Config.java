@@ -1,5 +1,5 @@
 // This file is auto-generated, don't edit it. Thanks.
-package com.aliyun.ha3engine.models;
+package com.aliyun.ha3engine.vector.models;
 
 import com.aliyun.tea.*;
 

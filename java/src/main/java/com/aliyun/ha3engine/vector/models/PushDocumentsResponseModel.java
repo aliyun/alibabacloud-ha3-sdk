@@ -1,9 +1,9 @@
 // This file is auto-generated, don't edit it. Thanks.
-package com.aliyun.ha3engine.models;
+package com.aliyun.ha3engine.vector.models;
 
 import com.aliyun.tea.*;
 
-public class SearchBytesResponseModel extends TeaModel {
+public class PushDocumentsResponseModel extends TeaModel {
     // headers
     @NameInMap("headers")
     public java.util.Map<String, String> headers;
@@ -11,14 +11,14 @@ public class SearchBytesResponseModel extends TeaModel {
     // body
     @NameInMap("body")
     @Validation(required = true)
-    public byte[] body;
+    public String body;
 
-    public static SearchBytesResponseModel build(java.util.Map<String, ?> map) throws Exception {
-        SearchBytesResponseModel self = new SearchBytesResponseModel();
+    public static PushDocumentsResponseModel build(java.util.Map<String, ?> map) throws Exception {
+        PushDocumentsResponseModel self = new PushDocumentsResponseModel();
         return TeaModel.build(map, self);
     }
 
-    public SearchBytesResponseModel setHeaders(java.util.Map<String, String> headers) {
+    public PushDocumentsResponseModel setHeaders(java.util.Map<String, String> headers) {
         this.headers = headers;
         return this;
     }
@@ -26,11 +26,11 @@ public class SearchBytesResponseModel extends TeaModel {
         return this.headers;
     }
 
-    public SearchBytesResponseModel setBody(byte[] body) {
+    public PushDocumentsResponseModel setBody(String body) {
         this.body = body;
         return this;
     }
-    public byte[] getBody() {
+    public String getBody() {
         return this.body;
     }
 
