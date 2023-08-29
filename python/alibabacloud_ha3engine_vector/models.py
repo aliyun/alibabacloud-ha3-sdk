@@ -201,6 +201,149 @@ class QueryRequestModel(TeaModel):
         return self
 
 
+class Query(TeaModel):
+    def __init__(
+        self,
+        vector: List[float] = None,
+        vector_count: int = None,
+        top_k: int = None,
+        namespace: str = None,
+        search_params: str = None,
+        score_threshold: float = None,
+    ):
+        # 查询的向量数据，多个向量可以平铺开
+        self.vector = vector
+        # vector字段中向量的个数
+        self.vector_count = vector_count
+        # 返回个数
+        self.top_k = top_k
+        # 查询向量的空间
+        self.namespace = namespace
+        # 向量查询参数
+        self.search_params = search_params
+        # 分数过滤， 使用欧式距离时，只返回小于scoreThreshold的结果。使用内积时，只返回大于scoreThreshold的结果
+        self.score_threshold = score_threshold
+
+    def validate(self):
+        self.validate_required(self.vector, 'vector')
+
+    def to_map(self):
+        _map = super().to_map()
+        if _map is not None:
+            return _map
+
+        result = dict()
+        if self.vector is not None:
+            result['vector'] = self.vector
+        if self.vector_count is not None:
+            result['vectorCount'] = self.vector_count
+        if self.top_k is not None:
+            result['topK'] = self.top_k
+        if self.namespace is not None:
+            result['namespace'] = self.namespace
+        if self.search_params is not None:
+            result['searchParams'] = self.search_params
+        if self.score_threshold is not None:
+            result['scoreThreshold'] = self.score_threshold
+        return result
+
+    def from_map(self, m: dict = None):
+        m = m or dict()
+        if m.get('vector') is not None:
+            self.vector = m.get('vector')
+        if m.get('vectorCount') is not None:
+            self.vector_count = m.get('vectorCount')
+        if m.get('topK') is not None:
+            self.top_k = m.get('topK')
+        if m.get('namespace') is not None:
+            self.namespace = m.get('namespace')
+        if m.get('searchParams') is not None:
+            self.search_params = m.get('searchParams')
+        if m.get('scoreThreshold') is not None:
+            self.score_threshold = m.get('scoreThreshold')
+        return self
+
+
+class MultiQueryRequestModel(TeaModel):
+    def __init__(
+        self,
+        table_name: str = None,
+        queries: List[Query] = None,
+        top_k: int = None,
+        include_vector: bool = None,
+        output_fields: List[str] = None,
+        order: str = None,
+        filter: str = None,
+    ):
+        # 数据源名
+        self.table_name = table_name
+        # 多向量列表
+        self.queries = queries
+        # 返回个数
+        self.top_k = top_k
+        # 是否返回文档中的向量信息
+        self.include_vector = include_vector
+        # 需要返回值的字段列表
+        self.output_fields = output_fields
+        # 排序顺序, ASC：升序  DESC: 降序
+        self.order = order
+        # 过滤表达式
+        self.filter = filter
+
+    def validate(self):
+        self.validate_required(self.table_name, 'table_name')
+        self.validate_required(self.queries, 'queries')
+        if self.queries:
+            for k in self.queries:
+                if k:
+                    k.validate()
+
+    def to_map(self):
+        _map = super().to_map()
+        if _map is not None:
+            return _map
+
+        result = dict()
+        if self.table_name is not None:
+            result['tableName'] = self.table_name
+        result['queries'] = []
+        if self.queries is not None:
+            for k in self.queries:
+                result['queries'].append(k.to_map() if k else None)
+        if self.top_k is not None:
+            result['topK'] = self.top_k
+        if self.include_vector is not None:
+            result['includeVector'] = self.include_vector
+        if self.output_fields is not None:
+            result['outputFields'] = self.output_fields
+        if self.order is not None:
+            result['order'] = self.order
+        if self.filter is not None:
+            result['filter'] = self.filter
+        return result
+
+    def from_map(self, m: dict = None):
+        m = m or dict()
+        if m.get('tableName') is not None:
+            self.table_name = m.get('tableName')
+        self.queries = []
+        if m.get('queries') is not None:
+            for k in m.get('queries'):
+                temp_model = Query()
+                self.queries.append(temp_model.from_map(k))
+        if m.get('topK') is not None:
+            self.top_k = m.get('topK')
+        if m.get('includeVector') is not None:
+            self.include_vector = m.get('includeVector')
+        if m.get('outputFields') is not None:
+            self.output_fields = m.get('outputFields')
+        if m.get('order') is not None:
+            self.order = m.get('order')
+        if m.get('filter') is not None:
+            self.filter = m.get('filter')
+        return self
+
+
 class FetchRequestModel(TeaModel):
     def __init__(
         self,

@@ -175,6 +175,119 @@ func (s *QueryRequestModel) SetVectorCount(v int) *QueryRequestModel {
   return s
 }
 
+type MultiQueryRequestModel struct {
+  // 数据源名
+  TableName *string `json:"tableName,omitempty" xml:"tableName,omitempty" require:"true"`
+  // 多向量列表
+  Queries []*Query `json:"queries,omitempty" xml:"queries,omitempty" require:"true" type:"Repeated"`
+  // 返回个数
+  TopK *int `json:"topK,omitempty" xml:"topK,omitempty"`
+  // 是否返回文档中的向量信息
+  IncludeVector *bool `json:"includeVector,omitempty" xml:"includeVector,omitempty"`
+  // 需要返回值的字段列表
+  OutputFields []*string `json:"outputFields,omitempty" xml:"outputFields,omitempty" type:"Repeated"`
+  // 排序顺序, ASC：升序  DESC: 降序
+  Order *string `json:"order,omitempty" xml:"order,omitempty"`
+  // 过滤表达式
+  Filter *string `json:"filter,omitempty" xml:"filter,omitempty"`
+}
+
+func (s MultiQueryRequestModel) String() string {
+  return tea.Prettify(s)
+}
+
+func (s MultiQueryRequestModel) GoString() string {
+  return s.String()
+}
+
+func (s *MultiQueryRequestModel) SetTableName(v string) *MultiQueryRequestModel {
+  s.TableName = &v
+  return s
+}
+
+func (s *MultiQueryRequestModel) SetQueries(v []*Query) *MultiQueryRequestModel {
+  s.Queries = v
+  return s
+}
+
+func (s *MultiQueryRequestModel) SetTopK(v int) *MultiQueryRequestModel {
+  s.TopK = &v
+  return s
+}
+
+func (s *MultiQueryRequestModel) SetIncludeVector(v bool) *MultiQueryRequestModel {
+  s.IncludeVector = &v
+  return s
+}
+
+func (s *MultiQueryRequestModel) SetOutputFields(v []*string) *MultiQueryRequestModel {
+  s.OutputFields = v
+  return s
+}
+
+func (s *MultiQueryRequestModel) SetOrder(v string) *MultiQueryRequestModel {
+  s.Order = &v
+  return s
+}
+
+func (s *MultiQueryRequestModel) SetFilter(v string) *MultiQueryRequestModel {
+  s.Filter = &v
+  return s
+}
+
+type Query struct {
+  // 查询的向量数据，多个向量可以平铺开
+  Vector []*float32 `json:"vector,omitempty" xml:"vector,omitempty" require:"true" type:"Repeated"`
+  // vector字段中向量的个数
+  VectorCount *int `json:"vectorCount,omitempty" xml:"vectorCount,omitempty"`
+  // 返回个数
+  TopK *int `json:"topK,omitempty" xml:"topK,omitempty"`
+  // 查询向量的空间
+  Namespace *string `json:"namespace,omitempty" xml:"namespace,omitempty"`
+  // 向量查询参数
+  SearchParams *string `json:"searchParams,omitempty" xml:"searchParams,omitempty"`
+  // 分数过滤， 使用欧式距离时，只返回小于scoreThreshold的结果。使用内积时，只返回大于scoreThreshold的结果
+  ScoreThreshold *float32 `json:"scoreThreshold,omitempty" xml:"scoreThreshold,omitempty"`
+}
+
+func (s Query) String() string {
+  return tea.Prettify(s)
+}
+
+func (s Query) GoString() string {
+  return s.String()
+}
+
+func (s *Query) SetVector(v []*float32) *Query {
+  s.Vector = v
+  return s
+}
+
+func (s *Query) SetVectorCount(v int) *Query {
+  s.VectorCount = &v
+  return s
+}
+
+func (s *Query) SetTopK(v int) *Query {
+  s.TopK = &v
+  return s
+}
+
+func (s *Query) SetNamespace(v string) *Query {
+  s.Namespace = &v
+  return s
+}
+
+func (s *Query) SetSearchParams(v string) *Query {
+  s.SearchParams = &v
+  return s
+}
+
+func (s *Query) SetScoreThreshold(v float32) *Query {
+  s.ScoreThreshold = &v
+  return s
+}
+
 type FetchRequestModel struct {
   // 数据源名
   TableName *string `json:"tableName,omitempty" xml:"tableName,omitempty" require:"true"`
@@ -460,6 +573,24 @@ func (client *Client) Query (request *QueryRequestModel) (_result *SearchRespons
     return _result, _err
   }
   _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/query"), nil, nil, util.ToJSONString(tea.ToMap(request)), buildRuntimeOptionsTmp)
+  if _err != nil {
+    return _result, _err
+  }
+  _err = tea.Convert(_body, &_result)
+  return _result, _err
+}
+
+/**
+ * 多namespace查询
+ */
+func (client *Client) MultiQuery (request *MultiQueryRequestModel) (_result *SearchResponseModel, _err error) {
+  _result = &SearchResponseModel{}
+  buildRuntimeOptionsTmp, err := client.BuildRuntimeOptions()
+  if err != nil {
+    _err = err
+    return _result, _err
+  }
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/multi-query"), nil, nil, util.ToJSONString(tea.ToMap(request)), buildRuntimeOptionsTmp)
   if _err != nil {
     return _result, _err
   }
