@@ -287,6 +287,30 @@ class Client:
             await self._request_async('POST', f'/vector-service/query', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), await self.build_runtime_options_async())
         )
 
+    def multi_query(
+        self,
+        request: ha_3engine_vector_models.MultiQueryRequestModel,
+    ) -> ha_3engine_vector_models.SearchResponseModel:
+        """
+        多namespace查询
+        """
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponseModel(),
+            self._request('POST', f'/vector-service/multi-query', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), self.build_runtime_options())
+        )
+
+    async def multi_query_async(
+        self,
+        request: ha_3engine_vector_models.MultiQueryRequestModel,
+    ) -> ha_3engine_vector_models.SearchResponseModel:
+        """
+        多namespace查询
+        """
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponseModel(),
+            await self._request_async('POST', f'/vector-service/multi-query', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), await self.build_runtime_options_async())
+        )
+
     def fetch(
         self,
         request: ha_3engine_vector_models.FetchRequestModel,

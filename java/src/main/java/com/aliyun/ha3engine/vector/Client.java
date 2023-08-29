@@ -202,6 +202,13 @@ public class Client {
     }
 
     /**
+     * 多namespace查询
+     */
+    public SearchResponseModel multiQuery(MultiQueryRequestModel request) throws Exception {
+        return TeaModel.toModel(this._request("POST", "/vector-service/multi-query", null, null, com.aliyun.teautil.Common.toJSONString(TeaModel.buildMap(request)), this.buildRuntimeOptions()), new SearchResponseModel());
+    }
+
+    /**
      * 查询数据
      */
     public SearchResponseModel fetch(FetchRequestModel request) throws Exception {
