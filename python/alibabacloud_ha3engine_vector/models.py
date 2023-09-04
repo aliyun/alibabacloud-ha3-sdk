@@ -67,7 +67,7 @@ class Config(TeaModel):
         return self
 
 
-class SearchResponseModel(TeaModel):
+class SearchResponse(TeaModel):
     def __init__(
         self,
         headers: Dict[str, str] = None,
@@ -102,13 +102,15 @@ class SearchResponseModel(TeaModel):
         return self
 
 
-class QueryRequestModel(TeaModel):
+class QueryRequest(TeaModel):
     def __init__(
         self,
         table_name: str = None,
         vector: List[float] = None,
         namespace: str = None,
         top_k: int = None,
+        content: str = None,
+        modal: str = None,
         include_vector: bool = None,
         output_fields: List[str] = None,
         order: str = None,
@@ -125,6 +127,10 @@ class QueryRequestModel(TeaModel):
         self.namespace = namespace
         # 返回个数
         self.top_k = top_k
+        # 需要向量化的内容
+        self.content = content
+        # 使用的模型
+        self.modal = modal
         # 是否返回文档中的向量信息
         self.include_vector = include_vector
         # 需要返回值的字段列表
@@ -158,6 +164,10 @@ class QueryRequestModel(TeaModel):
             result['namespace'] = self.namespace
         if self.top_k is not None:
             result['topK'] = self.top_k
+        if self.content is not None:
+            result['content'] = self.content
+        if self.modal is not None:
+            result['modal'] = self.modal
         if self.include_vector is not None:
             result['includeVector'] = self.include_vector
         if self.output_fields is not None:
@@ -184,6 +194,10 @@ class QueryRequestModel(TeaModel):
             self.namespace = m.get('namespace')
         if m.get('topK') is not None:
             self.top_k = m.get('topK')
+        if m.get('content') is not None:
+            self.content = m.get('content')
+        if m.get('modal') is not None:
+            self.modal = m.get('modal')
         if m.get('includeVector') is not None:
             self.include_vector = m.get('includeVector')
         if m.get('outputFields') is not None:
@@ -201,74 +215,11 @@ class QueryRequestModel(TeaModel):
         return self
 
 
-class Query(TeaModel):
-    def __init__(
-        self,
-        vector: List[float] = None,
-        vector_count: int = None,
-        top_k: int = None,
-        namespace: str = None,
-        search_params: str = None,
-        score_threshold: float = None,
-    ):
-        # 查询的向量数据，多个向量可以平铺开
-        self.vector = vector
-        # vector字段中向量的个数
-        self.vector_count = vector_count
-        # 返回个数
-        self.top_k = top_k
-        # 查询向量的空间
-        self.namespace = namespace
-        # 向量查询参数
-        self.search_params = search_params
-        # 分数过滤， 使用欧式距离时，只返回小于scoreThreshold的结果。使用内积时，只返回大于scoreThreshold的结果
-        self.score_threshold = score_threshold
-
-    def validate(self):
-        self.validate_required(self.vector, 'vector')
-
-    def to_map(self):
-        _map = super().to_map()
-        if _map is not None:
-            return _map
-
-        result = dict()
-        if self.vector is not None:
-            result['vector'] = self.vector
-        if self.vector_count is not None:
-            result['vectorCount'] = self.vector_count
-        if self.top_k is not None:
-            result['topK'] = self.top_k
-        if self.namespace is not None:
-            result['namespace'] = self.namespace
-        if self.search_params is not None:
-            result['searchParams'] = self.search_params
-        if self.score_threshold is not None:
-            result['scoreThreshold'] = self.score_threshold
-        return result
-
-    def from_map(self, m: dict = None):
-        m = m or dict()
-        if m.get('vector') is not None:
-            self.vector = m.get('vector')
-        if m.get('vectorCount') is not None:
-            self.vector_count = m.get('vectorCount')
-        if m.get('topK') is not None:
-            self.top_k = m.get('topK')
-        if m.get('namespace') is not None:
-            self.namespace = m.get('namespace')
-        if m.get('searchParams') is not None:
-            self.search_params = m.get('searchParams')
-        if m.get('scoreThreshold') is not None:
-            self.score_threshold = m.get('scoreThreshold')
-        return self
-
-
-class MultiQueryRequestModel(TeaModel):
+class MultiQueryRequest(TeaModel):
     def __init__(
         self,
         table_name: str = None,
-        queries: List[Query] = None,
+        queries: List[QueryRequest] = None,
         top_k: int = None,
         include_vector: bool = None,
         output_fields: List[str] = None,
@@ -329,7 +280,7 @@ class MultiQueryRequestModel(TeaModel):
         self.queries = []
         if m.get('queries') is not None:
             for k in m.get('queries'):
-                temp_model = Query()
+                temp_model = QueryRequest()
                 self.queries.append(temp_model.from_map(k))
         if m.get('topK') is not None:
             self.top_k = m.get('topK')
@@ -344,7 +295,7 @@ class MultiQueryRequestModel(TeaModel):
         return self
 
 
-class FetchRequestModel(TeaModel):
+class FetchRequest(TeaModel):
     def __init__(
         self,
         table_name: str = None,
@@ -380,7 +331,7 @@ class FetchRequestModel(TeaModel):
         return self
 
 
-class PushDocumentsRequestModel(TeaModel):
+class PushDocumentsRequest(TeaModel):
     def __init__(
         self,
         headers: Dict[str, str] = None,
@@ -415,7 +366,7 @@ class PushDocumentsRequestModel(TeaModel):
         return self
 
 
-class PushDocumentsResponseModel(TeaModel):
+class PushDocumentsResponse(TeaModel):
     def __init__(
         self,
         headers: Dict[str, str] = None,

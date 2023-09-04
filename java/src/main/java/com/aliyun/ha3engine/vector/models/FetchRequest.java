@@ -3,23 +3,27 @@ package com.aliyun.ha3engine.vector.models;
 
 import com.aliyun.tea.*;
 
-public class FetchRequestModel extends TeaModel {
-    // 数据源名
+public class FetchRequest extends TeaModel {
+    /**
+     * <p>数据源名</p>
+     */
     @NameInMap("tableName")
     @Validation(required = true)
     public String tableName;
 
-    // 主键列表
+    /**
+     * <p>主键列表</p>
+     */
     @NameInMap("ids")
     @Validation(required = true)
     public java.util.List<String> ids;
 
-    public static FetchRequestModel build(java.util.Map<String, ?> map) throws Exception {
-        FetchRequestModel self = new FetchRequestModel();
+    public static FetchRequest build(java.util.Map<String, ?> map) throws Exception {
+        FetchRequest self = new FetchRequest();
         return TeaModel.build(map, self);
     }
 
-    public FetchRequestModel setTableName(String tableName) {
+    public FetchRequest setTableName(String tableName) {
         this.tableName = tableName;
         return this;
     }
@@ -27,7 +31,7 @@ public class FetchRequestModel extends TeaModel {
         return this.tableName;
     }
 
-    public FetchRequestModel setIds(java.util.List<String> ids) {
+    public FetchRequest setIds(java.util.List<String> ids) {
         this.ids = ids;
         return this;
     }

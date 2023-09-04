@@ -71,16 +71,18 @@ function getRealmSignStr(accessUserName: string, accessPassWord: string): string
   return EncodeUtil.base64EncodeToString(String.toBytes(realmStr, 'UTF-8'));
 }
 
-model SearchResponseModel {
+model SearchResponse {
   headers?: map[string]string(description='headers', name='headers'),
   body: string(description='body', name='body')
 }
 
-model QueryRequestModel {
+model QueryRequest {
   tableName: string(name='tableName', description='数据源名'),
   vector: [ float ](name='vector', description='向量数据'),
   namespace?: string(name='namespace', description='查询向量的空间'),
   topK?: integer(name='topK', description='返回个数'),
+  content?: string(name='content', description='需要向量化的内容'),
+  modal?: string(name='modal', description='使用的模型'),
   includeVector?: boolean(name='includeVector', description='是否返回文档中的向量信息'),
   outputFields?: [ string ](name='outputFields', description='需要返回值的字段列表'),
   order?: string(name='order', description='排序顺序, ASC：升序  DESC: 降序'),
@@ -90,9 +92,9 @@ model QueryRequestModel {
   vectorCount?: integer(name='vectorCount', description='vector字段中包含的向量个数')
 }
 
-model MultiQueryRequestModel {
+model MultiQueryRequest {
   tableName: string(name='tableName', description='数据源名'),
-  queries: [ Query ](name='queries', description='多向量列表'),
+  queries: [ QueryRequest ](name='queries', description='多向量列表'),
   topK?: integer(name='topK', description='返回个数'),
   includeVector?: boolean(name='includeVector', description='是否返回文档中的向量信息'),
   outputFields?: [ string ](name='outputFields', description='需要返回值的字段列表'),
@@ -100,16 +102,7 @@ model MultiQueryRequestModel {
   filter?: string(name='filter', description='过滤表达式')
 }
 
-model Query {
-  vector: [ float ](name='vector', description='查询的向量数据，多个向量可以平铺开'),
-  vectorCount?: integer(name='vectorCount', description='vector字段中向量的个数'),
-  topK?: integer(name='topK', description='返回个数'),
-  namespace?: string(name='namespace', description='查询向量的空间'),
-  searchParams?: string(name='searchParams', description='向量查询参数'),
-  scoreThreshold?: float(name='scoreThreshold', description='分数过滤， 使用欧式距离时，只返回小于scoreThreshold的结果。使用内积时，只返回大于scoreThreshold的结果')
-}
-
-model FetchRequestModel {
+model FetchRequest {
   tableName: string(name='tableName', description='数据源名'),
   ids: [ string ](name='ids', description='主键列表')
 }
@@ -117,39 +110,46 @@ model FetchRequestModel {
 /**
  * 向量查询
  */
-async function query(request: QueryRequestModel): SearchResponseModel {
+async function query(request: QueryRequest): SearchResponse {
   return _request('POST', `/vector-service/query`, null, null, Util.toJSONString(request), buildRuntimeOptions());
+}
+
+/**
+ * 向量预测查询
+ */
+async function inferenceQuery(request: QueryRequest): SearchResponse {
+  return _request('POST', `/vector-service/inference-query`, null, null, Util.toJSONString(request), buildRuntimeOptions());
 }
 
 /**
  * 多namespace查询
  */
-async function multiQuery(request: MultiQueryRequestModel): SearchResponseModel {
+async function multiQuery(request: MultiQueryRequest): SearchResponse {
   return _request('POST', `/vector-service/multi-query`, null, null, Util.toJSONString(request), buildRuntimeOptions());
 }
 
 /**
  * 查询数据
  */
-async function fetch(request: FetchRequestModel): SearchResponseModel {
+async function fetch(request: FetchRequest): SearchResponse {
   return _request('POST', `/vector-service/fetch`, null, null, Util.toJSONString(request), buildRuntimeOptions());
 }
 
 /**
  * 文档统计
  */
-async function stats(tableName: string): SearchResponseModel {
+async function stats(tableName: string): SearchResponse {
   var body: map[string]any = {
         tableName = tableName};
   return _request('POST', `/vector-service/stats`, null, null, Util.toJSONString(body), buildRuntimeOptions());
 }
 
-model PushDocumentsRequestModel {
+model PushDocumentsRequest {
   headers?: map[string]string(description='headers', name='headers'),
   body: [ map[string]any ](description='body', name='body')
 }
 
-model PushDocumentsResponseModel {
+model PushDocumentsResponse {
   headers?: map[string]string(description='headers', name='headers'),
   body: string(description='body', name='body')
 }
@@ -157,7 +157,7 @@ model PushDocumentsResponseModel {
 /**
  * 支持新增、更新、删除 等操作，以及对应批量操作
  */
-async function pushDocuments(dataSourceName: string, keyField: string, request: PushDocumentsRequestModel): PushDocumentsResponseModel {
+async function pushDocuments(dataSourceName: string, keyField: string, request: PushDocumentsRequest): PushDocumentsResponse {
   request.headers = {
     X-Opensearch-Swift-PK-Field = keyField
   };
@@ -167,7 +167,7 @@ async function pushDocuments(dataSourceName: string, keyField: string, request: 
 /**
  * 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
  */
-async function pushDocumentsWithSwift(dataSourceName: string, keyField: string, topic: string, swift: string, request: PushDocumentsRequestModel): PushDocumentsResponseModel {
+async function pushDocumentsWithSwift(dataSourceName: string, keyField: string, topic: string, swift: string, request: PushDocumentsRequest): PushDocumentsResponse {
   request.headers = {
     X-Opensearch-Swift-PK-Field = keyField,
     X-Opensearch-Swift-Topic = topic,
@@ -263,4 +263,3 @@ async function buildRuntimeOptions(): Util.RuntimeOptions {
      httpProxy = @httpProxy
   };
 }
-

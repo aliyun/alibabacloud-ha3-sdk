@@ -265,80 +265,104 @@ class Client:
 
     def query(
         self,
-        request: ha_3engine_vector_models.QueryRequestModel,
-    ) -> ha_3engine_vector_models.SearchResponseModel:
+        request: ha_3engine_vector_models.QueryRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
         """
         向量查询
         """
         return TeaCore.from_map(
-            ha_3engine_vector_models.SearchResponseModel(),
-            self._request('POST', f'/vector-service/query', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), self.build_runtime_options())
+            ha_3engine_vector_models.SearchResponse(),
+            self._request('POST', f'/vector-service/query', None, None, UtilClient.to_jsonstring(request), self.build_runtime_options())
         )
 
     async def query_async(
         self,
-        request: ha_3engine_vector_models.QueryRequestModel,
-    ) -> ha_3engine_vector_models.SearchResponseModel:
+        request: ha_3engine_vector_models.QueryRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
         """
         向量查询
         """
         return TeaCore.from_map(
-            ha_3engine_vector_models.SearchResponseModel(),
-            await self._request_async('POST', f'/vector-service/query', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), await self.build_runtime_options_async())
+            ha_3engine_vector_models.SearchResponse(),
+            await self._request_async('POST', f'/vector-service/query', None, None, UtilClient.to_jsonstring(request), await self.build_runtime_options_async())
+        )
+
+    def inference_query(
+        self,
+        request: ha_3engine_vector_models.QueryRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
+        """
+        向量预测查询
+        """
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            self._request('POST', f'/vector-service/inference-query', None, None, UtilClient.to_jsonstring(request), self.build_runtime_options())
+        )
+
+    async def inference_query_async(
+        self,
+        request: ha_3engine_vector_models.QueryRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
+        """
+        向量预测查询
+        """
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            await self._request_async('POST', f'/vector-service/inference-query', None, None, UtilClient.to_jsonstring(request), await self.build_runtime_options_async())
         )
 
     def multi_query(
         self,
-        request: ha_3engine_vector_models.MultiQueryRequestModel,
-    ) -> ha_3engine_vector_models.SearchResponseModel:
+        request: ha_3engine_vector_models.MultiQueryRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
         """
         多namespace查询
         """
         return TeaCore.from_map(
-            ha_3engine_vector_models.SearchResponseModel(),
-            self._request('POST', f'/vector-service/multi-query', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), self.build_runtime_options())
+            ha_3engine_vector_models.SearchResponse(),
+            self._request('POST', f'/vector-service/multi-query', None, None, UtilClient.to_jsonstring(request), self.build_runtime_options())
         )
 
     async def multi_query_async(
         self,
-        request: ha_3engine_vector_models.MultiQueryRequestModel,
-    ) -> ha_3engine_vector_models.SearchResponseModel:
+        request: ha_3engine_vector_models.MultiQueryRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
         """
         多namespace查询
         """
         return TeaCore.from_map(
-            ha_3engine_vector_models.SearchResponseModel(),
-            await self._request_async('POST', f'/vector-service/multi-query', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), await self.build_runtime_options_async())
+            ha_3engine_vector_models.SearchResponse(),
+            await self._request_async('POST', f'/vector-service/multi-query', None, None, UtilClient.to_jsonstring(request), await self.build_runtime_options_async())
         )
 
     def fetch(
         self,
-        request: ha_3engine_vector_models.FetchRequestModel,
-    ) -> ha_3engine_vector_models.SearchResponseModel:
+        request: ha_3engine_vector_models.FetchRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
         """
         查询数据
         """
         return TeaCore.from_map(
-            ha_3engine_vector_models.SearchResponseModel(),
-            self._request('POST', f'/vector-service/fetch', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), self.build_runtime_options())
+            ha_3engine_vector_models.SearchResponse(),
+            self._request('POST', f'/vector-service/fetch', None, None, UtilClient.to_jsonstring(request), self.build_runtime_options())
         )
 
     async def fetch_async(
         self,
-        request: ha_3engine_vector_models.FetchRequestModel,
-    ) -> ha_3engine_vector_models.SearchResponseModel:
+        request: ha_3engine_vector_models.FetchRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
         """
         查询数据
         """
         return TeaCore.from_map(
-            ha_3engine_vector_models.SearchResponseModel(),
-            await self._request_async('POST', f'/vector-service/fetch', None, None, UtilClient.to_jsonstring(TeaCore.to_map(request)), await self.build_runtime_options_async())
+            ha_3engine_vector_models.SearchResponse(),
+            await self._request_async('POST', f'/vector-service/fetch', None, None, UtilClient.to_jsonstring(request), await self.build_runtime_options_async())
         )
 
     def stats(
         self,
         table_name: str,
-    ) -> ha_3engine_vector_models.SearchResponseModel:
+    ) -> ha_3engine_vector_models.SearchResponse:
         """
         文档统计
         """
@@ -346,14 +370,14 @@ class Client:
             'tableName': table_name
         }
         return TeaCore.from_map(
-            ha_3engine_vector_models.SearchResponseModel(),
+            ha_3engine_vector_models.SearchResponse(),
             self._request('POST', f'/vector-service/stats', None, None, UtilClient.to_jsonstring(body), self.build_runtime_options())
         )
 
     async def stats_async(
         self,
         table_name: str,
-    ) -> ha_3engine_vector_models.SearchResponseModel:
+    ) -> ha_3engine_vector_models.SearchResponse:
         """
         文档统计
         """
@@ -361,7 +385,7 @@ class Client:
             'tableName': table_name
         }
         return TeaCore.from_map(
-            ha_3engine_vector_models.SearchResponseModel(),
+            ha_3engine_vector_models.SearchResponse(),
             await self._request_async('POST', f'/vector-service/stats', None, None, UtilClient.to_jsonstring(body), await self.build_runtime_options_async())
         )
 
@@ -369,8 +393,8 @@ class Client:
         self,
         data_source_name: str,
         key_field: str,
-        request: ha_3engine_vector_models.PushDocumentsRequestModel,
-    ) -> ha_3engine_vector_models.PushDocumentsResponseModel:
+        request: ha_3engine_vector_models.PushDocumentsRequest,
+    ) -> ha_3engine_vector_models.PushDocumentsResponse:
         """
         支持新增、更新、删除 等操作，以及对应批量操作
         """
@@ -378,7 +402,7 @@ class Client:
             'X-Opensearch-Swift-PK-Field': key_field
         }
         return TeaCore.from_map(
-            ha_3engine_vector_models.PushDocumentsResponseModel(),
+            ha_3engine_vector_models.PushDocumentsResponse(),
             self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self.build_runtime_options())
         )
 
@@ -386,8 +410,8 @@ class Client:
         self,
         data_source_name: str,
         key_field: str,
-        request: ha_3engine_vector_models.PushDocumentsRequestModel,
-    ) -> ha_3engine_vector_models.PushDocumentsResponseModel:
+        request: ha_3engine_vector_models.PushDocumentsRequest,
+    ) -> ha_3engine_vector_models.PushDocumentsResponse:
         """
         支持新增、更新、删除 等操作，以及对应批量操作
         """
@@ -395,7 +419,7 @@ class Client:
             'X-Opensearch-Swift-PK-Field': key_field
         }
         return TeaCore.from_map(
-            ha_3engine_vector_models.PushDocumentsResponseModel(),
+            ha_3engine_vector_models.PushDocumentsResponse(),
             await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, await self.build_runtime_options_async())
         )
 
@@ -405,8 +429,8 @@ class Client:
         key_field: str,
         topic: str,
         swift: str,
-        request: ha_3engine_vector_models.PushDocumentsRequestModel,
-    ) -> ha_3engine_vector_models.PushDocumentsResponseModel:
+        request: ha_3engine_vector_models.PushDocumentsRequest,
+    ) -> ha_3engine_vector_models.PushDocumentsResponse:
         """
         用于内网环境的新增、更新、删除 等操作，以及对应批量操作
         """
@@ -416,7 +440,7 @@ class Client:
             'X-Opensearch-Swift-Swift': swift
         }
         return TeaCore.from_map(
-            ha_3engine_vector_models.PushDocumentsResponseModel(),
+            ha_3engine_vector_models.PushDocumentsResponse(),
             self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self.build_runtime_options())
         )
 
@@ -426,8 +450,8 @@ class Client:
         key_field: str,
         topic: str,
         swift: str,
-        request: ha_3engine_vector_models.PushDocumentsRequestModel,
-    ) -> ha_3engine_vector_models.PushDocumentsResponseModel:
+        request: ha_3engine_vector_models.PushDocumentsRequest,
+    ) -> ha_3engine_vector_models.PushDocumentsResponse:
         """
         用于内网环境的新增、更新、删除 等操作，以及对应批量操作
         """
@@ -437,7 +461,7 @@ class Client:
             'X-Opensearch-Swift-Swift': swift
         }
         return TeaCore.from_map(
-            ha_3engine_vector_models.PushDocumentsResponseModel(),
+            ha_3engine_vector_models.PushDocumentsResponse(),
             await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, await self.build_runtime_options_async())
         )
 

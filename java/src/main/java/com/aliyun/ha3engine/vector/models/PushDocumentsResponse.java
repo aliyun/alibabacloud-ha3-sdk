@@ -3,22 +3,26 @@ package com.aliyun.ha3engine.vector.models;
 
 import com.aliyun.tea.*;
 
-public class PushDocumentsResponseModel extends TeaModel {
-    // headers
+public class PushDocumentsResponse extends TeaModel {
+    /**
+     * <p>headers</p>
+     */
     @NameInMap("headers")
     public java.util.Map<String, String> headers;
 
-    // body
+    /**
+     * <p>body</p>
+     */
     @NameInMap("body")
     @Validation(required = true)
     public String body;
 
-    public static PushDocumentsResponseModel build(java.util.Map<String, ?> map) throws Exception {
-        PushDocumentsResponseModel self = new PushDocumentsResponseModel();
+    public static PushDocumentsResponse build(java.util.Map<String, ?> map) throws Exception {
+        PushDocumentsResponse self = new PushDocumentsResponse();
         return TeaModel.build(map, self);
     }
 
-    public PushDocumentsResponseModel setHeaders(java.util.Map<String, String> headers) {
+    public PushDocumentsResponse setHeaders(java.util.Map<String, String> headers) {
         this.headers = headers;
         return this;
     }
@@ -26,7 +30,7 @@ public class PushDocumentsResponseModel extends TeaModel {
         return this.headers;
     }
 
-    public PushDocumentsResponseModel setBody(String body) {
+    public PushDocumentsResponse setBody(String body) {
         this.body = body;
         return this;
     }
