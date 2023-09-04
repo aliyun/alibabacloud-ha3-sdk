@@ -3,43 +3,57 @@ package com.aliyun.ha3engine.vector.models;
 
 import com.aliyun.tea.*;
 
-public class MultiQueryRequestModel extends TeaModel {
-    // 数据源名
+public class MultiQueryRequest extends TeaModel {
+    /**
+     * <p>数据源名</p>
+     */
     @NameInMap("tableName")
     @Validation(required = true)
     public String tableName;
 
-    // 多向量列表
+    /**
+     * <p>多向量列表</p>
+     */
     @NameInMap("queries")
     @Validation(required = true)
-    public java.util.List<Query> queries;
+    public java.util.List<QueryRequest> queries;
 
-    // 返回个数
+    /**
+     * <p>返回个数</p>
+     */
     @NameInMap("topK")
     public Integer topK;
 
-    // 是否返回文档中的向量信息
+    /**
+     * <p>是否返回文档中的向量信息</p>
+     */
     @NameInMap("includeVector")
     public Boolean includeVector;
 
-    // 需要返回值的字段列表
+    /**
+     * <p>需要返回值的字段列表</p>
+     */
     @NameInMap("outputFields")
     public java.util.List<String> outputFields;
 
-    // 排序顺序, ASC：升序  DESC: 降序
+    /**
+     * <p>排序顺序, ASC：升序  DESC: 降序</p>
+     */
     @NameInMap("order")
     public String order;
 
-    // 过滤表达式
+    /**
+     * <p>过滤表达式</p>
+     */
     @NameInMap("filter")
     public String filter;
 
-    public static MultiQueryRequestModel build(java.util.Map<String, ?> map) throws Exception {
-        MultiQueryRequestModel self = new MultiQueryRequestModel();
+    public static MultiQueryRequest build(java.util.Map<String, ?> map) throws Exception {
+        MultiQueryRequest self = new MultiQueryRequest();
         return TeaModel.build(map, self);
     }
 
-    public MultiQueryRequestModel setTableName(String tableName) {
+    public MultiQueryRequest setTableName(String tableName) {
         this.tableName = tableName;
         return this;
     }
@@ -47,15 +61,15 @@ public class MultiQueryRequestModel extends TeaModel {
         return this.tableName;
     }
 
-    public MultiQueryRequestModel setQueries(java.util.List<Query> queries) {
+    public MultiQueryRequest setQueries(java.util.List<QueryRequest> queries) {
         this.queries = queries;
         return this;
     }
-    public java.util.List<Query> getQueries() {
+    public java.util.List<QueryRequest> getQueries() {
         return this.queries;
     }
 
-    public MultiQueryRequestModel setTopK(Integer topK) {
+    public MultiQueryRequest setTopK(Integer topK) {
         this.topK = topK;
         return this;
     }
@@ -63,7 +77,7 @@ public class MultiQueryRequestModel extends TeaModel {
         return this.topK;
     }
 
-    public MultiQueryRequestModel setIncludeVector(Boolean includeVector) {
+    public MultiQueryRequest setIncludeVector(Boolean includeVector) {
         this.includeVector = includeVector;
         return this;
     }
@@ -71,7 +85,7 @@ public class MultiQueryRequestModel extends TeaModel {
         return this.includeVector;
     }
 
-    public MultiQueryRequestModel setOutputFields(java.util.List<String> outputFields) {
+    public MultiQueryRequest setOutputFields(java.util.List<String> outputFields) {
         this.outputFields = outputFields;
         return this;
     }
@@ -79,7 +93,7 @@ public class MultiQueryRequestModel extends TeaModel {
         return this.outputFields;
     }
 
-    public MultiQueryRequestModel setOrder(String order) {
+    public MultiQueryRequest setOrder(String order) {
         this.order = order;
         return this;
     }
@@ -87,7 +101,7 @@ public class MultiQueryRequestModel extends TeaModel {
         return this.order;
     }
 
-    public MultiQueryRequestModel setFilter(String filter) {
+    public MultiQueryRequest setFilter(String filter) {
         this.filter = filter;
         return this;
     }

@@ -3,59 +3,93 @@ package com.aliyun.ha3engine.vector.models;
 
 import com.aliyun.tea.*;
 
-public class QueryRequestModel extends TeaModel {
-    // 数据源名
+public class QueryRequest extends TeaModel {
+    /**
+     * <p>数据源名</p>
+     */
     @NameInMap("tableName")
     @Validation(required = true)
     public String tableName;
 
-    // 向量数据
+    /**
+     * <p>向量数据</p>
+     */
     @NameInMap("vector")
     @Validation(required = true)
     public java.util.List<Float> vector;
 
-    // 查询向量的空间
+    /**
+     * <p>查询向量的空间</p>
+     */
     @NameInMap("namespace")
     public String namespace;
 
-    // 返回个数
+    /**
+     * <p>返回个数</p>
+     */
     @NameInMap("topK")
     public Integer topK;
 
-    // 是否返回文档中的向量信息
+    /**
+     * <p>需要向量化的内容</p>
+     */
+    @NameInMap("content")
+    public String content;
+
+    /**
+     * <p>使用的模型</p>
+     */
+    @NameInMap("modal")
+    public String modal;
+
+    /**
+     * <p>是否返回文档中的向量信息</p>
+     */
     @NameInMap("includeVector")
     public Boolean includeVector;
 
-    // 需要返回值的字段列表
+    /**
+     * <p>需要返回值的字段列表</p>
+     */
     @NameInMap("outputFields")
     public java.util.List<String> outputFields;
 
-    // 排序顺序, ASC：升序  DESC: 降序
+    /**
+     * <p>排序顺序, ASC：升序  DESC: 降序</p>
+     */
     @NameInMap("order")
     public String order;
 
-    // 查询参数
+    /**
+     * <p>查询参数</p>
+     */
     @NameInMap("searchParams")
     public String searchParams;
 
-    // 过滤表达式
+    /**
+     * <p>过滤表达式</p>
+     */
     @NameInMap("filter")
     public String filter;
 
-    // 分数过滤， 使用欧式距离时，只返回小于scoreThreshold的结果。使用内积时，只返回大于scoreThreshold的结果
+    /**
+     * <p>分数过滤， 使用欧式距离时，只返回小于scoreThreshold的结果。使用内积时，只返回大于scoreThreshold的结果</p>
+     */
     @NameInMap("scoreThreshold")
     public Float scoreThreshold;
 
-    // vector字段中包含的向量个数
+    /**
+     * <p>vector字段中包含的向量个数</p>
+     */
     @NameInMap("vectorCount")
     public Integer vectorCount;
 
-    public static QueryRequestModel build(java.util.Map<String, ?> map) throws Exception {
-        QueryRequestModel self = new QueryRequestModel();
+    public static QueryRequest build(java.util.Map<String, ?> map) throws Exception {
+        QueryRequest self = new QueryRequest();
         return TeaModel.build(map, self);
     }
 
-    public QueryRequestModel setTableName(String tableName) {
+    public QueryRequest setTableName(String tableName) {
         this.tableName = tableName;
         return this;
     }
@@ -63,7 +97,7 @@ public class QueryRequestModel extends TeaModel {
         return this.tableName;
     }
 
-    public QueryRequestModel setVector(java.util.List<Float> vector) {
+    public QueryRequest setVector(java.util.List<Float> vector) {
         this.vector = vector;
         return this;
     }
@@ -71,7 +105,7 @@ public class QueryRequestModel extends TeaModel {
         return this.vector;
     }
 
-    public QueryRequestModel setNamespace(String namespace) {
+    public QueryRequest setNamespace(String namespace) {
         this.namespace = namespace;
         return this;
     }
@@ -79,7 +113,7 @@ public class QueryRequestModel extends TeaModel {
         return this.namespace;
     }
 
-    public QueryRequestModel setTopK(Integer topK) {
+    public QueryRequest setTopK(Integer topK) {
         this.topK = topK;
         return this;
     }
@@ -87,7 +121,23 @@ public class QueryRequestModel extends TeaModel {
         return this.topK;
     }
 
-    public QueryRequestModel setIncludeVector(Boolean includeVector) {
+    public QueryRequest setContent(String content) {
+        this.content = content;
+        return this;
+    }
+    public String getContent() {
+        return this.content;
+    }
+
+    public QueryRequest setModal(String modal) {
+        this.modal = modal;
+        return this;
+    }
+    public String getModal() {
+        return this.modal;
+    }
+
+    public QueryRequest setIncludeVector(Boolean includeVector) {
         this.includeVector = includeVector;
         return this;
     }
@@ -95,7 +145,7 @@ public class QueryRequestModel extends TeaModel {
         return this.includeVector;
     }
 
-    public QueryRequestModel setOutputFields(java.util.List<String> outputFields) {
+    public QueryRequest setOutputFields(java.util.List<String> outputFields) {
         this.outputFields = outputFields;
         return this;
     }
@@ -103,7 +153,7 @@ public class QueryRequestModel extends TeaModel {
         return this.outputFields;
     }
 
-    public QueryRequestModel setOrder(String order) {
+    public QueryRequest setOrder(String order) {
         this.order = order;
         return this;
     }
@@ -111,7 +161,7 @@ public class QueryRequestModel extends TeaModel {
         return this.order;
     }
 
-    public QueryRequestModel setSearchParams(String searchParams) {
+    public QueryRequest setSearchParams(String searchParams) {
         this.searchParams = searchParams;
         return this;
     }
@@ -119,7 +169,7 @@ public class QueryRequestModel extends TeaModel {
         return this.searchParams;
     }
 
-    public QueryRequestModel setFilter(String filter) {
+    public QueryRequest setFilter(String filter) {
         this.filter = filter;
         return this;
     }
@@ -127,7 +177,7 @@ public class QueryRequestModel extends TeaModel {
         return this.filter;
     }
 
-    public QueryRequestModel setScoreThreshold(Float scoreThreshold) {
+    public QueryRequest setScoreThreshold(Float scoreThreshold) {
         this.scoreThreshold = scoreThreshold;
         return this;
     }
@@ -135,7 +185,7 @@ public class QueryRequestModel extends TeaModel {
         return this.scoreThreshold;
     }
 
-    public QueryRequestModel setVectorCount(Integer vectorCount) {
+    public QueryRequest setVectorCount(Integer vectorCount) {
         this.vectorCount = vectorCount;
         return this;
     }

@@ -7,11 +7,6 @@ import com.aliyun.tea.interceptor.RuntimeOptionsInterceptor;
 import com.aliyun.tea.interceptor.RequestInterceptor;
 import com.aliyun.tea.interceptor.ResponseInterceptor;
 import com.aliyun.ha3engine.vector.models.*;
-import com.aliyun.teautil.*;
-import com.aliyun.teautil.models.*;
-import com.aliyun.darabonbastring.*;
-import com.aliyun.darabonba.encode.*;
-import com.aliyun.darabonba.map.*;
 
 public class Client {
 
@@ -25,7 +20,7 @@ public class Client {
     public String _domainsuffix;
     public String _httpProxy;
     public Client(Config config) throws Exception {
-        if (com.aliyun.teautil.Common.isUnset(TeaModel.buildMap(config))) {
+        if (com.aliyun.teautil.Common.isUnset(config)) {
             throw new TeaException(TeaConverter.buildMap(
                 new TeaPair("name", "ParameterMissing"),
                 new TeaPair("message", "'config' can not be unset")
@@ -44,7 +39,7 @@ public class Client {
         this._httpProxy = config.httpProxy;
     }
 
-    public java.util.Map<String, ?> _request(String method, String pathname, java.util.Map<String, ?> query, java.util.Map<String, String> headers, Object body, RuntimeOptions runtime) throws Exception {
+    public java.util.Map<String, ?> _request(String method, String pathname, java.util.Map<String, ?> query, java.util.Map<String, String> headers, Object body, com.aliyun.teautil.models.RuntimeOptions runtime) throws Exception {
         java.util.Map<String, Object> runtime_ = TeaConverter.buildMap(
             new TeaPair("timeouted", "retry"),
             new TeaPair("readTimeout", runtime.readTimeout),
@@ -197,61 +192,68 @@ public class Client {
     /**
      * 向量查询
      */
-    public SearchResponseModel query(QueryRequestModel request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/query", null, null, com.aliyun.teautil.Common.toJSONString(TeaModel.buildMap(request)), this.buildRuntimeOptions()), new SearchResponseModel());
+    public SearchResponse query(QueryRequest request) throws Exception {
+        return TeaModel.toModel(this._request("POST", "/vector-service/query", null, null, com.aliyun.teautil.Common.toJSONString(request), this.buildRuntimeOptions()), new SearchResponse());
+    }
+
+    /**
+     * 向量预测查询
+     */
+    public SearchResponse inferenceQuery(QueryRequest request) throws Exception {
+        return TeaModel.toModel(this._request("POST", "/vector-service/inference-query", null, null, com.aliyun.teautil.Common.toJSONString(request), this.buildRuntimeOptions()), new SearchResponse());
     }
 
     /**
      * 多namespace查询
      */
-    public SearchResponseModel multiQuery(MultiQueryRequestModel request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/multi-query", null, null, com.aliyun.teautil.Common.toJSONString(TeaModel.buildMap(request)), this.buildRuntimeOptions()), new SearchResponseModel());
+    public SearchResponse multiQuery(MultiQueryRequest request) throws Exception {
+        return TeaModel.toModel(this._request("POST", "/vector-service/multi-query", null, null, com.aliyun.teautil.Common.toJSONString(request), this.buildRuntimeOptions()), new SearchResponse());
     }
 
     /**
      * 查询数据
      */
-    public SearchResponseModel fetch(FetchRequestModel request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/fetch", null, null, com.aliyun.teautil.Common.toJSONString(TeaModel.buildMap(request)), this.buildRuntimeOptions()), new SearchResponseModel());
+    public SearchResponse fetch(FetchRequest request) throws Exception {
+        return TeaModel.toModel(this._request("POST", "/vector-service/fetch", null, null, com.aliyun.teautil.Common.toJSONString(request), this.buildRuntimeOptions()), new SearchResponse());
     }
 
     /**
      * 文档统计
      */
-    public SearchResponseModel stats(String tableName) throws Exception {
+    public SearchResponse stats(String tableName) throws Exception {
         java.util.Map<String, Object> body = TeaConverter.buildMap(
             new TeaPair("tableName", tableName)
         );
-        return TeaModel.toModel(this._request("POST", "/vector-service/stats", null, null, com.aliyun.teautil.Common.toJSONString(body), this.buildRuntimeOptions()), new SearchResponseModel());
+        return TeaModel.toModel(this._request("POST", "/vector-service/stats", null, null, com.aliyun.teautil.Common.toJSONString(body), this.buildRuntimeOptions()), new SearchResponse());
     }
 
     /**
      * 支持新增、更新、删除 等操作，以及对应批量操作
      */
-    public PushDocumentsResponseModel pushDocuments(String dataSourceName, String keyField, PushDocumentsRequestModel request) throws Exception {
+    public PushDocumentsResponse pushDocuments(String dataSourceName, String keyField, PushDocumentsRequest request) throws Exception {
         request.headers = TeaConverter.buildMap(
             new TeaPair("X-Opensearch-Swift-PK-Field", keyField)
         );
-        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, this.buildRuntimeOptions()), new PushDocumentsResponseModel());
+        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, this.buildRuntimeOptions()), new PushDocumentsResponse());
     }
 
     /**
      * 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
      */
-    public PushDocumentsResponseModel pushDocumentsWithSwift(String dataSourceName, String keyField, String topic, String swift, PushDocumentsRequestModel request) throws Exception {
+    public PushDocumentsResponse pushDocumentsWithSwift(String dataSourceName, String keyField, String topic, String swift, PushDocumentsRequest request) throws Exception {
         request.headers = TeaConverter.buildMap(
             new TeaPair("X-Opensearch-Swift-PK-Field", keyField),
             new TeaPair("X-Opensearch-Swift-Topic", topic),
             new TeaPair("X-Opensearch-Swift-Swift", swift)
         );
-        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, this.buildRuntimeOptions()), new PushDocumentsResponseModel());
+        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, this.buildRuntimeOptions()), new PushDocumentsResponse());
     }
 
     /**
      * 构建RuntimeOptions
      */
-    public RuntimeOptions buildRuntimeOptions() throws Exception {
-        return RuntimeOptions.build(TeaConverter.buildMap(
+    public com.aliyun.teautil.models.RuntimeOptions buildRuntimeOptions() throws Exception {
+        return com.aliyun.teautil.models.RuntimeOptions.build(TeaConverter.buildMap(
             new TeaPair("connectTimeout", 5000),
             new TeaPair("readTimeout", 10000),
             new TeaPair("autoretry", false),
