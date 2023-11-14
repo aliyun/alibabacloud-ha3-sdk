@@ -4,18 +4,30 @@ package com.aliyun.ha3engine.models;
 import com.aliyun.tea.*;
 
 public class SearchRequestModel extends TeaModel {
-    // headers
+    /**
+     * <p>headers</p>
+     */
     @NameInMap("headers")
     public java.util.Map<String, String> headers;
 
-    // query
+    /**
+     * <p>query</p>
+     */
     @NameInMap("query")
     @Validation(required = true)
     public SearchQuery query;
 
-    // body
+    /**
+     * <p>body</p>
+     */
     @NameInMap("body")
     public String body;
+
+    /**
+     * <p>请求方式，仅支持GET、POST两种请求方式</p>
+     */
+    @NameInMap("method")
+    public String method;
 
     public static SearchRequestModel build(java.util.Map<String, ?> map) throws Exception {
         SearchRequestModel self = new SearchRequestModel();
@@ -44,6 +56,14 @@ public class SearchRequestModel extends TeaModel {
     }
     public String getBody() {
         return this.body;
+    }
+
+    public SearchRequestModel setMethod(String method) {
+        this.method = method;
+        return this;
+    }
+    public String getMethod() {
+        return this.method;
     }
 
 }

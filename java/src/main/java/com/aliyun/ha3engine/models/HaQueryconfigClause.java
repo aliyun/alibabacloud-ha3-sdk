@@ -4,22 +4,30 @@ package com.aliyun.ha3engine.models;
 import com.aliyun.tea.*;
 
 public class HaQueryconfigClause extends TeaModel {
-    // 从结果集中第 start_offset 开始返回 document 
+    /**
+     * <p>从结果集中第 start_offset 开始返回 document </p>
+     */
     @NameInMap("start")
     @Validation(required = true)
     public String start;
 
-    // 返回文档的最大数量
+    /**
+     * <p>返回文档的最大数量</p>
+     */
     @NameInMap("hit")
     @Validation(required = true)
     public String hit;
 
-    // 指定用户返回数据格式. 支持 xml 和 json 类型数据返回  
+    /**
+     * <p>指定用户返回数据格式. 支持 xml 和 json 类型数据返回  </p>
+     */
     @NameInMap("format")
     @Validation(required = true)
     public String format;
 
-    // 扩展 配置参数
+    /**
+     * <p>扩展 配置参数</p>
+     */
     @NameInMap("customConfig")
     public java.util.Map<String, String> customConfig;
 

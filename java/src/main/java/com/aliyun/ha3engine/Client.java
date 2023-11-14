@@ -7,11 +7,6 @@ import com.aliyun.tea.interceptor.RuntimeOptionsInterceptor;
 import com.aliyun.tea.interceptor.RequestInterceptor;
 import com.aliyun.tea.interceptor.ResponseInterceptor;
 import com.aliyun.ha3engine.models.*;
-import com.aliyun.teautil.*;
-import com.aliyun.teautil.models.*;
-import com.aliyun.darabonbastring.*;
-import com.aliyun.darabonba.encode.*;
-import com.aliyun.darabonba.map.*;
 
 public class Client {
 
@@ -25,7 +20,7 @@ public class Client {
     public String _domainsuffix;
     public String _httpProxy;
     public Client(Config config) throws Exception {
-        if (com.aliyun.teautil.Common.isUnset(TeaModel.buildMap(config))) {
+        if (com.aliyun.teautil.Common.isUnset(config)) {
             throw new TeaException(TeaConverter.buildMap(
                 new TeaPair("name", "ParameterMissing"),
                 new TeaPair("message", "'config' can not be unset")
@@ -41,7 +36,7 @@ public class Client {
         this._httpProxy = config.httpProxy;
     }
 
-    public java.util.Map<String, ?> _request(String method, String pathname, java.util.Map<String, ?> query, java.util.Map<String, String> headers, Object body, RuntimeOptions runtime) throws Exception {
+    public java.util.Map<String, ?> _request(String method, String pathname, java.util.Map<String, ?> query, java.util.Map<String, String> headers, Object body, com.aliyun.teautil.models.RuntimeOptions runtime) throws Exception {
         java.util.Map<String, Object> runtime_ = TeaConverter.buildMap(
             new TeaPair("timeouted", "retry"),
             new TeaPair("readTimeout", runtime.readTimeout),
@@ -147,7 +142,7 @@ public class Client {
         throw new TeaUnretryableException(_lastRequest, _lastException);
     }
 
-    public java.util.Map<String, ?> _request_search_bytes(String method, String pathname, java.util.Map<String, ?> query, java.util.Map<String, String> headers, Object body, RuntimeOptions runtime) throws Exception {
+    public java.util.Map<String, ?> _request_search_bytes(String method, String pathname, java.util.Map<String, ?> query, java.util.Map<String, String> headers, Object body, com.aliyun.teautil.models.RuntimeOptions runtime) throws Exception {
         java.util.Map<String, Object> runtime_ = TeaConverter.buildMap(
             new TeaPair("timeouted", "retry"),
             new TeaPair("readTimeout", runtime.readTimeout),
@@ -494,7 +489,7 @@ public class Client {
 
     public String buildHaQueryconfigClauseStr(HaQueryconfigClause Clause) throws Exception {
         String tempClauseString = "";
-        if (com.aliyun.teautil.Common.isUnset(TeaModel.buildMap(Clause))) {
+        if (com.aliyun.teautil.Common.isUnset(Clause)) {
             throw new TeaException(TeaConverter.buildMap(
                 new TeaPair("name", "ParameterMissing"),
                 new TeaPair("message", "'HaQueryconfigClause' can not be unset")
@@ -576,7 +571,33 @@ public class Client {
      * 返回数据的body为String格式
      */
     public SearchResponseModel Search(SearchRequestModel request) throws Exception {
-        return TeaModel.toModel(this._request("GET", "/query", TeaModel.buildMap(request.query), request.headers, null, this.buildRuntimeOptions()), new SearchResponseModel());
+        if (com.aliyun.teautil.Common.empty(request.method)) {
+            request.method = "GET";
+        }
+
+        if (!com.aliyun.teautil.Common.equalString(request.method, "GET") && !com.aliyun.teautil.Common.equalString(request.method, "POST")) {
+            throw new TeaException(TeaConverter.buildMap(
+                new TeaPair("name", "MethodNotSupportedException"),
+                new TeaPair("message", "method must be GET or POST")
+            ));
+        }
+
+        if (com.aliyun.teautil.Common.equalString(request.method, "GET")) {
+            return TeaModel.toModel(this._request(request.method, "/query", TeaModel.buildMap(request.query), request.headers, null, this.buildRuntimeOptions()), new SearchResponseModel());
+        }
+
+        if (!com.aliyun.teautil.Common.empty(request.query.query)) {
+            java.util.Map<String, String> queryBody = TeaConverter.buildMap(
+                new TeaPair("assemblyQuery", request.query.query)
+            );
+            return TeaModel.toModel(this._request(request.method, "/query", null, request.headers, queryBody, this.buildRuntimeOptions()), new SearchResponseModel());
+        } else {
+            java.util.Map<String, String> sqlBody = TeaConverter.buildMap(
+                new TeaPair("assemblyQuery", request.query.sql)
+            );
+            return TeaModel.toModel(this._request(request.method, "/query?type=sql", null, request.headers, sqlBody, this.buildRuntimeOptions()), new SearchResponseModel());
+        }
+
     }
 
     /**
@@ -631,8 +652,8 @@ public class Client {
     /**
      * 构建RuntimeOptions
      */
-    public RuntimeOptions buildRuntimeOptions() throws Exception {
-        return RuntimeOptions.build(TeaConverter.buildMap(
+    public com.aliyun.teautil.models.RuntimeOptions buildRuntimeOptions() throws Exception {
+        return com.aliyun.teautil.models.RuntimeOptions.build(TeaConverter.buildMap(
             new TeaPair("connectTimeout", 5000),
             new TeaPair("readTimeout", 10000),
             new TeaPair("autoretry", false),

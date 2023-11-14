@@ -653,10 +653,34 @@ class Client:
         支持ha3的query和sql查询语法
         返回数据的body为String格式
         """
-        return TeaCore.from_map(
-            ha_3engine_models.SearchResponseModel(),
-            self._request('GET', f'/query', TeaCore.to_map(request.query), request.headers, None, self.build_runtime_options())
-        )
+        if UtilClient.empty(request.method):
+            request.method = 'GET'
+        if not UtilClient.equal_string(request.method, 'GET') and not UtilClient.equal_string(request.method, 'POST'):
+            raise TeaException({
+                'name': 'MethodNotSupportedException',
+                'message': 'method must be GET or POST'
+            })
+        if UtilClient.equal_string(request.method, 'GET'):
+            return TeaCore.from_map(
+                ha_3engine_models.SearchResponseModel(),
+                self._request(request.method, f'/query', TeaCore.to_map(request.query), request.headers, None, self.build_runtime_options())
+            )
+        if not UtilClient.empty(request.query.query):
+            query_body = {
+                'assemblyQuery': request.query.query
+            }
+            return TeaCore.from_map(
+                ha_3engine_models.SearchResponseModel(),
+                self._request(request.method, f'/query', None, request.headers, query_body, self.build_runtime_options())
+            )
+        else:
+            sql_body = {
+                'assemblyQuery': request.query.sql
+            }
+            return TeaCore.from_map(
+                ha_3engine_models.SearchResponseModel(),
+                self._request(request.method, f'/query?type=sql', None, request.headers, sql_body, self.build_runtime_options())
+            )
 
     async def search_async(
         self,
@@ -667,10 +691,34 @@ class Client:
         支持ha3的query和sql查询语法
         返回数据的body为String格式
         """
-        return TeaCore.from_map(
-            ha_3engine_models.SearchResponseModel(),
-            await self._request_async('GET', f'/query', TeaCore.to_map(request.query), request.headers, None, await self.build_runtime_options_async())
-        )
+        if UtilClient.empty(request.method):
+            request.method = 'GET'
+        if not UtilClient.equal_string(request.method, 'GET') and not UtilClient.equal_string(request.method, 'POST'):
+            raise TeaException({
+                'name': 'MethodNotSupportedException',
+                'message': 'method must be GET or POST'
+            })
+        if UtilClient.equal_string(request.method, 'GET'):
+            return TeaCore.from_map(
+                ha_3engine_models.SearchResponseModel(),
+                await self._request_async(request.method, f'/query', TeaCore.to_map(request.query), request.headers, None, await self.build_runtime_options_async())
+            )
+        if not UtilClient.empty(request.query.query):
+            query_body = {
+                'assemblyQuery': request.query.query
+            }
+            return TeaCore.from_map(
+                ha_3engine_models.SearchResponseModel(),
+                await self._request_async(request.method, f'/query', None, request.headers, query_body, await self.build_runtime_options_async())
+            )
+        else:
+            sql_body = {
+                'assemblyQuery': request.query.sql
+            }
+            return TeaCore.from_map(
+                ha_3engine_models.SearchResponseModel(),
+                await self._request_async(request.method, f'/query?type=sql', None, request.headers, sql_body, await self.build_runtime_options_async())
+            )
 
     def search_rest(
         self,

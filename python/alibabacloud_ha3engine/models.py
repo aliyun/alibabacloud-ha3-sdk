@@ -486,6 +486,7 @@ class SearchRequestModel(TeaModel):
         headers: Dict[str, str] = None,
         query: SearchQuery = None,
         body: str = None,
+        method: str = None,
     ):
         # headers
         self.headers = headers
@@ -493,6 +494,8 @@ class SearchRequestModel(TeaModel):
         self.query = query
         # body
         self.body = body
+        # 请求方式，仅支持GET、POST两种请求方式
+        self.method = method
 
     def validate(self):
         self.validate_required(self.query, 'query')
@@ -511,6 +514,8 @@ class SearchRequestModel(TeaModel):
             result['query'] = self.query.to_map()
         if self.body is not None:
             result['body'] = self.body
+        if self.method is not None:
+            result['method'] = self.method
         return result
 
     def from_map(self, m: dict = None):
@@ -522,6 +527,8 @@ class SearchRequestModel(TeaModel):
             self.query = temp_model.from_map(m['query'])
         if m.get('body') is not None:
             self.body = m.get('body')
+        if m.get('method') is not None:
+            self.method = m.get('method')
         return self
 
 

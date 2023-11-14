@@ -386,7 +386,8 @@ model SearchQuery {
 model SearchRequestModel {
   headers?: map[string]string(description='headers', name='headers'),
   query: SearchQuery(description='query', name='query'),
-  body?: string(name='body', description='body')
+  body?: string(name='body', description='body'),
+  method?: string(name='method', description='请求方式，仅支持GET、POST两种请求方式')
 }
 
 model SearchResponseModel {
@@ -405,7 +406,30 @@ model SearchBytesResponseModel {
  * 返回数据的body为String格式
  */
 async function Search(request: SearchRequestModel): SearchResponseModel {
-  return _request('GET', `/query`, request.query, request.headers, null, buildRuntimeOptions());
+  if (Util.empty(request.method)) {
+    request.method = 'GET';
+  }
+  if (!Util.equalString(request.method, 'GET') && !Util.equalString(request.method, 'POST')) {
+    throw {
+        name = 'MethodNotSupportedException',
+        message = 'method must be GET or POST'
+    };
+  }
+  if (Util.equalString(request.method, 'GET')) {
+    return _request(request.method, `/query`, request.query, request.headers, null, buildRuntimeOptions());
+  }
+
+  if (!Util.empty(request.query.query)) {
+    var queryBody: map[string]string = {
+      assemblyQuery = request.query.query
+    };
+    return _request(request.method, `/query`, null, request.headers, queryBody, buildRuntimeOptions());
+  } else {
+    var sqlBody: map[string]string = {
+      assemblyQuery = request.query.sql
+    };
+    return _request(request.method, `/query?type=sql`, null, request.headers, sqlBody, buildRuntimeOptions());
+  }
 }
 
 /**

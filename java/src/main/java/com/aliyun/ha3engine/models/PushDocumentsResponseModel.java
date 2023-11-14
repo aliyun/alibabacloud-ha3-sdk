@@ -4,11 +4,15 @@ package com.aliyun.ha3engine.models;
 import com.aliyun.tea.*;
 
 public class PushDocumentsResponseModel extends TeaModel {
-    // headers
+    /**
+     * <p>headers</p>
+     */
     @NameInMap("headers")
     public java.util.Map<String, String> headers;
 
-    // body
+    /**
+     * <p>body</p>
+     */
     @NameInMap("body")
     @Validation(required = true)
     public String body;

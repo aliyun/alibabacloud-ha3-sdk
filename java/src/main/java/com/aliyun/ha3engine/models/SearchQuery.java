@@ -4,11 +4,15 @@ package com.aliyun.ha3engine.models;
 import com.aliyun.tea.*;
 
 public class SearchQuery extends TeaModel {
-    // 适配于 Ha3 类型 query. 参数支持子句关键字请参照文档
+    /**
+     * <p>适配于 Ha3 类型 query. 参数支持子句关键字请参照文档</p>
+     */
     @NameInMap("query")
     public String query;
 
-    // 适配于 SQL 类型 query. 参数支持子句关键字请参照文档.
+    /**
+     * <p>适配于 SQL 类型 query. 参数支持子句关键字请参照文档.</p>
+     */
     @NameInMap("sql")
     public String sql;
 
