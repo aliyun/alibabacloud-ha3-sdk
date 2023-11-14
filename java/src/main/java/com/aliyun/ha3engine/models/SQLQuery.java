@@ -4,12 +4,16 @@ package com.aliyun.ha3engine.models;
 import com.aliyun.tea.*;
 
 public class SQLQuery extends TeaModel {
-    // 搜索主体，不能为空.
+    /**
+     * <p>搜索主体，不能为空.</p>
+     */
     @NameInMap("query")
     @Validation(required = true)
     public String query;
 
-    // cluster部分用于指定要查询的集群的名字。它不仅可以同时指定多个集群，还可以指定到集群中的哪些partition获取结果。
+    /**
+     * <p>cluster部分用于指定要查询的集群的名字。它不仅可以同时指定多个集群，还可以指定到集群中的哪些partition获取结果。</p>
+     */
     @NameInMap("kvpairs")
     public java.util.Map<String, String> kvpairs;
 

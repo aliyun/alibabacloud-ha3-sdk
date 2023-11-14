@@ -4,12 +4,16 @@ package com.aliyun.ha3engine.models;
 import com.aliyun.tea.*;
 
 public class HaQuerySortClause extends TeaModel {
-    // field为要进行统计的字段名，必须配置属性字段
+    /**
+     * <p>field为要进行统计的字段名，必须配置属性字段</p>
+     */
     @NameInMap("sortKey")
     @Validation(required = true)
     public String sortKey;
 
-    // +为按字段值升序排序，-为降序排序
+    /**
+     * <p>+为按字段值升序排序，-为降序排序</p>
+     */
     @NameInMap("sortOrder")
     @Validation(required = true)
     public String sortOrder;
