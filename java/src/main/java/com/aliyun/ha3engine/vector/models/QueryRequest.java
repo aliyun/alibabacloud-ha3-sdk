@@ -31,6 +31,24 @@ public class QueryRequest extends TeaModel {
     public Integer topK;
 
     /**
+     * <p>查询的索引名</p>
+     */
+    @NameInMap("indexName")
+    public String indexName;
+
+    /**
+     * <p>查询的稀疏向量</p>
+     */
+    @NameInMap("sparseData")
+    public SparseData sparseData;
+
+    /**
+     * <p>Query的权重</p>
+     */
+    @NameInMap("weight")
+    public Float weight;
+
+    /**
      * <p>需要向量化的内容</p>
      */
     @NameInMap("content")
@@ -84,6 +102,12 @@ public class QueryRequest extends TeaModel {
     @NameInMap("vectorCount")
     public Integer vectorCount;
 
+    /**
+     * <p>排序表达式</p>
+     */
+    @NameInMap("sort")
+    public String sort;
+
     public static QueryRequest build(java.util.Map<String, ?> map) throws Exception {
         QueryRequest self = new QueryRequest();
         return TeaModel.build(map, self);
@@ -119,6 +143,30 @@ public class QueryRequest extends TeaModel {
     }
     public Integer getTopK() {
         return this.topK;
+    }
+
+    public QueryRequest setIndexName(String indexName) {
+        this.indexName = indexName;
+        return this;
+    }
+    public String getIndexName() {
+        return this.indexName;
+    }
+
+    public QueryRequest setSparseData(SparseData sparseData) {
+        this.sparseData = sparseData;
+        return this;
+    }
+    public SparseData getSparseData() {
+        return this.sparseData;
+    }
+
+    public QueryRequest setWeight(Float weight) {
+        this.weight = weight;
+        return this;
+    }
+    public Float getWeight() {
+        return this.weight;
     }
 
     public QueryRequest setContent(String content) {
@@ -191,6 +239,14 @@ public class QueryRequest extends TeaModel {
     }
     public Integer getVectorCount() {
         return this.vectorCount;
+    }
+
+    public QueryRequest setSort(String sort) {
+        this.sort = sort;
+        return this;
+    }
+    public String getSort() {
+        return this.sort;
     }
 
 }

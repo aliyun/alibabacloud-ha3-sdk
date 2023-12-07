@@ -102,6 +102,49 @@ class SearchResponse(TeaModel):
         return self
 
 
+class SparseData(TeaModel):
+    def __init__(
+        self,
+        count: List[int] = None,
+        indices: List[int] = None,
+        values: List[float] = None,
+    ):
+        # 每个稀疏向量中包含的元素个数
+        self.count = count
+        # 元素下标（需要从小到大排序）
+        self.indices = indices
+        # 元素值（与下标一一对应）
+        self.values = values
+
+    def validate(self):
+        self.validate_required(self.indices, 'indices')
+        self.validate_required(self.values, 'values')
+
+    def to_map(self):
+        _map = super().to_map()
+        if _map is not None:
+            return _map
+
+        result = dict()
+        if self.count is not None:
+            result['count'] = self.count
+        if self.indices is not None:
+            result['indices'] = self.indices
+        if self.values is not None:
+            result['values'] = self.values
+        return result
+
+    def from_map(self, m: dict = None):
+        m = m or dict()
+        if m.get('count') is not None:
+            self.count = m.get('count')
+        if m.get('indices') is not None:
+            self.indices = m.get('indices')
+        if m.get('values') is not None:
+            self.values = m.get('values')
+        return self
+
+
 class QueryRequest(TeaModel):
     def __init__(
         self,
@@ -109,6 +152,9 @@ class QueryRequest(TeaModel):
         vector: List[float] = None,
         namespace: str = None,
         top_k: int = None,
+        index_name: str = None,
+        sparse_data: SparseData = None,
+        weight: float = None,
         content: str = None,
         modal: str = None,
         include_vector: bool = None,
@@ -118,6 +164,7 @@ class QueryRequest(TeaModel):
         filter: str = None,
         score_threshold: float = None,
         vector_count: int = None,
+        sort: str = None,
     ):
         # 数据源名
         self.table_name = table_name
@@ -127,6 +174,12 @@ class QueryRequest(TeaModel):
         self.namespace = namespace
         # 返回个数
         self.top_k = top_k
+        # 查询的索引名
+        self.index_name = index_name
+        # 查询的稀疏向量
+        self.sparse_data = sparse_data
+        # Query的权重
+        self.weight = weight
         # 需要向量化的内容
         self.content = content
         # 使用的模型
@@ -145,10 +198,14 @@ class QueryRequest(TeaModel):
         self.score_threshold = score_threshold
         # vector字段中包含的向量个数
         self.vector_count = vector_count
+        # 排序表达式
+        self.sort = sort
 
     def validate(self):
         self.validate_required(self.table_name, 'table_name')
         self.validate_required(self.vector, 'vector')
+        if self.sparse_data:
+            self.sparse_data.validate()
 
     def to_map(self):
         _map = super().to_map()
@@ -164,6 +221,12 @@ class QueryRequest(TeaModel):
             result['namespace'] = self.namespace
         if self.top_k is not None:
             result['topK'] = self.top_k
+        if self.index_name is not None:
+            result['indexName'] = self.index_name
+        if self.sparse_data is not None:
+            result['sparseData'] = self.sparse_data.to_map()
+        if self.weight is not None:
+            result['weight'] = self.weight
         if self.content is not None:
             result['content'] = self.content
         if self.modal is not None:
@@ -182,6 +245,8 @@ class QueryRequest(TeaModel):
             result['scoreThreshold'] = self.score_threshold
         if self.vector_count is not None:
             result['vectorCount'] = self.vector_count
+        if self.sort is not None:
+            result['sort'] = self.sort
         return result
 
     def from_map(self, m: dict = None):
@@ -194,6 +259,13 @@ class QueryRequest(TeaModel):
             self.namespace = m.get('namespace')
         if m.get('topK') is not None:
             self.top_k = m.get('topK')
+        if m.get('indexName') is not None:
+            self.index_name = m.get('indexName')
+        if m.get('sparseData') is not None:
+            temp_model = SparseData()
+            self.sparse_data = temp_model.from_map(m['sparseData'])
+        if m.get('weight') is not None:
+            self.weight = m.get('weight')
         if m.get('content') is not None:
             self.content = m.get('content')
         if m.get('modal') is not None:
@@ -212,6 +284,8 @@ class QueryRequest(TeaModel):
             self.score_threshold = m.get('scoreThreshold')
         if m.get('vectorCount') is not None:
             self.vector_count = m.get('vectorCount')
+        if m.get('sort') is not None:
+            self.sort = m.get('sort')
         return self
 
 

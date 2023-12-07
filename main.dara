@@ -81,6 +81,9 @@ model QueryRequest {
   vector: [ float ](name='vector', description='向量数据'),
   namespace?: string(name='namespace', description='查询向量的空间'),
   topK?: integer(name='topK', description='返回个数'),
+  indexName?: string(name='indexName', description='查询的索引名'),
+  sparseData?: SparseData(name='sparseData', description='查询的稀疏向量'),
+  weight?: float(name='weight', description='Query的权重'),
   content?: string(name='content', description='需要向量化的内容'),
   modal?: string(name='modal', description='使用的模型'),
   includeVector?: boolean(name='includeVector', description='是否返回文档中的向量信息'),
@@ -89,7 +92,14 @@ model QueryRequest {
   searchParams?: string(name='searchParams', description='查询参数'),
   filter?: string(name='filter', description='过滤表达式'),
   scoreThreshold?: float(name='scoreThreshold', description='分数过滤， 使用欧式距离时，只返回小于scoreThreshold的结果。使用内积时，只返回大于scoreThreshold的结果'),
-  vectorCount?: integer(name='vectorCount', description='vector字段中包含的向量个数')
+  vectorCount?: integer(name='vectorCount', description='vector字段中包含的向量个数'),
+  sort?: string(name='sort', description='排序表达式')
+}
+
+model SparseData {
+  count?: [ integer ](name='count', description='每个稀疏向量中包含的元素个数'),
+  indices: [ long ](name='indices', description='元素下标（需要从小到大排序）'),
+  values: [ float ](name='values', description='元素值（与下标一一对应）')
 }
 
 model MultiQueryRequest {
