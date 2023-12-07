@@ -5,6 +5,7 @@ import (
 	encodeutil "github.com/alibabacloud-go/darabonba-encode-util/client"
 	map_ "github.com/alibabacloud-go/darabonba-map/client"
 	string_ "github.com/alibabacloud-go/darabonba-string/client"
+	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
 )
 
@@ -95,6 +96,12 @@ type QueryRequest struct {
 	Namespace *string `json:"namespace,omitempty" xml:"namespace,omitempty"`
 	// 返回个数
 	TopK *int `json:"topK,omitempty" xml:"topK,omitempty"`
+	// 查询的索引名
+	IndexName *string `json:"indexName,omitempty" xml:"indexName,omitempty"`
+	// 查询的稀疏向量
+	SparseData *SparseData `json:"sparseData,omitempty" xml:"sparseData,omitempty"`
+	// Query的权重
+	Weight *float32 `json:"weight,omitempty" xml:"weight,omitempty"`
 	// 需要向量化的内容
 	Content *string `json:"content,omitempty" xml:"content,omitempty"`
 	// 使用的模型
@@ -113,6 +120,8 @@ type QueryRequest struct {
 	ScoreThreshold *float32 `json:"scoreThreshold,omitempty" xml:"scoreThreshold,omitempty"`
 	// vector字段中包含的向量个数
 	VectorCount *int `json:"vectorCount,omitempty" xml:"vectorCount,omitempty"`
+	// 排序表达式
+	Sort *string `json:"sort,omitempty" xml:"sort,omitempty"`
 }
 
 func (s QueryRequest) String() string {
@@ -140,6 +149,21 @@ func (s *QueryRequest) SetNamespace(v string) *QueryRequest {
 
 func (s *QueryRequest) SetTopK(v int) *QueryRequest {
 	s.TopK = &v
+	return s
+}
+
+func (s *QueryRequest) SetIndexName(v string) *QueryRequest {
+	s.IndexName = &v
+	return s
+}
+
+func (s *QueryRequest) SetSparseData(v *SparseData) *QueryRequest {
+	s.SparseData = v
+	return s
+}
+
+func (s *QueryRequest) SetWeight(v float32) *QueryRequest {
+	s.Weight = &v
 	return s
 }
 
@@ -185,6 +209,43 @@ func (s *QueryRequest) SetScoreThreshold(v float32) *QueryRequest {
 
 func (s *QueryRequest) SetVectorCount(v int) *QueryRequest {
 	s.VectorCount = &v
+	return s
+}
+
+func (s *QueryRequest) SetSort(v string) *QueryRequest {
+	s.Sort = &v
+	return s
+}
+
+type SparseData struct {
+	// 每个稀疏向量中包含的元素个数
+	Count []*int `json:"count,omitempty" xml:"count,omitempty" type:"Repeated"`
+	// 元素下标（需要从小到大排序）
+	Indices []*int64 `json:"indices,omitempty" xml:"indices,omitempty" require:"true" type:"Repeated"`
+	// 元素值（与下标一一对应）
+	Values []*float32 `json:"values,omitempty" xml:"values,omitempty" require:"true" type:"Repeated"`
+}
+
+func (s SparseData) String() string {
+	return tea.Prettify(s)
+}
+
+func (s SparseData) GoString() string {
+	return s.String()
+}
+
+func (s *SparseData) SetCount(v []*int) *SparseData {
+	s.Count = v
+	return s
+}
+
+func (s *SparseData) SetIndices(v []*int64) *SparseData {
+	s.Indices = v
+	return s
+}
+
+func (s *SparseData) SetValues(v []*float32) *SparseData {
+	s.Values = v
 	return s
 }
 
