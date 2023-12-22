@@ -12,6 +12,39 @@
     <groupId>com.aliyun</groupId>
     <artifactId>aliyun-sdk-ha3engine-async-core</artifactId>
     <version>0.0.1</version>
+    <description>Alibaba Cloud Ha3engine Async SDK for Java</description>
+    <url>https://github.com/aliyun/alibabacloud-ha3-sdk</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>aliyunproducts</id>
+            <name>Alibaba Cloud SDK</name>
+            <email>sdk-team@alibabacloud.com</email>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <url/>
+    </scm>
 
     <dependencies>
         <dependency>
