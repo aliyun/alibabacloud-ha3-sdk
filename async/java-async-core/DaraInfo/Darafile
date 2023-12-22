@@ -1,0 +1,30 @@
+{
+  "scope": "alibabacloud",
+  "name": "DarabonbaCore.Ha3engineCore",
+  "version": "0.0.1",
+  "main": "./main.dara",
+  "maintainers": [
+    {
+      "name": "Alibaba Cloud SDK",
+      "email": "sdk-team@alibabacloud.com"
+    }
+  ],
+  "java": {
+    "package": "com.aliyun.sdk.ha3engine.async.core,
+    "className": "BaseClientBuilder",
+    "packageInfo": {
+      "description": "Alibaba Cloud Gateway POP SDK for Java",
+      "url": "https://github.com/aliyun/alibabacloud-java-core",
+      "licenseName": "The Apache License, Version 2.0",
+      "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0.txt",
+      "developerId": "aliyunproducts",
+      "developerName": "Aliyun SDK",
+      "developerEmail": "aliyunsdk@aliyun.com"
+    }
+  },
+  "libraries": {
+  },
+  "releases": {
+    "java": "com.aliyun:aliyun-sdk-ha3engine-async-core:0.0.1"
+  }
+}
