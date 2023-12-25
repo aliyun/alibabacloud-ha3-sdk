@@ -1,7 +1,7 @@
 {
   "scope": "alibabacloud",
   "name": "ha3engine-async",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "./main.dara",
   "libraries": {
     "Util": "darabonba:Util:*",
@@ -24,7 +24,7 @@
     }
   ],
   "releases": {
-    "java": "com.aliyun:aliyun-sdk-ha3engine-async:0.0.1"
+    "java": "com.aliyun:aliyun-sdk-ha3engine-async:1.0.0"
   },
   "java": {
     "package": "com.aliyun.ha3engine.async",
@@ -41,7 +41,7 @@
       "developerEmail": "sdk-team@alibabacloud.com",
       "groupId": "com.aliyun",
       "artifactId": "aliyun-sdk-ha3engine-async",
-      "version": "0.0.1"
+      "version": "1.0.0"
     }
   }
 }
