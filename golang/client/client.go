@@ -264,6 +264,8 @@ type MultiQueryRequest struct {
 	Order *string `json:"order,omitempty" xml:"order,omitempty"`
 	// 过滤表达式
 	Filter *string `json:"filter,omitempty" xml:"filter,omitempty"`
+	// 排序表达式
+	Sort *string `json:"sort,omitempty" xml:"sort,omitempty"`
 }
 
 func (s MultiQueryRequest) String() string {
@@ -309,11 +311,28 @@ func (s *MultiQueryRequest) SetFilter(v string) *MultiQueryRequest {
 	return s
 }
 
+func (s *MultiQueryRequest) SetSort(v string) *MultiQueryRequest {
+	s.Sort = &v
+	return s
+}
+
 type FetchRequest struct {
 	// 数据源名
 	TableName *string `json:"tableName,omitempty" xml:"tableName,omitempty" require:"true"`
-	// 主键列表
-	Ids []*string `json:"ids,omitempty" xml:"ids,omitempty" require:"true" type:"Repeated"`
+	// 主键列表，如果传了主键列表，下面的条件参数不生效
+	Ids []*string `json:"ids,omitempty" xml:"ids,omitempty" type:"Repeated"`
+	// 过滤表达式
+	Filter *string `json:"filter,omitempty" xml:"filter,omitempty"`
+	// 排序表达式
+	Sort *string `json:"sort,omitempty" xml:"sort,omitempty"`
+	// 返回的数据个数
+	Limit *int `json:"limit,omitempty" xml:"limit,omitempty"`
+	// 返回的数据开始下标，用于翻页
+	Offset *int `json:"offset,omitempty" xml:"offset,omitempty"`
+	// 是否返回向量数据
+	IncludeVector *bool `json:"includeVector,omitempty" xml:"includeVector,omitempty"`
+	// 需要返回的字段，不指定默认返回所有的字段
+	OutputFields []*string `json:"outputFields,omitempty" xml:"outputFields,omitempty" type:"Repeated"`
 }
 
 func (s FetchRequest) String() string {
@@ -331,6 +350,36 @@ func (s *FetchRequest) SetTableName(v string) *FetchRequest {
 
 func (s *FetchRequest) SetIds(v []*string) *FetchRequest {
 	s.Ids = v
+	return s
+}
+
+func (s *FetchRequest) SetFilter(v string) *FetchRequest {
+	s.Filter = &v
+	return s
+}
+
+func (s *FetchRequest) SetSort(v string) *FetchRequest {
+	s.Sort = &v
+	return s
+}
+
+func (s *FetchRequest) SetLimit(v int) *FetchRequest {
+	s.Limit = &v
+	return s
+}
+
+func (s *FetchRequest) SetOffset(v int) *FetchRequest {
+	s.Offset = &v
+	return s
+}
+
+func (s *FetchRequest) SetIncludeVector(v bool) *FetchRequest {
+	s.IncludeVector = &v
+	return s
+}
+
+func (s *FetchRequest) SetOutputFields(v []*string) *FetchRequest {
+	s.OutputFields = v
 	return s
 }
 

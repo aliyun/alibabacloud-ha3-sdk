@@ -299,6 +299,7 @@ class MultiQueryRequest(TeaModel):
         output_fields: List[str] = None,
         order: str = None,
         filter: str = None,
+        sort: str = None,
     ):
         # 数据源名
         self.table_name = table_name
@@ -314,6 +315,8 @@ class MultiQueryRequest(TeaModel):
         self.order = order
         # 过滤表达式
         self.filter = filter
+        # 排序表达式
+        self.sort = sort
 
     def validate(self):
         self.validate_required(self.table_name, 'table_name')
@@ -345,6 +348,8 @@ class MultiQueryRequest(TeaModel):
             result['order'] = self.order
         if self.filter is not None:
             result['filter'] = self.filter
+        if self.sort is not None:
+            result['sort'] = self.sort
         return result
 
     def from_map(self, m: dict = None):
@@ -366,6 +371,8 @@ class MultiQueryRequest(TeaModel):
             self.order = m.get('order')
         if m.get('filter') is not None:
             self.filter = m.get('filter')
+        if m.get('sort') is not None:
+            self.sort = m.get('sort')
         return self
 
 
@@ -374,15 +381,32 @@ class FetchRequest(TeaModel):
         self,
         table_name: str = None,
         ids: List[str] = None,
+        filter: str = None,
+        sort: str = None,
+        limit: int = None,
+        offset: int = None,
+        include_vector: bool = None,
+        output_fields: List[str] = None,
     ):
         # 数据源名
         self.table_name = table_name
-        # 主键列表
+        # 主键列表，如果传了主键列表，下面的条件参数不生效
         self.ids = ids
+        # 过滤表达式
+        self.filter = filter
+        # 排序表达式
+        self.sort = sort
+        # 返回的数据个数
+        self.limit = limit
+        # 返回的数据开始下标，用于翻页
+        self.offset = offset
+        # 是否返回向量数据
+        self.include_vector = include_vector
+        # 需要返回的字段，不指定默认返回所有的字段
+        self.output_fields = output_fields
 
     def validate(self):
         self.validate_required(self.table_name, 'table_name')
-        self.validate_required(self.ids, 'ids')
 
     def to_map(self):
         _map = super().to_map()
@@ -394,6 +418,18 @@ class FetchRequest(TeaModel):
             result['tableName'] = self.table_name
         if self.ids is not None:
             result['ids'] = self.ids
+        if self.filter is not None:
+            result['filter'] = self.filter
+        if self.sort is not None:
+            result['sort'] = self.sort
+        if self.limit is not None:
+            result['limit'] = self.limit
+        if self.offset is not None:
+            result['offset'] = self.offset
+        if self.include_vector is not None:
+            result['includeVector'] = self.include_vector
+        if self.output_fields is not None:
+            result['outputFields'] = self.output_fields
         return result
 
     def from_map(self, m: dict = None):
@@ -402,6 +438,18 @@ class FetchRequest(TeaModel):
             self.table_name = m.get('tableName')
         if m.get('ids') is not None:
             self.ids = m.get('ids')
+        if m.get('filter') is not None:
+            self.filter = m.get('filter')
+        if m.get('sort') is not None:
+            self.sort = m.get('sort')
+        if m.get('limit') is not None:
+            self.limit = m.get('limit')
+        if m.get('offset') is not None:
+            self.offset = m.get('offset')
+        if m.get('includeVector') is not None:
+            self.include_vector = m.get('includeVector')
+        if m.get('outputFields') is not None:
+            self.output_fields = m.get('outputFields')
         return self
 
 

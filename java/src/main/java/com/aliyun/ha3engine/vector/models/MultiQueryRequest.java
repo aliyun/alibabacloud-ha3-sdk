@@ -48,6 +48,12 @@ public class MultiQueryRequest extends TeaModel {
     @NameInMap("filter")
     public String filter;
 
+    /**
+     * <p>排序表达式</p>
+     */
+    @NameInMap("sort")
+    public String sort;
+
     public static MultiQueryRequest build(java.util.Map<String, ?> map) throws Exception {
         MultiQueryRequest self = new MultiQueryRequest();
         return TeaModel.build(map, self);
@@ -107,6 +113,14 @@ public class MultiQueryRequest extends TeaModel {
     }
     public String getFilter() {
         return this.filter;
+    }
+
+    public MultiQueryRequest setSort(String sort) {
+        this.sort = sort;
+        return this;
+    }
+    public String getSort() {
+        return this.sort;
     }
 
 }
