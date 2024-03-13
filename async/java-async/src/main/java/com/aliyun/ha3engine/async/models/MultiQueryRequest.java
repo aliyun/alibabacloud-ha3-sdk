@@ -45,6 +45,10 @@ public class MultiQueryRequest extends Request {
     @NameInMap("filter")
     private String filter;
 
+    @Body
+    @NameInMap("sort")
+    private String sort;
+
     private MultiQueryRequest(Builder builder) {
         super(builder);
         this.tableName = builder.tableName;
@@ -54,6 +58,7 @@ public class MultiQueryRequest extends Request {
         this.outputFields = builder.outputFields;
         this.order = builder.order;
         this.filter = builder.filter;
+        this.sort = builder.sort;
     }
 
     public static Builder builder() {
@@ -118,6 +123,13 @@ public class MultiQueryRequest extends Request {
         return this.filter;
     }
 
+    /**
+     * @return sort
+     */
+    public String getSort() {
+        return sort;
+    }
+
     public static final class Builder extends Request.Builder<MultiQueryRequest, Builder> {
         private String tableName; 
         private java.util.List < QueryRequest > queries; 
@@ -125,7 +137,8 @@ public class MultiQueryRequest extends Request {
         private Boolean includeVector; 
         private java.util.List < String > outputFields; 
         private String order; 
-        private String filter; 
+        private String filter;
+        private String sort;
 
         private Builder() {
             super();
@@ -140,6 +153,7 @@ public class MultiQueryRequest extends Request {
             this.outputFields = request.outputFields;
             this.order = request.order;
             this.filter = request.filter;
+            this.sort = request.sort;
         } 
 
         /**
@@ -202,6 +216,15 @@ public class MultiQueryRequest extends Request {
         public Builder filter(String filter) {
             this.putBodyParameter("filter", filter);
             this.filter = filter;
+            return this;
+        }
+
+        /**
+         * 排序表达式
+         */
+        public Builder sort(String sort) {
+            this.putBodyParameter("sort", sort);
+            this.sort = sort;
             return this;
         }
 
