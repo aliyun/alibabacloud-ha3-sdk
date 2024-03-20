@@ -828,7 +828,7 @@ func (client *Client) GetRealmSignStr(accessUserName *string, accessPassWord *st
 	return _result
 }
 
-func (client *Client) BuildHaSearchQuery(haquery *HaQuery) (_result *string) {
+func (client *Client) BuildHaSearchQuery(haquery *HaQuery) (_result *string, _err error) {
 	if tea.BoolValue(util.IsUnset(haquery.Query)) {
 		_err = tea.NewSDKError(map[string]interface{}{
 			"name":    "ParameterMissing",
@@ -838,7 +838,11 @@ func (client *Client) BuildHaSearchQuery(haquery *HaQuery) (_result *string) {
 	}
 
 	tempString := tea.String("query=" + tea.StringValue(haquery.Query))
-	configStr := client.BuildHaQueryconfigClauseStr(haquery.Config)
+	configStr, _err := client.BuildHaQueryconfigClauseStr(haquery.Config)
+	if _err != nil {
+		return _result, _err
+	}
+
 	tempString = tea.String(tea.StringValue(tempString) + "&&cluster=" + tea.StringValue(util.DefaultString(haquery.Cluster, tea.String("general"))))
 	tempString = tea.String(tea.StringValue(tempString) + "&&config=" + tea.StringValue(configStr))
 	if !tea.BoolValue(util.IsUnset(haquery.Filter)) {
@@ -871,7 +875,11 @@ func (client *Client) BuildHaSearchQuery(haquery *HaQuery) (_result *string) {
 	}
 
 	if !tea.BoolValue(util.IsUnset(haquery.Aggregate)) {
-		aggregateClauseStr := client.BuildHaQueryAggregateClauseStr(haquery.Aggregate)
+		aggregateClauseStr, _err := client.BuildHaQueryAggregateClauseStr(haquery.Aggregate)
+		if _err != nil {
+			return _result, _err
+		}
+
 		if !tea.BoolValue(util.Empty(aggregateClauseStr)) {
 			tempString = tea.String(tea.StringValue(tempString) + "&&aggregate=" + tea.StringValue(aggregateClauseStr))
 		}
@@ -879,7 +887,11 @@ func (client *Client) BuildHaSearchQuery(haquery *HaQuery) (_result *string) {
 	}
 
 	if !tea.BoolValue(util.IsUnset(haquery.Distinct)) {
-		distinctClauseStr := client.BuildHaQueryDistinctClauseStr(haquery.Distinct)
+		distinctClauseStr, _err := client.BuildHaQueryDistinctClauseStr(haquery.Distinct)
+		if _err != nil {
+			return _result, _err
+		}
+
 		if !tea.BoolValue(util.Empty(distinctClauseStr)) {
 			tempString = tea.String(tea.StringValue(tempString) + "&&distinct=" + tea.StringValue(distinctClauseStr))
 		}
@@ -892,10 +904,10 @@ func (client *Client) BuildHaSearchQuery(haquery *HaQuery) (_result *string) {
 	}
 
 	_result = tempString
-	return _result
+	return _result, _err
 }
 
-func (client *Client) BuildHaQueryAggregateClauseStr(Clause []*HaQueryAggregateClause) (_result *string) {
+func (client *Client) BuildHaQueryAggregateClauseStr(Clause []*HaQueryAggregateClause) (_result *string, _err error) {
 	tempClauseString := tea.String("")
 	for _, AggregateClause := range Clause {
 		tempAggregateClauseString := tea.String("")
@@ -946,10 +958,10 @@ func (client *Client) BuildHaQueryAggregateClauseStr(Clause []*HaQueryAggregateC
 
 	}
 	_result = tempClauseString
-	return _result
+	return _result, _err
 }
 
-func (client *Client) BuildHaQueryDistinctClauseStr(Clause []*HaQueryDistinctClause) (_result *string) {
+func (client *Client) BuildHaQueryDistinctClauseStr(Clause []*HaQueryDistinctClause) (_result *string, _err error) {
 	tempClauseString := tea.String("")
 	for _, DistinctClause := range Clause {
 		tempDistinctClauseString := tea.String("")
@@ -1004,7 +1016,7 @@ func (client *Client) BuildHaQueryDistinctClauseStr(Clause []*HaQueryDistinctCla
 
 	}
 	_result = tempClauseString
-	return _result
+	return _result, _err
 }
 
 func (client *Client) BuildHaQuerySortClauseStr(Clause []*HaQuerySortClause) (_result *string) {
@@ -1029,7 +1041,7 @@ func (client *Client) BuildHaQuerySortClauseStr(Clause []*HaQuerySortClause) (_r
 	return _result
 }
 
-func (client *Client) BuildHaQueryconfigClauseStr(Clause *HaQueryconfigClause) (_result *string) {
+func (client *Client) BuildHaQueryconfigClauseStr(Clause *HaQueryconfigClause) (_result *string, _err error) {
 	tempClauseString := tea.String("")
 	if tea.BoolValue(util.IsUnset(Clause)) {
 		_err = tea.NewSDKError(map[string]interface{}{
@@ -1072,10 +1084,10 @@ func (client *Client) BuildHaQueryconfigClauseStr(Clause *HaQueryconfigClause) (
 	}
 
 	_result = tempClauseString
-	return _result
+	return _result, _err
 }
 
-func (client *Client) BuildSQLSearchQuery(sqlquery *SQLQuery) (_result *string) {
+func (client *Client) BuildSQLSearchQuery(sqlquery *SQLQuery) (_result *string, _err error) {
 	if tea.BoolValue(util.IsUnset(sqlquery.Query)) {
 		_err = tea.NewSDKError(map[string]interface{}{
 			"name":    "ParameterMissing",
@@ -1091,7 +1103,7 @@ func (client *Client) BuildSQLSearchQuery(sqlquery *SQLQuery) (_result *string) 
 	}
 
 	_result = tempString
-	return _result
+	return _result, _err
 }
 
 func (client *Client) BuildSearcKvPairClauseStr(kvPair map[string]*string, separator *string) (_result *string) {
