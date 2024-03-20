@@ -3,7 +3,6 @@ package client
 
 import (
 	encodeutil "github.com/alibabacloud-go/darabonba-encode-util/client"
-	map_ "github.com/alibabacloud-go/darabonba-map/client"
 	string_ "github.com/alibabacloud-go/darabonba-string/client"
 	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
