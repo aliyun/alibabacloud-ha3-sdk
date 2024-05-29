@@ -155,7 +155,7 @@ public final class DefaultAsyncClient implements AsyncClient {
     @Override
     public CompletableFuture<PushDocumentsResponse> pushDocuments(String dataSourceName, String keyField, PushDocumentsRequest request) {
         try {
-            Map<String, String> headers = new HashMap<>();
+            Map<String, String> headers = null == request.getHeaders() || request.getHeaders().isEmpty() ? new HashMap<>() : request.getHeaders();
             headers.put("X-Opensearch-Swift-PK-Field", keyField);
             PushDocumentsRequest build = request.toBuilder().headers(headers).body(request.getBody()).build();
             TeaRequest teaRequest = REQUEST.copy()
