@@ -631,8 +631,11 @@ public class Client {
      * 支持新增、更新、删除 等操作，以及对应批量操作
      */
     public PushDocumentsResponseModel pushDocuments(String dataSourceName, String keyField, PushDocumentsRequestModel request) throws Exception {
-        request.headers = TeaConverter.buildMap(
-            new TeaPair("X-Opensearch-Swift-PK-Field", keyField)
+        request.headers = TeaConverter.merge(String.class,
+            TeaConverter.buildMap(
+                new TeaPair("X-Opensearch-Swift-PK-Field", keyField)
+            ),
+            request.headers
         );
         return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, this.buildRuntimeOptions()), new PushDocumentsResponseModel());
     }
