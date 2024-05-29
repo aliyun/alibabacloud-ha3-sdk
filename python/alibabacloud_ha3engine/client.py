@@ -491,6 +491,48 @@ class Client:
             temp_string = f'{temp_string}&&kvpairs={kvpairs}'
         return temp_string
 
+    async def build_ha_search_query_async(
+        self,
+        haquery: ha_3engine_models.HaQuery,
+    ) -> str:
+        if UtilClient.is_unset(haquery.query):
+            raise TeaException({
+                'name': 'ParameterMissing',
+                'message': "'HaQuery.query' can not be unset"
+            })
+        temp_string = f'query={haquery.query}'
+        config_str = await self.build_ha_queryconfig_clause_str_async(haquery.config)
+        temp_string = f"{temp_string}&&cluster={UtilClient.default_string(haquery.cluster, 'general')}"
+        temp_string = f'{temp_string}&&config={config_str}'
+        if not UtilClient.is_unset(haquery.filter):
+            filter_str = haquery.filter
+            if not UtilClient.empty(filter_str):
+                field_value_trimed = StringClient.trim(filter_str)
+                temp_string = f'{temp_string}&&filter={field_value_trimed}'
+        if not UtilClient.is_unset(haquery.custom_query):
+            for key_field in MapClient.key_set(haquery.custom_query):
+                field_value = haquery.custom_query.get(key_field)
+                if not UtilClient.empty(field_value):
+                    field_value_trimed = StringClient.trim(field_value)
+                    key_field_trimed = StringClient.trim(key_field)
+                    temp_string = f'{temp_string}&&{key_field_trimed}={field_value_trimed}'
+        if not UtilClient.is_unset(haquery.sort):
+            sort_str = self.build_ha_query_sort_clause_str(haquery.sort)
+            if not UtilClient.empty(sort_str):
+                temp_string = f'{temp_string}&&sort={sort_str}'
+        if not UtilClient.is_unset(haquery.aggregate):
+            aggregate_clause_str = await self.build_ha_query_aggregate_clause_str_async(haquery.aggregate)
+            if not UtilClient.empty(aggregate_clause_str):
+                temp_string = f'{temp_string}&&aggregate={aggregate_clause_str}'
+        if not UtilClient.is_unset(haquery.distinct):
+            distinct_clause_str = await self.build_ha_query_distinct_clause_str_async(haquery.distinct)
+            if not UtilClient.empty(distinct_clause_str):
+                temp_string = f'{temp_string}&&distinct={distinct_clause_str}'
+        kvpairs = self.build_searc_kv_pair_clause_str(haquery.kvpairs, ',')
+        if not UtilClient.empty(kvpairs):
+            temp_string = f'{temp_string}&&kvpairs={kvpairs}'
+        return temp_string
+
     def build_ha_query_aggregate_clause_str(
         self,
         clause: List[ha_3engine_models.HaQueryAggregateClause],
@@ -528,7 +570,83 @@ class Client:
                 temp_clause_string = f'{temp_aggregate_clause_string}'
         return temp_clause_string
 
+    async def build_ha_query_aggregate_clause_str_async(
+        self,
+        clause: List[ha_3engine_models.HaQueryAggregateClause],
+    ) -> str:
+        temp_clause_string = ''
+        for aggregate_clause in clause:
+            temp_aggregate_clause_string = ''
+            if UtilClient.is_unset(aggregate_clause.group_key) or UtilClient.is_unset(aggregate_clause.agg_fun):
+                raise TeaException({
+                    'name': 'ParameterMissing',
+                    'message': "'HaQueryAggregateClause.groupKey/aggFun' can not be unset"
+                })
+            if not UtilClient.empty(aggregate_clause.group_key) and not UtilClient.empty(aggregate_clause.agg_fun):
+                group_key_trimed = StringClient.trim(aggregate_clause.group_key)
+                agg_fun_trimed = StringClient.trim(aggregate_clause.agg_fun)
+                temp_aggregate_clause_string = f'group_key:{group_key_trimed},agg_fun:{agg_fun_trimed}'
+            if not UtilClient.empty(aggregate_clause.range):
+                range_trimed = StringClient.trim(aggregate_clause.range)
+                temp_aggregate_clause_string = f'{temp_aggregate_clause_string},range:{range_trimed}'
+            if not UtilClient.empty(aggregate_clause.max_group):
+                max_group_trimed = StringClient.trim(aggregate_clause.max_group)
+                temp_aggregate_clause_string = f'{temp_aggregate_clause_string},max_group:{max_group_trimed}'
+            if not UtilClient.empty(aggregate_clause.agg_filter):
+                agg_filter_trimed = StringClient.trim(aggregate_clause.agg_filter)
+                temp_aggregate_clause_string = f'{temp_aggregate_clause_string},agg_filter:{agg_filter_trimed}'
+            if not UtilClient.empty(aggregate_clause.agg_sampler_thres_hold):
+                agg_sampler_thres_hold_trimed = StringClient.trim(aggregate_clause.agg_sampler_thres_hold)
+                temp_aggregate_clause_string = f'{temp_aggregate_clause_string},agg_sampler_threshold:{agg_sampler_thres_hold_trimed}'
+            if not UtilClient.empty(aggregate_clause.agg_sampler_step):
+                agg_sampler_step_trimed = StringClient.trim(aggregate_clause.agg_sampler_step)
+                temp_aggregate_clause_string = f'{temp_aggregate_clause_string},agg_sampler_step:{agg_sampler_step_trimed}'
+            if not UtilClient.empty(temp_clause_string):
+                temp_clause_string = f'{temp_clause_string};{temp_aggregate_clause_string}'
+            else:
+                temp_clause_string = f'{temp_aggregate_clause_string}'
+        return temp_clause_string
+
     def build_ha_query_distinct_clause_str(
+        self,
+        clause: List[ha_3engine_models.HaQueryDistinctClause],
+    ) -> str:
+        temp_clause_string = ''
+        for distinct_clause in clause:
+            temp_distinct_clause_string = ''
+            if UtilClient.is_unset(distinct_clause.dist_key):
+                raise TeaException({
+                    'name': 'ParameterMissing',
+                    'message': "'HaQueryDistinctClause.distKey' can not be unset"
+                })
+            if not UtilClient.empty(distinct_clause.dist_key):
+                dist_key_trimed = StringClient.trim(distinct_clause.dist_key)
+                temp_distinct_clause_string = f'dist_key:{dist_key_trimed}'
+            if not UtilClient.empty(distinct_clause.dist_count):
+                dist_count_trimed = StringClient.trim(distinct_clause.dist_count)
+                temp_distinct_clause_string = f'{temp_distinct_clause_string},dist_count:{dist_count_trimed}'
+            if not UtilClient.empty(distinct_clause.dist_times):
+                dist_times_trimed = StringClient.trim(distinct_clause.dist_times)
+                temp_distinct_clause_string = f'{temp_distinct_clause_string},dist_times:{dist_times_trimed}'
+            if not UtilClient.empty(distinct_clause.reserved):
+                reserved_trimed = StringClient.trim(distinct_clause.reserved)
+                temp_distinct_clause_string = f'{temp_distinct_clause_string},reserved:{reserved_trimed}'
+            if not UtilClient.empty(distinct_clause.dist_filter):
+                dist_filter_trimed = StringClient.trim(distinct_clause.dist_filter)
+                temp_distinct_clause_string = f'{temp_distinct_clause_string},dist_filter:{dist_filter_trimed}'
+            if not UtilClient.empty(distinct_clause.update_total_hit):
+                update_total_hit_trimed = StringClient.trim(distinct_clause.update_total_hit)
+                temp_distinct_clause_string = f'{temp_distinct_clause_string},update_total_hit:{update_total_hit_trimed}'
+            if not UtilClient.empty(distinct_clause.grade):
+                grade_trimed = StringClient.trim(distinct_clause.grade)
+                temp_distinct_clause_string = f'{temp_distinct_clause_string},grade:{grade_trimed}'
+            if not UtilClient.empty(temp_clause_string):
+                temp_clause_string = f'{temp_clause_string};{temp_distinct_clause_string}'
+            else:
+                temp_clause_string = f'{temp_distinct_clause_string}'
+        return temp_clause_string
+
+    async def build_ha_query_distinct_clause_str_async(
         self,
         clause: List[ha_3engine_models.HaQueryDistinctClause],
     ) -> str:
@@ -614,7 +732,53 @@ class Client:
                         temp_clause_string = f'{key_field_trimed}:{field_value_trimed}'
         return temp_clause_string
 
+    async def build_ha_queryconfig_clause_str_async(
+        self,
+        clause: ha_3engine_models.HaQueryconfigClause,
+    ) -> str:
+        temp_clause_string = ''
+        if UtilClient.is_unset(clause):
+            raise TeaException({
+                'name': 'ParameterMissing',
+                'message': "'HaQueryconfigClause' can not be unset"
+            })
+        if UtilClient.is_unset(clause.start):
+            clause.start = None
+        if UtilClient.is_unset(clause.hit):
+            clause.hit = None
+        if UtilClient.is_unset(clause.format):
+            clause.format = None
+        temp_clause_string = f"start:{UtilClient.default_string(clause.start, '0')}"
+        temp_clause_string = f"{temp_clause_string},hit:{UtilClient.default_string(clause.hit, '10')}"
+        temp_clause_string = f"{temp_clause_string},format:{StringClient.to_lower(UtilClient.default_string(clause.format, 'json'))}"
+        if not UtilClient.is_unset(clause.custom_config):
+            for key_field in MapClient.key_set(clause.custom_config):
+                field_value = clause.custom_config.get(key_field)
+                if not UtilClient.empty(field_value):
+                    field_value_trimed = StringClient.trim(field_value)
+                    key_field_trimed = StringClient.trim(key_field)
+                    if not UtilClient.empty(temp_clause_string):
+                        temp_clause_string = f'{temp_clause_string},{key_field_trimed}:{field_value_trimed}'
+                    else:
+                        temp_clause_string = f'{key_field_trimed}:{field_value_trimed}'
+        return temp_clause_string
+
     def build_sqlsearch_query(
+        self,
+        sqlquery: ha_3engine_models.SQLQuery,
+    ) -> str:
+        if UtilClient.is_unset(sqlquery.query):
+            raise TeaException({
+                'name': 'ParameterMissing',
+                'message': "'SQLQuery.query' can not be unset"
+            })
+        temp_string = f'query={sqlquery.query}'
+        kvpairs = self.build_searc_kv_pair_clause_str(sqlquery.kvpairs, ';')
+        if not UtilClient.empty(kvpairs):
+            temp_string = f'{temp_string}&&kvpair={kvpairs}'
+        return temp_string
+
+    async def build_sqlsearch_query_async(
         self,
         sqlquery: ha_3engine_models.SQLQuery,
     ) -> str:
@@ -817,9 +981,9 @@ class Client:
         """
         支持新增、更新、删除 等操作，以及对应批量操作
         """
-        request.headers = {
+        request.headers = TeaCore.merge({
             'X-Opensearch-Swift-PK-Field': key_field
-        }
+        }, request.headers)
         return TeaCore.from_map(
             ha_3engine_models.PushDocumentsResponseModel(),
             self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self.build_runtime_options())
@@ -834,9 +998,9 @@ class Client:
         """
         支持新增、更新、删除 等操作，以及对应批量操作
         """
-        request.headers = {
+        request.headers = TeaCore.merge({
             'X-Opensearch-Swift-PK-Field': key_field
-        }
+        }, request.headers)
         return TeaCore.from_map(
             ha_3engine_models.PushDocumentsResponseModel(),
             await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, await self.build_runtime_options_async())

@@ -69,7 +69,7 @@ function getRealmSignStr(accessUserName: string, accessPassWord: string): string
   return EncodeUtil.base64EncodeToString(String.toBytes(realmStr, 'UTF-8'));
 }
 
-function buildHaSearchQuery(haquery: HaQuery): string {
+async function buildHaSearchQuery(haquery: HaQuery): string {
   if (Util.isUnset(haquery.query)) {
     throw {
       name = 'ParameterMissing',
@@ -133,7 +133,7 @@ function buildHaSearchQuery(haquery: HaQuery): string {
   return tempString;
 }
 
-function buildHaQueryAggregateClauseStr(Clause: [ HaQueryAggregateClause ]): string {
+async function buildHaQueryAggregateClauseStr(Clause: [ HaQueryAggregateClause ]): string {
   var tempClauseString: string = '';
   for (var AggregateClause : Clause) {
     var tempAggregateClauseString: string = '';
@@ -185,7 +185,7 @@ function buildHaQueryAggregateClauseStr(Clause: [ HaQueryAggregateClause ]): str
 }
 
 
-function buildHaQueryDistinctClauseStr(Clause: [ HaQueryDistinctClause ]): string {
+async function buildHaQueryDistinctClauseStr(Clause: [ HaQueryDistinctClause ]): string {
   var tempClauseString: string = '';
   for (var DistinctClause : Clause) {
     var tempDistinctClauseString: string = '';
@@ -259,7 +259,7 @@ function buildHaQuerySortClauseStr(Clause: [ HaQuerySortClause ]): string {
   return tempClauseString;
 }
 
-function buildHaQueryconfigClauseStr(Clause: HaQueryconfigClause): string {
+async function buildHaQueryconfigClauseStr(Clause: HaQueryconfigClause): string {
   var tempClauseString: string = '';
 
   if (Util.isUnset(Clause)) {
@@ -300,7 +300,7 @@ function buildHaQueryconfigClauseStr(Clause: HaQueryconfigClause): string {
   return tempClauseString;
 }
 
-function buildSQLSearchQuery(sqlquery: SQLQuery): string {
+async function buildSQLSearchQuery(sqlquery: SQLQuery): string {
   if (Util.isUnset(sqlquery.query)) {
     throw {
       name = 'ParameterMissing',
@@ -474,7 +474,8 @@ model PushDocumentsResponseModel {
  */
 async function pushDocuments(dataSourceName: string, keyField: string, request: PushDocumentsRequestModel): PushDocumentsResponseModel {
   request.headers = {
-    X-Opensearch-Swift-PK-Field = keyField
+    X-Opensearch-Swift-PK-Field = keyField,
+    ...request.headers
   };
   return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, buildRuntimeOptions());
 }
