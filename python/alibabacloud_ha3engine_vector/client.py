@@ -398,9 +398,9 @@ class Client:
         """
         支持新增、更新、删除 等操作，以及对应批量操作
         """
-        request.headers = {
+        request.headers = TeaCore.merge({
             'X-Opensearch-Swift-PK-Field': key_field
-        }
+        }, request.headers)
         return TeaCore.from_map(
             ha_3engine_vector_models.PushDocumentsResponse(),
             self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self.build_runtime_options())
@@ -415,9 +415,9 @@ class Client:
         """
         支持新增、更新、删除 等操作，以及对应批量操作
         """
-        request.headers = {
+        request.headers = TeaCore.merge({
             'X-Opensearch-Swift-PK-Field': key_field
-        }
+        }, request.headers)
         return TeaCore.from_map(
             ha_3engine_vector_models.PushDocumentsResponse(),
             await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, await self.build_runtime_options_async())

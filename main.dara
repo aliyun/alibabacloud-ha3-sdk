@@ -1,7 +1,6 @@
 import Util;
 import String;
 import EncodeUtil;
-import Map;
 
 type @endpoint = string
 type @instanceId = string
@@ -176,7 +175,8 @@ model PushDocumentsResponse {
  */
 async function pushDocuments(dataSourceName: string, keyField: string, request: PushDocumentsRequest): PushDocumentsResponse {
   request.headers = {
-    X-Opensearch-Swift-PK-Field = keyField
+    X-Opensearch-Swift-PK-Field = keyField,
+    ...request.headers
   };
   return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, buildRuntimeOptions());
 }

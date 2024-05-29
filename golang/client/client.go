@@ -594,32 +594,32 @@ func (client *Client) _request(method *string, pathname *string, query map[strin
 	return _resp, _err
 }
 
-/**
- * 设置Client UA 配置.
- */
+// Description:
+//
+// 设置Client UA 配置.
 func (client *Client) SetUserAgent(userAgent *string) {
 	client.UserAgent = userAgent
 }
 
-/**
- * 添加Client UA 配置.
- */
+// Description:
+//
+// 添加Client UA 配置.
 func (client *Client) AppendUserAgent(userAgent *string) {
 	client.UserAgent = tea.String(tea.StringValue(client.UserAgent) + " " + tea.StringValue(userAgent))
 }
 
-/**
- * 获取Client 配置 UA 配置.
- */
+// Description:
+//
+// 获取Client 配置 UA 配置.
 func (client *Client) GetUserAgent() (_result *string) {
 	userAgent := util.GetUserAgent(client.UserAgent)
 	_result = userAgent
 	return _result
 }
 
-/**
- * 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
- */
+// Description:
+//
+// 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
 func (client *Client) GetRealmSignStr(accessUserName *string, accessPassWord *string) (_result *string) {
 	accessUserNameStr := string_.Trim(accessUserName)
 	accessPassWordStr := string_.Trim(accessPassWord)
@@ -629,9 +629,9 @@ func (client *Client) GetRealmSignStr(accessUserName *string, accessPassWord *st
 	return _result
 }
 
-/**
- * 向量查询
- */
+// Description:
+//
+// 向量查询
 func (client *Client) Query(request *QueryRequest) (_result *SearchResponse, _err error) {
 	_result = &SearchResponse{}
 	buildRuntimeOptionsTmp, err := client.BuildRuntimeOptions()
@@ -647,9 +647,9 @@ func (client *Client) Query(request *QueryRequest) (_result *SearchResponse, _er
 	return _result, _err
 }
 
-/**
- * 向量预测查询
- */
+// Description:
+//
+// 向量预测查询
 func (client *Client) InferenceQuery(request *QueryRequest) (_result *SearchResponse, _err error) {
 	_result = &SearchResponse{}
 	buildRuntimeOptionsTmp, err := client.BuildRuntimeOptions()
@@ -665,9 +665,9 @@ func (client *Client) InferenceQuery(request *QueryRequest) (_result *SearchResp
 	return _result, _err
 }
 
-/**
- * 多namespace查询
- */
+// Description:
+//
+// 多namespace查询
 func (client *Client) MultiQuery(request *MultiQueryRequest) (_result *SearchResponse, _err error) {
 	_result = &SearchResponse{}
 	buildRuntimeOptionsTmp, err := client.BuildRuntimeOptions()
@@ -683,9 +683,9 @@ func (client *Client) MultiQuery(request *MultiQueryRequest) (_result *SearchRes
 	return _result, _err
 }
 
-/**
- * 查询数据
- */
+// Description:
+//
+// 查询数据
 func (client *Client) Fetch(request *FetchRequest) (_result *SearchResponse, _err error) {
 	_result = &SearchResponse{}
 	buildRuntimeOptionsTmp, err := client.BuildRuntimeOptions()
@@ -701,9 +701,9 @@ func (client *Client) Fetch(request *FetchRequest) (_result *SearchResponse, _er
 	return _result, _err
 }
 
-/**
- * 文档统计
- */
+// Description:
+//
+// 文档统计
 func (client *Client) Stats(tableName *string) (_result *SearchResponse, _err error) {
 	body := map[string]interface{}{
 		"tableName": tea.StringValue(tableName),
@@ -722,13 +722,13 @@ func (client *Client) Stats(tableName *string) (_result *SearchResponse, _err er
 	return _result, _err
 }
 
-/**
- * 支持新增、更新、删除 等操作，以及对应批量操作
- */
+// Description:
+//
+// 支持新增、更新、删除 等操作，以及对应批量操作
 func (client *Client) PushDocuments(dataSourceName *string, keyField *string, request *PushDocumentsRequest) (_result *PushDocumentsResponse, _err error) {
-	request.Headers = map[string]*string{
+	request.Headers = tea.Merge(map[string]*string{
 		"X-Opensearch-Swift-PK-Field": keyField,
-	}
+	}, request.Headers)
 	_result = &PushDocumentsResponse{}
 	buildRuntimeOptionsTmp, err := client.BuildRuntimeOptions()
 	if err != nil {
@@ -743,9 +743,9 @@ func (client *Client) PushDocuments(dataSourceName *string, keyField *string, re
 	return _result, _err
 }
 
-/**
- * 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
- */
+// Description:
+//
+// 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
 func (client *Client) PushDocumentsWithSwift(dataSourceName *string, keyField *string, topic *string, swift *string, request *PushDocumentsRequest) (_result *PushDocumentsResponse, _err error) {
 	request.Headers = map[string]*string{
 		"X-Opensearch-Swift-PK-Field": keyField,
@@ -766,9 +766,9 @@ func (client *Client) PushDocumentsWithSwift(dataSourceName *string, keyField *s
 	return _result, _err
 }
 
-/**
- * 构建RuntimeOptions
- */
+// Description:
+//
+// 构建RuntimeOptions
 func (client *Client) BuildRuntimeOptions() (_result *util.RuntimeOptions, _err error) {
 	_result = &util.RuntimeOptions{}
 	return _result, _err
