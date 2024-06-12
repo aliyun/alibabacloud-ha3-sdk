@@ -19,6 +19,7 @@ public class Client {
     public String _credential;
     public String _domainsuffix;
     public String _httpProxy;
+    public com.aliyun.teautil.models.RuntimeOptions _runtimeOptions;
     public Client(Config config) throws Exception {
         if (com.aliyun.teautil.Common.isUnset(config)) {
             throw new TeaException(TeaConverter.buildMap(
@@ -37,6 +38,7 @@ public class Client {
         this._userAgent = config.userAgent;
         this._domainsuffix = "ha.aliyuncs.com";
         this._httpProxy = config.httpProxy;
+        this._runtimeOptions = this.buildRuntimeOptions(config.runtimeOptions);
     }
 
     public java.util.Map<String, ?> _request(String method, String pathname, java.util.Map<String, ?> query, java.util.Map<String, String> headers, Object body, com.aliyun.teautil.models.RuntimeOptions runtime) throws Exception {
@@ -50,11 +52,11 @@ public class Client {
             new TeaPair("maxIdleConns", runtime.maxIdleConns),
             new TeaPair("retry", TeaConverter.buildMap(
                 new TeaPair("retryable", runtime.autoretry),
-                new TeaPair("maxAttempts", com.aliyun.teautil.Common.defaultNumber(runtime.maxAttempts, 5))
+                new TeaPair("maxAttempts", runtime.maxAttempts)
             )),
             new TeaPair("backoff", TeaConverter.buildMap(
-                new TeaPair("policy", com.aliyun.teautil.Common.defaultString(runtime.backoffPolicy, "no")),
-                new TeaPair("period", com.aliyun.teautil.Common.defaultNumber(runtime.backoffPeriod, 1))
+                new TeaPair("policy", runtime.backoffPolicy),
+                new TeaPair("period", runtime.backoffPeriod)
             )),
             new TeaPair("ignoreSSL", runtime.ignoreSSL)
         );
@@ -193,28 +195,28 @@ public class Client {
      * 向量查询
      */
     public SearchResponse query(QueryRequest request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/query", null, null, com.aliyun.teautil.Common.toJSONString(request), this.buildRuntimeOptions()), new SearchResponse());
+        return TeaModel.toModel(this._request("POST", "/vector-service/query", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
      * 向量预测查询
      */
     public SearchResponse inferenceQuery(QueryRequest request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/inference-query", null, null, com.aliyun.teautil.Common.toJSONString(request), this.buildRuntimeOptions()), new SearchResponse());
+        return TeaModel.toModel(this._request("POST", "/vector-service/inference-query", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
      * 多namespace查询
      */
     public SearchResponse multiQuery(MultiQueryRequest request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/multi-query", null, null, com.aliyun.teautil.Common.toJSONString(request), this.buildRuntimeOptions()), new SearchResponse());
+        return TeaModel.toModel(this._request("POST", "/vector-service/multi-query", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
      * 查询数据
      */
     public SearchResponse fetch(FetchRequest request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/fetch", null, null, com.aliyun.teautil.Common.toJSONString(request), this.buildRuntimeOptions()), new SearchResponse());
+        return TeaModel.toModel(this._request("POST", "/vector-service/fetch", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
@@ -224,7 +226,7 @@ public class Client {
         java.util.Map<String, Object> body = TeaConverter.buildMap(
             new TeaPair("tableName", tableName)
         );
-        return TeaModel.toModel(this._request("POST", "/vector-service/stats", null, null, com.aliyun.teautil.Common.toJSONString(body), this.buildRuntimeOptions()), new SearchResponse());
+        return TeaModel.toModel(this._request("POST", "/vector-service/stats", null, null, com.aliyun.teautil.Common.toJSONString(body), _runtimeOptions), new SearchResponse());
     }
 
     /**
@@ -237,7 +239,7 @@ public class Client {
             ),
             request.headers
         );
-        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, this.buildRuntimeOptions()), new PushDocumentsResponse());
+        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, _runtimeOptions), new PushDocumentsResponse());
     }
 
     /**
@@ -249,20 +251,36 @@ public class Client {
             new TeaPair("X-Opensearch-Swift-Topic", topic),
             new TeaPair("X-Opensearch-Swift-Swift", swift)
         );
-        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, this.buildRuntimeOptions()), new PushDocumentsResponse());
+        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, _runtimeOptions), new PushDocumentsResponse());
     }
 
     /**
      * 构建RuntimeOptions
      */
-    public com.aliyun.teautil.models.RuntimeOptions buildRuntimeOptions() throws Exception {
+    public com.aliyun.teautil.models.RuntimeOptions buildRuntimeOptions(com.aliyun.teautil.models.RuntimeOptions runtimeOptions) throws Exception {
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions)) {
+            return com.aliyun.teautil.models.RuntimeOptions.build(TeaConverter.buildMap(
+                new TeaPair("readTimeout", 10000),
+                new TeaPair("connectTimeout", 5000),
+                new TeaPair("autoretry", false),
+                new TeaPair("ignoreSSL", false),
+                new TeaPair("maxIdleConns", 50),
+                new TeaPair("httpProxy", _httpProxy)
+            ));
+        }
+
         return com.aliyun.teautil.models.RuntimeOptions.build(TeaConverter.buildMap(
-            new TeaPair("connectTimeout", 5000),
-            new TeaPair("readTimeout", 10000),
-            new TeaPair("autoretry", false),
-            new TeaPair("ignoreSSL", false),
-            new TeaPair("maxIdleConns", 50),
-            new TeaPair("httpProxy", _httpProxy)
+            new TeaPair("readTimeout", com.aliyun.teautil.Common.defaultNumber(runtimeOptions.readTimeout, 10000)),
+            new TeaPair("connectTimeout", com.aliyun.teautil.Common.defaultNumber(runtimeOptions.connectTimeout, 5000)),
+            new TeaPair("maxIdleConns", com.aliyun.teautil.Common.defaultNumber(runtimeOptions.maxIdleConns, 50)),
+            new TeaPair("maxAttempts", com.aliyun.teautil.Common.defaultNumber(runtimeOptions.maxAttempts, 5)),
+            new TeaPair("backoffPolicy", com.aliyun.teautil.Common.defaultString(runtimeOptions.backoffPolicy, "no")),
+            new TeaPair("backoffPeriod", com.aliyun.teautil.Common.defaultNumber(runtimeOptions.backoffPeriod, 1)),
+            new TeaPair("autoretry", runtimeOptions.autoretry),
+            new TeaPair("ignoreSSL", runtimeOptions.ignoreSSL),
+            new TeaPair("httpProxy", runtimeOptions.httpProxy),
+            new TeaPair("httpsProxy", runtimeOptions.httpsProxy),
+            new TeaPair("noProxy", runtimeOptions.noProxy)
         ));
     }
 }

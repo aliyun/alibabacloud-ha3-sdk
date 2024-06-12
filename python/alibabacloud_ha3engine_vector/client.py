@@ -8,9 +8,9 @@ from Tea.core import TeaCore
 from alibabacloud_darabonba_encode_util.encoder import Encoder
 from typing import Dict, Any
 
+from alibabacloud_tea_util import models as util_models
 from alibabacloud_ha3engine_vector import models as ha_3engine_vector_models
 from alibabacloud_tea_util.client import Client as UtilClient
-from alibabacloud_tea_util import models as util_models
 from alibabacloud_darabonba_string.client import Client as StringClient
 
 
@@ -22,6 +22,7 @@ class Client:
     _credential: str = None
     _domainsuffix: str = None
     _http_proxy: str = None
+    _runtime_options: util_models.RuntimeOptions = None
 
     def __init__(
         self, 
@@ -40,6 +41,7 @@ class Client:
         self._user_agent = config.user_agent
         self._domainsuffix = 'ha.aliyuncs.com'
         self._http_proxy = config.http_proxy
+        self._runtime_options = self.build_runtime_options(config.runtime_options)
 
     def _request(
         self,
@@ -61,11 +63,11 @@ class Client:
             'maxIdleConns': runtime.max_idle_conns,
             'retry': {
                 'retryable': runtime.autoretry,
-                'maxAttempts': UtilClient.default_number(runtime.max_attempts, 5)
+                'maxAttempts': runtime.max_attempts
             },
             'backoff': {
-                'policy': UtilClient.default_string(runtime.backoff_policy, 'no'),
-                'period': UtilClient.default_number(runtime.backoff_period, 1)
+                'policy': runtime.backoff_policy,
+                'period': runtime.backoff_period
             },
             'ignoreSSL': runtime.ignore_ssl
         }
@@ -153,11 +155,11 @@ class Client:
             'maxIdleConns': runtime.max_idle_conns,
             'retry': {
                 'retryable': runtime.autoretry,
-                'maxAttempts': UtilClient.default_number(runtime.max_attempts, 5)
+                'maxAttempts': runtime.max_attempts
             },
             'backoff': {
-                'policy': UtilClient.default_string(runtime.backoff_policy, 'no'),
-                'period': UtilClient.default_number(runtime.backoff_period, 1)
+                'policy': runtime.backoff_policy,
+                'period': runtime.backoff_period
             },
             'ignoreSSL': runtime.ignore_ssl
         }
@@ -272,7 +274,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            self._request('POST', f'/vector-service/query', None, None, UtilClient.to_jsonstring(request), self.build_runtime_options())
+            self._request('POST', f'/vector-service/query', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     async def query_async(
@@ -284,7 +286,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            await self._request_async('POST', f'/vector-service/query', None, None, UtilClient.to_jsonstring(request), await self.build_runtime_options_async())
+            await self._request_async('POST', f'/vector-service/query', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     def inference_query(
@@ -296,7 +298,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            self._request('POST', f'/vector-service/inference-query', None, None, UtilClient.to_jsonstring(request), self.build_runtime_options())
+            self._request('POST', f'/vector-service/inference-query', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     async def inference_query_async(
@@ -308,7 +310,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            await self._request_async('POST', f'/vector-service/inference-query', None, None, UtilClient.to_jsonstring(request), await self.build_runtime_options_async())
+            await self._request_async('POST', f'/vector-service/inference-query', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     def multi_query(
@@ -320,7 +322,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            self._request('POST', f'/vector-service/multi-query', None, None, UtilClient.to_jsonstring(request), self.build_runtime_options())
+            self._request('POST', f'/vector-service/multi-query', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     async def multi_query_async(
@@ -332,7 +334,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            await self._request_async('POST', f'/vector-service/multi-query', None, None, UtilClient.to_jsonstring(request), await self.build_runtime_options_async())
+            await self._request_async('POST', f'/vector-service/multi-query', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     def fetch(
@@ -344,7 +346,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            self._request('POST', f'/vector-service/fetch', None, None, UtilClient.to_jsonstring(request), self.build_runtime_options())
+            self._request('POST', f'/vector-service/fetch', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     async def fetch_async(
@@ -356,7 +358,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            await self._request_async('POST', f'/vector-service/fetch', None, None, UtilClient.to_jsonstring(request), await self.build_runtime_options_async())
+            await self._request_async('POST', f'/vector-service/fetch', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     def stats(
@@ -371,7 +373,7 @@ class Client:
         }
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            self._request('POST', f'/vector-service/stats', None, None, UtilClient.to_jsonstring(body), self.build_runtime_options())
+            self._request('POST', f'/vector-service/stats', None, None, UtilClient.to_jsonstring(body), self._runtime_options)
         )
 
     async def stats_async(
@@ -386,7 +388,7 @@ class Client:
         }
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            await self._request_async('POST', f'/vector-service/stats', None, None, UtilClient.to_jsonstring(body), await self.build_runtime_options_async())
+            await self._request_async('POST', f'/vector-service/stats', None, None, UtilClient.to_jsonstring(body), self._runtime_options)
         )
 
     def push_documents(
@@ -403,7 +405,7 @@ class Client:
         }, request.headers)
         return TeaCore.from_map(
             ha_3engine_vector_models.PushDocumentsResponse(),
-            self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self.build_runtime_options())
+            self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self._runtime_options)
         )
 
     async def push_documents_async(
@@ -420,7 +422,7 @@ class Client:
         }, request.headers)
         return TeaCore.from_map(
             ha_3engine_vector_models.PushDocumentsResponse(),
-            await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, await self.build_runtime_options_async())
+            await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self._runtime_options)
         )
 
     def push_documents_with_swift(
@@ -441,7 +443,7 @@ class Client:
         }
         return TeaCore.from_map(
             ha_3engine_vector_models.PushDocumentsResponse(),
-            self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self.build_runtime_options())
+            self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self._runtime_options)
         )
 
     async def push_documents_with_swift_async(
@@ -462,31 +464,35 @@ class Client:
         }
         return TeaCore.from_map(
             ha_3engine_vector_models.PushDocumentsResponse(),
-            await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, await self.build_runtime_options_async())
+            await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self._runtime_options)
         )
 
-    def build_runtime_options(self) -> util_models.RuntimeOptions:
+    def build_runtime_options(
+        self,
+        runtime_options: util_models.RuntimeOptions,
+    ) -> util_models.RuntimeOptions:
         """
         构建RuntimeOptions
         """
+        if UtilClient.is_unset(runtime_options):
+            return util_models.RuntimeOptions(
+                read_timeout=10000,
+                connect_timeout=5000,
+                autoretry=False,
+                ignore_ssl=False,
+                max_idle_conns=50,
+                http_proxy=self._http_proxy
+            )
         return util_models.RuntimeOptions(
-            connect_timeout=5000,
-            read_timeout=10000,
-            autoretry=False,
-            ignore_ssl=False,
-            max_idle_conns=50,
-            http_proxy=self._http_proxy
-        )
-
-    async def build_runtime_options_async(self) -> util_models.RuntimeOptions:
-        """
-        构建RuntimeOptions
-        """
-        return util_models.RuntimeOptions(
-            connect_timeout=5000,
-            read_timeout=10000,
-            autoretry=False,
-            ignore_ssl=False,
-            max_idle_conns=50,
-            http_proxy=self._http_proxy
+            read_timeout=UtilClient.default_number(runtime_options.read_timeout, 10000),
+            connect_timeout=UtilClient.default_number(runtime_options.connect_timeout, 5000),
+            max_idle_conns=UtilClient.default_number(runtime_options.max_idle_conns, 50),
+            max_attempts=UtilClient.default_number(runtime_options.max_attempts, 5),
+            backoff_policy=UtilClient.default_string(runtime_options.backoff_policy, 'no'),
+            backoff_period=UtilClient.default_number(runtime_options.backoff_period, 1),
+            autoretry=runtime_options.autoretry,
+            ignore_ssl=runtime_options.ignore_ssl,
+            http_proxy=runtime_options.http_proxy,
+            https_proxy=runtime_options.https_proxy,
+            no_proxy=runtime_options.no_proxy
         )

@@ -9,6 +9,7 @@ type @userAgent = string
 type @credential = string
 type @domainsuffix = string
 type @httpProxy = string
+type @runtimeOptions = Util.RuntimeOptions
 
 model Config {
   endpoint?: string,
@@ -17,7 +18,8 @@ model Config {
   accessUserName?: string,
   accessPassWord?: string,
   userAgent?: string,
-  httpProxy?: string
+  httpProxy?: string,
+  runtimeOptions?: Util.RuntimeOptions
 }
 
 init(config: Config) {
@@ -36,6 +38,7 @@ init(config: Config) {
   @userAgent = config.userAgent;
   @domainsuffix = 'ha.aliyuncs.com';
   @httpProxy = config.httpProxy;
+  @runtimeOptions = buildRuntimeOptions(config.runtimeOptions);
 }
 
 /**
@@ -127,28 +130,28 @@ model FetchRequest {
  * 向量查询
  */
 async function query(request: QueryRequest): SearchResponse {
-  return _request('POST', `/vector-service/query`, null, null, Util.toJSONString(request), buildRuntimeOptions());
+  return _request('POST', `/vector-service/query`, null, null, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
  * 向量预测查询
  */
 async function inferenceQuery(request: QueryRequest): SearchResponse {
-  return _request('POST', `/vector-service/inference-query`, null, null, Util.toJSONString(request), buildRuntimeOptions());
+  return _request('POST', `/vector-service/inference-query`, null, null, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
  * 多namespace查询
  */
 async function multiQuery(request: MultiQueryRequest): SearchResponse {
-  return _request('POST', `/vector-service/multi-query`, null, null, Util.toJSONString(request), buildRuntimeOptions());
+  return _request('POST', `/vector-service/multi-query`, null, null, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
  * 查询数据
  */
 async function fetch(request: FetchRequest): SearchResponse {
-  return _request('POST', `/vector-service/fetch`, null, null, Util.toJSONString(request), buildRuntimeOptions());
+  return _request('POST', `/vector-service/fetch`, null, null, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
@@ -157,7 +160,7 @@ async function fetch(request: FetchRequest): SearchResponse {
 async function stats(tableName: string): SearchResponse {
   var body: map[string]any = {
         tableName = tableName};
-  return _request('POST', `/vector-service/stats`, null, null, Util.toJSONString(body), buildRuntimeOptions());
+  return _request('POST', `/vector-service/stats`, null, null, Util.toJSONString(body), @runtimeOptions);
 }
 
 model PushDocumentsRequest {
@@ -178,7 +181,7 @@ async function pushDocuments(dataSourceName: string, keyField: string, request: 
     X-Opensearch-Swift-PK-Field = keyField,
     ...request.headers
   };
-  return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, buildRuntimeOptions());
+  return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, @runtimeOptions);
 }
 
 /**
@@ -190,7 +193,7 @@ async function pushDocumentsWithSwift(dataSourceName: string, keyField: string, 
     X-Opensearch-Swift-Topic = topic,
     X-Opensearch-Swift-Swift = swift
   };
-  return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, buildRuntimeOptions());
+  return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, @runtimeOptions);
 }
 
 api _request(method: string, pathname: string, query: map[string]any, headers: map[string]string, body: any, runtime: Util.RuntimeOptions): map[string]any {
@@ -258,11 +261,11 @@ api _request(method: string, pathname: string, query: map[string]any, headers: m
   maxIdleConns = runtime.maxIdleConns,
   retry = {
     retryable = runtime.autoretry,
-    maxAttempts = Util.defaultNumber(runtime.maxAttempts, 5)
+    maxAttempts = runtime.maxAttempts
   },
   backoff = {
-    policy = Util.defaultString(runtime.backoffPolicy, 'no'),
-    period = Util.defaultNumber(runtime.backoffPeriod, 1)
+    policy = runtime.backoffPolicy,
+    period = runtime.backoffPeriod
   },
   ignoreSSL = runtime.ignoreSSL
 }
@@ -270,13 +273,29 @@ api _request(method: string, pathname: string, query: map[string]any, headers: m
 /**
  * 构建RuntimeOptions
  */
-async function buildRuntimeOptions(): Util.RuntimeOptions {
+function buildRuntimeOptions(runtimeOptions: Util.RuntimeOptions): Util.RuntimeOptions {
+  if (Util.isUnset(runtimeOptions)) {
+    return new Util.RuntimeOptions{
+      readTimeout = 10000,
+      connectTimeout = 5000,
+      autoretry = false,
+      ignoreSSL = false,
+      maxIdleConns = 50,
+      httpProxy = @httpProxy
+    };
+  }
+
   return new Util.RuntimeOptions{
-     connectTimeout = 5000,
-     readTimeout = 10000,
-     autoretry = false,
-     ignoreSSL = false,
-     maxIdleConns = 50,
-     httpProxy = @httpProxy
+     readTimeout = Util.defaultNumber(runtimeOptions.readTimeout, 10000),
+     connectTimeout = Util.defaultNumber(runtimeOptions.connectTimeout, 5000),
+     maxIdleConns = Util.defaultNumber(runtimeOptions.maxIdleConns, 50),
+     maxAttempts = Util.defaultNumber(runtimeOptions.maxAttempts, 5),
+     backoffPolicy = Util.defaultString(runtimeOptions.backoffPolicy, 'no'),
+     backoffPeriod = Util.defaultNumber(runtimeOptions.backoffPeriod, 1),
+     autoretry = runtimeOptions.autoretry,
+     ignoreSSL = runtimeOptions.ignoreSSL,
+     httpProxy = runtimeOptions.httpProxy,
+     httpsProxy = runtimeOptions.httpsProxy,
+     noProxy = runtimeOptions.noProxy
   };
 }

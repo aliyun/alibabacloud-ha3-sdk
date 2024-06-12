@@ -25,6 +25,9 @@ public class Config extends TeaModel {
     @NameInMap("httpProxy")
     public String httpProxy;
 
+    @NameInMap("runtimeOptions")
+    public com.aliyun.teautil.models.RuntimeOptions runtimeOptions;
+
     public static Config build(java.util.Map<String, ?> map) throws Exception {
         Config self = new Config();
         return TeaModel.build(map, self);
@@ -84,6 +87,14 @@ public class Config extends TeaModel {
     }
     public String getHttpProxy() {
         return this.httpProxy;
+    }
+
+    public Config setRuntimeOptions(com.aliyun.teautil.models.RuntimeOptions runtimeOptions) {
+        this.runtimeOptions = runtimeOptions;
+        return this;
+    }
+    public com.aliyun.teautil.models.RuntimeOptions getRuntimeOptions() {
+        return this.runtimeOptions;
     }
 
 }
