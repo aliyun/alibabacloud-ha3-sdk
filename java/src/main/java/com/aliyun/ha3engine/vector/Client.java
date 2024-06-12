@@ -269,18 +269,30 @@ public class Client {
             ));
         }
 
-        return com.aliyun.teautil.models.RuntimeOptions.build(TeaConverter.buildMap(
-            new TeaPair("readTimeout", com.aliyun.teautil.Common.defaultNumber(runtimeOptions.readTimeout, 10000)),
-            new TeaPair("connectTimeout", com.aliyun.teautil.Common.defaultNumber(runtimeOptions.connectTimeout, 5000)),
-            new TeaPair("maxIdleConns", com.aliyun.teautil.Common.defaultNumber(runtimeOptions.maxIdleConns, 50)),
-            new TeaPair("maxAttempts", com.aliyun.teautil.Common.defaultNumber(runtimeOptions.maxAttempts, 5)),
-            new TeaPair("backoffPolicy", com.aliyun.teautil.Common.defaultString(runtimeOptions.backoffPolicy, "no")),
-            new TeaPair("backoffPeriod", com.aliyun.teautil.Common.defaultNumber(runtimeOptions.backoffPeriod, 1)),
-            new TeaPair("autoretry", runtimeOptions.autoretry),
-            new TeaPair("ignoreSSL", runtimeOptions.ignoreSSL),
-            new TeaPair("httpProxy", runtimeOptions.httpProxy),
-            new TeaPair("httpsProxy", runtimeOptions.httpsProxy),
-            new TeaPair("noProxy", runtimeOptions.noProxy)
-        ));
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions.readTimeout)) {
+            runtimeOptions.readTimeout = 10000;
+        }
+
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions.connectTimeout)) {
+            runtimeOptions.connectTimeout = 5000;
+        }
+
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions.maxIdleConns)) {
+            runtimeOptions.maxIdleConns = 50;
+        }
+
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions.maxAttempts)) {
+            runtimeOptions.maxAttempts = 5;
+        }
+
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions.backoffPolicy)) {
+            runtimeOptions.backoffPolicy = "no";
+        }
+
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions.backoffPeriod)) {
+            runtimeOptions.backoffPeriod = 1;
+        }
+
+        return runtimeOptions;
     }
 }

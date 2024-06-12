@@ -483,16 +483,16 @@ class Client:
                 max_idle_conns=50,
                 http_proxy=self._http_proxy
             )
-        return util_models.RuntimeOptions(
-            read_timeout=UtilClient.default_number(runtime_options.read_timeout, 10000),
-            connect_timeout=UtilClient.default_number(runtime_options.connect_timeout, 5000),
-            max_idle_conns=UtilClient.default_number(runtime_options.max_idle_conns, 50),
-            max_attempts=UtilClient.default_number(runtime_options.max_attempts, 5),
-            backoff_policy=UtilClient.default_string(runtime_options.backoff_policy, 'no'),
-            backoff_period=UtilClient.default_number(runtime_options.backoff_period, 1),
-            autoretry=runtime_options.autoretry,
-            ignore_ssl=runtime_options.ignore_ssl,
-            http_proxy=runtime_options.http_proxy,
-            https_proxy=runtime_options.https_proxy,
-            no_proxy=runtime_options.no_proxy
-        )
+        if UtilClient.is_unset(runtime_options.read_timeout):
+            runtime_options.read_timeout = 10000
+        if UtilClient.is_unset(runtime_options.connect_timeout):
+            runtime_options.connect_timeout = 5000
+        if UtilClient.is_unset(runtime_options.max_idle_conns):
+            runtime_options.max_idle_conns = 50
+        if UtilClient.is_unset(runtime_options.max_attempts):
+            runtime_options.max_attempts = 5
+        if UtilClient.is_unset(runtime_options.backoff_policy):
+            runtime_options.backoff_policy = 'no'
+        if UtilClient.is_unset(runtime_options.backoff_period):
+            runtime_options.backoff_period = 1
+        return runtime_options

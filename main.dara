@@ -285,17 +285,23 @@ function buildRuntimeOptions(runtimeOptions: Util.RuntimeOptions): Util.RuntimeO
     };
   }
 
-  return new Util.RuntimeOptions{
-     readTimeout = Util.defaultNumber(runtimeOptions.readTimeout, 10000),
-     connectTimeout = Util.defaultNumber(runtimeOptions.connectTimeout, 5000),
-     maxIdleConns = Util.defaultNumber(runtimeOptions.maxIdleConns, 50),
-     maxAttempts = Util.defaultNumber(runtimeOptions.maxAttempts, 5),
-     backoffPolicy = Util.defaultString(runtimeOptions.backoffPolicy, 'no'),
-     backoffPeriod = Util.defaultNumber(runtimeOptions.backoffPeriod, 1),
-     autoretry = runtimeOptions.autoretry,
-     ignoreSSL = runtimeOptions.ignoreSSL,
-     httpProxy = runtimeOptions.httpProxy,
-     httpsProxy = runtimeOptions.httpsProxy,
-     noProxy = runtimeOptions.noProxy
-  };
+  if (Util.isUnset(runtimeOptions.readTimeout)) {
+    runtimeOptions.readTimeout = 10000;
+  }
+  if (Util.isUnset(runtimeOptions.connectTimeout)) {
+    runtimeOptions.connectTimeout = 5000;
+  }
+  if (Util.isUnset(runtimeOptions.maxIdleConns)) {
+    runtimeOptions.maxIdleConns = 50;
+  }
+  if (Util.isUnset(runtimeOptions.maxAttempts)) {
+    runtimeOptions.maxAttempts = 5;
+  }
+  if (Util.isUnset(runtimeOptions.backoffPolicy)) {
+    runtimeOptions.backoffPolicy = 'no';
+  }
+  if (Util.isUnset(runtimeOptions.backoffPeriod)) {
+    runtimeOptions.backoffPeriod = 1;
+  }
+  return runtimeOptions;
 }
