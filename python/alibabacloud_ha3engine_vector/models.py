@@ -3,6 +3,8 @@
 from Tea.model import TeaModel
 from typing import Dict, List, Any
 
+from alibabacloud_tea_util import models as util_models
+
 
 class Config(TeaModel):
     def __init__(
@@ -14,6 +16,7 @@ class Config(TeaModel):
         access_pass_word: str = None,
         user_agent: str = None,
         http_proxy: str = None,
+        runtime_options: util_models.RuntimeOptions = None,
     ):
         self.endpoint = endpoint
         self.instance_id = instance_id
@@ -22,9 +25,11 @@ class Config(TeaModel):
         self.access_pass_word = access_pass_word
         self.user_agent = user_agent
         self.http_proxy = http_proxy
+        self.runtime_options = runtime_options
 
     def validate(self):
-        pass
+        if self.runtime_options:
+            self.runtime_options.validate()
 
     def to_map(self):
         _map = super().to_map()
@@ -46,6 +51,8 @@ class Config(TeaModel):
             result['userAgent'] = self.user_agent
         if self.http_proxy is not None:
             result['httpProxy'] = self.http_proxy
+        if self.runtime_options is not None:
+            result['runtimeOptions'] = self.runtime_options.to_map()
         return result
 
     def from_map(self, m: dict = None):
@@ -64,6 +71,9 @@ class Config(TeaModel):
             self.user_agent = m.get('userAgent')
         if m.get('httpProxy') is not None:
             self.http_proxy = m.get('httpProxy')
+        if m.get('runtimeOptions') is not None:
+            temp_model = util_models.RuntimeOptions()
+            self.runtime_options = temp_model.from_map(m['runtimeOptions'])
         return self
 
 
