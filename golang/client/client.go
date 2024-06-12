@@ -750,7 +750,31 @@ func (client *Client) BuildRuntimeOptions (runtimeOptions *util.RuntimeOptions) 
     return _result
   }
 
-  _result = &util.RuntimeOptions{}
+  if tea.BoolValue(util.IsUnset(runtimeOptions.ReadTimeout)) {
+    runtimeOptions.ReadTimeout = tea.Int(10000)
+  }
+
+  if tea.BoolValue(util.IsUnset(runtimeOptions.ConnectTimeout)) {
+    runtimeOptions.ConnectTimeout = tea.Int(5000)
+  }
+
+  if tea.BoolValue(util.IsUnset(runtimeOptions.MaxIdleConns)) {
+    runtimeOptions.MaxIdleConns = tea.Int(50)
+  }
+
+  if tea.BoolValue(util.IsUnset(runtimeOptions.MaxAttempts)) {
+    runtimeOptions.MaxAttempts = tea.Int(5)
+  }
+
+  if tea.BoolValue(util.IsUnset(runtimeOptions.BackoffPolicy)) {
+    runtimeOptions.BackoffPolicy = tea.String("no")
+  }
+
+  if tea.BoolValue(util.IsUnset(runtimeOptions.BackoffPeriod)) {
+    runtimeOptions.BackoffPeriod = tea.Int(1)
+  }
+
+  _result = runtimeOptions
   return _result
 }
 
