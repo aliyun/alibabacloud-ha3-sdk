@@ -15,7 +15,6 @@ class Config(TeaModel):
         access_user_name: str = None,
         access_pass_word: str = None,
         user_agent: str = None,
-        http_proxy: str = None,
         runtime_options: util_models.RuntimeOptions = None,
     ):
         self.endpoint = endpoint
@@ -24,7 +23,6 @@ class Config(TeaModel):
         self.access_user_name = access_user_name
         self.access_pass_word = access_pass_word
         self.user_agent = user_agent
-        self.http_proxy = http_proxy
         self.runtime_options = runtime_options
 
     def validate(self):
@@ -49,8 +47,6 @@ class Config(TeaModel):
             result['accessPassWord'] = self.access_pass_word
         if self.user_agent is not None:
             result['userAgent'] = self.user_agent
-        if self.http_proxy is not None:
-            result['httpProxy'] = self.http_proxy
         if self.runtime_options is not None:
             result['runtimeOptions'] = self.runtime_options.to_map()
         return result
@@ -69,8 +65,6 @@ class Config(TeaModel):
             self.access_pass_word = m.get('accessPassWord')
         if m.get('userAgent') is not None:
             self.user_agent = m.get('userAgent')
-        if m.get('httpProxy') is not None:
-            self.http_proxy = m.get('httpProxy')
         if m.get('runtimeOptions') is not None:
             temp_model = util_models.RuntimeOptions()
             self.runtime_options = temp_model.from_map(m['runtimeOptions'])

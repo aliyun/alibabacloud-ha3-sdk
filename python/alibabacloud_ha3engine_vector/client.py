@@ -21,7 +21,6 @@ class Client:
     _user_agent: str = None
     _credential: str = None
     _domainsuffix: str = None
-    _http_proxy: str = None
     _runtime_options: util_models.RuntimeOptions = None
 
     def __init__(
@@ -40,7 +39,6 @@ class Client:
         self._protocol = config.protocol
         self._user_agent = config.user_agent
         self._domainsuffix = 'ha.aliyuncs.com'
-        self._http_proxy = config.http_proxy
         self._runtime_options = self.build_runtime_options(config.runtime_options)
 
     def _request(
@@ -57,7 +55,6 @@ class Client:
             'timeouted': 'retry',
             'readTimeout': runtime.read_timeout,
             'connectTimeout': runtime.connect_timeout,
-            'httpProxy': runtime.http_proxy,
             'httpsProxy': runtime.https_proxy,
             'noProxy': runtime.no_proxy,
             'maxIdleConns': runtime.max_idle_conns,
@@ -149,7 +146,6 @@ class Client:
             'timeouted': 'retry',
             'readTimeout': runtime.read_timeout,
             'connectTimeout': runtime.connect_timeout,
-            'httpProxy': runtime.http_proxy,
             'httpsProxy': runtime.https_proxy,
             'noProxy': runtime.no_proxy,
             'maxIdleConns': runtime.max_idle_conns,
@@ -480,8 +476,7 @@ class Client:
                 connect_timeout=5000,
                 autoretry=False,
                 ignore_ssl=False,
-                max_idle_conns=50,
-                http_proxy=self._http_proxy
+                max_idle_conns=50
             )
         if UtilClient.is_unset(runtime_options.read_timeout):
             runtime_options.read_timeout = 10000

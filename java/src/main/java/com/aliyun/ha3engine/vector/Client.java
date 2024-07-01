@@ -18,7 +18,6 @@ public class Client {
     public String _userAgent;
     public String _credential;
     public String _domainsuffix;
-    public String _httpProxy;
     public com.aliyun.teautil.models.RuntimeOptions _runtimeOptions;
     public Client(Config config) throws Exception {
         if (com.aliyun.teautil.Common.isUnset(config)) {
@@ -37,7 +36,6 @@ public class Client {
         this._protocol = config.protocol;
         this._userAgent = config.userAgent;
         this._domainsuffix = "ha.aliyuncs.com";
-        this._httpProxy = config.httpProxy;
         this._runtimeOptions = this.buildRuntimeOptions(config.runtimeOptions);
     }
 
@@ -46,7 +44,6 @@ public class Client {
             new TeaPair("timeouted", "retry"),
             new TeaPair("readTimeout", runtime.readTimeout),
             new TeaPair("connectTimeout", runtime.connectTimeout),
-            new TeaPair("httpProxy", runtime.httpProxy),
             new TeaPair("httpsProxy", runtime.httpsProxy),
             new TeaPair("noProxy", runtime.noProxy),
             new TeaPair("maxIdleConns", runtime.maxIdleConns),
@@ -264,8 +261,7 @@ public class Client {
                 new TeaPair("connectTimeout", 5000),
                 new TeaPair("autoretry", false),
                 new TeaPair("ignoreSSL", false),
-                new TeaPair("maxIdleConns", 50),
-                new TeaPair("httpProxy", _httpProxy)
+                new TeaPair("maxIdleConns", 50)
             ));
         }
 

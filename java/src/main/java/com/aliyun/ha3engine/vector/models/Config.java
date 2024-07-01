@@ -22,9 +22,6 @@ public class Config extends TeaModel {
     @NameInMap("userAgent")
     public String userAgent;
 
-    @NameInMap("httpProxy")
-    public String httpProxy;
-
     @NameInMap("runtimeOptions")
     public com.aliyun.teautil.models.RuntimeOptions runtimeOptions;
 
@@ -79,14 +76,6 @@ public class Config extends TeaModel {
     }
     public String getUserAgent() {
         return this.userAgent;
-    }
-
-    public Config setHttpProxy(String httpProxy) {
-        this.httpProxy = httpProxy;
-        return this;
-    }
-    public String getHttpProxy() {
-        return this.httpProxy;
     }
 
     public Config setRuntimeOptions(com.aliyun.teautil.models.RuntimeOptions runtimeOptions) {
