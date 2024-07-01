@@ -8,7 +8,6 @@ type @protocol = string
 type @userAgent = string
 type @credential = string
 type @domainsuffix = string
-type @httpProxy = string
 type @runtimeOptions = Util.RuntimeOptions
 
 model Config {
@@ -18,7 +17,6 @@ model Config {
   accessUserName?: string,
   accessPassWord?: string,
   userAgent?: string,
-  httpProxy?: string,
   runtimeOptions?: Util.RuntimeOptions
 }
 
@@ -37,7 +35,6 @@ init(config: Config) {
   @protocol = config.protocol;
   @userAgent = config.userAgent;
   @domainsuffix = 'ha.aliyuncs.com';
-  @httpProxy = config.httpProxy;
   @runtimeOptions = buildRuntimeOptions(config.runtimeOptions);
 }
 
@@ -255,7 +252,6 @@ api _request(method: string, pathname: string, query: map[string]any, headers: m
   timeouted = 'retry',
   readTimeout = runtime.readTimeout,
   connectTimeout = runtime.connectTimeout,
-  httpProxy = runtime.httpProxy,
   httpsProxy = runtime.httpsProxy,
   noProxy = runtime.noProxy,
   maxIdleConns = runtime.maxIdleConns,
@@ -281,7 +277,6 @@ function buildRuntimeOptions(runtimeOptions: Util.RuntimeOptions): Util.RuntimeO
       autoretry = false,
       ignoreSSL = false,
       maxIdleConns = 50,
-      httpProxy = @httpProxy
     };
   }
 
