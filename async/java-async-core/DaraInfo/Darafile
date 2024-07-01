@@ -1,7 +1,7 @@
 {
   "scope": "alibabacloud",
   "name": "DarabonbaCore.Ha3engineCore",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "main": "./main.dara",
   "maintainers": [
     {
@@ -25,6 +25,6 @@
   "libraries": {
   },
   "releases": {
-    "java": "com.aliyun:aliyun-sdk-ha3engine-async-core:1.1.0"
+    "java": "com.aliyun:aliyun-sdk-ha3engine-async-core:1.1.2"
   }
 }
