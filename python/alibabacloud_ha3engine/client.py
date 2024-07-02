@@ -8,9 +8,9 @@ from Tea.core import TeaCore
 from alibabacloud_darabonba_encode_util.encoder import Encoder
 from typing import Dict, Any, List
 
+from alibabacloud_tea_util import models as util_models
 from alibabacloud_ha3engine import models as ha_3engine_models
 from alibabacloud_tea_util.client import Client as UtilClient
-from alibabacloud_tea_util import models as util_models
 from alibabacloud_darabonba_string.client import Client as StringClient
 from alibabacloud_darabonba_map.client import Client as MapClient
 
@@ -22,7 +22,7 @@ class Client:
     _user_agent: str = None
     _credential: str = None
     _domainsuffix: str = None
-    _http_proxy: str = None
+    _runtime_options: util_models.RuntimeOptions = None
 
     def __init__(
         self, 
@@ -39,7 +39,7 @@ class Client:
         self._protocol = config.protocol
         self._user_agent = config.user_agent
         self._domainsuffix = 'ha.aliyuncs.com'
-        self._http_proxy = config.http_proxy
+        self._runtime_options = self.build_runtime_options(config.runtime_options)
 
     def _request(
         self,
@@ -55,7 +55,6 @@ class Client:
             'timeouted': 'retry',
             'readTimeout': runtime.read_timeout,
             'connectTimeout': runtime.connect_timeout,
-            'httpProxy': runtime.http_proxy,
             'httpsProxy': runtime.https_proxy,
             'noProxy': runtime.no_proxy,
             'maxIdleConns': runtime.max_idle_conns,
@@ -147,7 +146,6 @@ class Client:
             'timeouted': 'retry',
             'readTimeout': runtime.read_timeout,
             'connectTimeout': runtime.connect_timeout,
-            'httpProxy': runtime.http_proxy,
             'httpsProxy': runtime.https_proxy,
             'noProxy': runtime.no_proxy,
             'maxIdleConns': runtime.max_idle_conns,
@@ -239,7 +237,6 @@ class Client:
             'timeouted': 'retry',
             'readTimeout': runtime.read_timeout,
             'connectTimeout': runtime.connect_timeout,
-            'httpProxy': runtime.http_proxy,
             'httpsProxy': runtime.https_proxy,
             'noProxy': runtime.no_proxy,
             'maxIdleConns': runtime.max_idle_conns,
@@ -332,7 +329,6 @@ class Client:
             'timeouted': 'retry',
             'readTimeout': runtime.read_timeout,
             'connectTimeout': runtime.connect_timeout,
-            'httpProxy': runtime.http_proxy,
             'httpsProxy': runtime.https_proxy,
             'noProxy': runtime.no_proxy,
             'maxIdleConns': runtime.max_idle_conns,
@@ -827,7 +823,7 @@ class Client:
         if UtilClient.equal_string(request.method, 'GET'):
             return TeaCore.from_map(
                 ha_3engine_models.SearchResponseModel(),
-                self._request(request.method, f'/query', TeaCore.to_map(request.query), request.headers, None, self.build_runtime_options())
+                self._request(request.method, f'/query', TeaCore.to_map(request.query), request.headers, None, self._runtime_options)
             )
         if not UtilClient.empty(request.query.query):
             query_body = {
@@ -835,7 +831,7 @@ class Client:
             }
             return TeaCore.from_map(
                 ha_3engine_models.SearchResponseModel(),
-                self._request(request.method, f'/query', None, request.headers, query_body, self.build_runtime_options())
+                self._request(request.method, f'/query', None, request.headers, query_body, self._runtime_options)
             )
         else:
             sql_body = {
@@ -843,7 +839,7 @@ class Client:
             }
             return TeaCore.from_map(
                 ha_3engine_models.SearchResponseModel(),
-                self._request(request.method, f'/query?type=sql', None, request.headers, sql_body, self.build_runtime_options())
+                self._request(request.method, f'/query?type=sql', None, request.headers, sql_body, self._runtime_options)
             )
 
     async def search_async(
@@ -865,7 +861,7 @@ class Client:
         if UtilClient.equal_string(request.method, 'GET'):
             return TeaCore.from_map(
                 ha_3engine_models.SearchResponseModel(),
-                await self._request_async(request.method, f'/query', TeaCore.to_map(request.query), request.headers, None, await self.build_runtime_options_async())
+                await self._request_async(request.method, f'/query', TeaCore.to_map(request.query), request.headers, None, self._runtime_options)
             )
         if not UtilClient.empty(request.query.query):
             query_body = {
@@ -873,7 +869,7 @@ class Client:
             }
             return TeaCore.from_map(
                 ha_3engine_models.SearchResponseModel(),
-                await self._request_async(request.method, f'/query', None, request.headers, query_body, await self.build_runtime_options_async())
+                await self._request_async(request.method, f'/query', None, request.headers, query_body, self._runtime_options)
             )
         else:
             sql_body = {
@@ -881,7 +877,7 @@ class Client:
             }
             return TeaCore.from_map(
                 ha_3engine_models.SearchResponseModel(),
-                await self._request_async(request.method, f'/query?type=sql', None, request.headers, sql_body, await self.build_runtime_options_async())
+                await self._request_async(request.method, f'/query?type=sql', None, request.headers, sql_body, self._runtime_options)
             )
 
     def search_rest(
@@ -896,7 +892,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_models.SearchResponseModel(),
-            self._request('POST', f'/{index_name}/search', None, request.headers, request.body, self.build_runtime_options())
+            self._request('POST', f'/{index_name}/search', None, request.headers, request.body, self._runtime_options)
         )
 
     async def search_rest_async(
@@ -911,7 +907,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_models.SearchResponseModel(),
-            await self._request_async('POST', f'/{index_name}/search', None, request.headers, request.body, await self.build_runtime_options_async())
+            await self._request_async('POST', f'/{index_name}/search', None, request.headers, request.body, self._runtime_options)
         )
 
     def search_bytes(
@@ -925,7 +921,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_models.SearchBytesResponseModel(),
-            self._request_search_bytes('GET', f'/query', TeaCore.to_map(request.query), request.headers, None, self.build_runtime_options())
+            self._request_search_bytes('GET', f'/query', TeaCore.to_map(request.query), request.headers, None, self._runtime_options)
         )
 
     async def search_bytes_async(
@@ -939,7 +935,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_models.SearchBytesResponseModel(),
-            await self._request_search_bytes_async('GET', f'/query', TeaCore.to_map(request.query), request.headers, None, await self.build_runtime_options_async())
+            await self._request_search_bytes_async('GET', f'/query', TeaCore.to_map(request.query), request.headers, None, self._runtime_options)
         )
 
     def search_rest_bytes(
@@ -954,7 +950,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_models.SearchBytesResponseModel(),
-            self._request_search_bytes('POST', f'/{index_name}/search', None, request.headers, request.body, self.build_runtime_options())
+            self._request_search_bytes('POST', f'/{index_name}/search', None, request.headers, request.body, self._runtime_options)
         )
 
     async def search_rest_bytes_async(
@@ -969,7 +965,7 @@ class Client:
         """
         return TeaCore.from_map(
             ha_3engine_models.SearchBytesResponseModel(),
-            await self._request_search_bytes_async('POST', f'/{index_name}/search', None, request.headers, request.body, await self.build_runtime_options_async())
+            await self._request_search_bytes_async('POST', f'/{index_name}/search', None, request.headers, request.body, self._runtime_options)
         )
 
     def push_documents(
@@ -986,7 +982,7 @@ class Client:
         }, request.headers)
         return TeaCore.from_map(
             ha_3engine_models.PushDocumentsResponseModel(),
-            self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self.build_runtime_options())
+            self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self._runtime_options)
         )
 
     async def push_documents_async(
@@ -1003,7 +999,7 @@ class Client:
         }, request.headers)
         return TeaCore.from_map(
             ha_3engine_models.PushDocumentsResponseModel(),
-            await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, await self.build_runtime_options_async())
+            await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self._runtime_options)
         )
 
     def push_documents_with_swift(
@@ -1024,7 +1020,7 @@ class Client:
         }
         return TeaCore.from_map(
             ha_3engine_models.PushDocumentsResponseModel(),
-            self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self.build_runtime_options())
+            self._request('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self._runtime_options)
         )
 
     async def push_documents_with_swift_async(
@@ -1045,31 +1041,34 @@ class Client:
         }
         return TeaCore.from_map(
             ha_3engine_models.PushDocumentsResponseModel(),
-            await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, await self.build_runtime_options_async())
+            await self._request_async('POST', f'/update/{data_source_name}/actions/bulk', None, request.headers, request.body, self._runtime_options)
         )
 
-    def build_runtime_options(self) -> util_models.RuntimeOptions:
+    def build_runtime_options(
+        self,
+        runtime_options: util_models.RuntimeOptions,
+    ) -> util_models.RuntimeOptions:
         """
         构建RuntimeOptions
         """
-        return util_models.RuntimeOptions(
-            connect_timeout=5000,
-            read_timeout=10000,
-            autoretry=False,
-            ignore_ssl=False,
-            max_idle_conns=50,
-            http_proxy=self._http_proxy
-        )
-
-    async def build_runtime_options_async(self) -> util_models.RuntimeOptions:
-        """
-        构建RuntimeOptions
-        """
-        return util_models.RuntimeOptions(
-            connect_timeout=5000,
-            read_timeout=10000,
-            autoretry=False,
-            ignore_ssl=False,
-            max_idle_conns=50,
-            http_proxy=self._http_proxy
-        )
+        if UtilClient.is_unset(runtime_options):
+            return util_models.RuntimeOptions(
+                read_timeout=10000,
+                connect_timeout=5000,
+                autoretry=False,
+                ignore_ssl=False,
+                max_idle_conns=50
+            )
+        if UtilClient.is_unset(runtime_options.read_timeout):
+            runtime_options.read_timeout = 10000
+        if UtilClient.is_unset(runtime_options.connect_timeout):
+            runtime_options.connect_timeout = 5000
+        if UtilClient.is_unset(runtime_options.max_idle_conns):
+            runtime_options.max_idle_conns = 50
+        if UtilClient.is_unset(runtime_options.max_attempts):
+            runtime_options.max_attempts = 5
+        if UtilClient.is_unset(runtime_options.backoff_policy):
+            runtime_options.backoff_policy = 'no'
+        if UtilClient.is_unset(runtime_options.backoff_period):
+            runtime_options.backoff_period = 1
+        return runtime_options
