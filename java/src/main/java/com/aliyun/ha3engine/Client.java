@@ -18,7 +18,7 @@ public class Client {
     public String _userAgent;
     public String _credential;
     public String _domainsuffix;
-    public String _httpProxy;
+    public com.aliyun.teautil.models.RuntimeOptions _runtimeOptions;
     public Client(Config config) throws Exception {
         if (com.aliyun.teautil.Common.isUnset(config)) {
             throw new TeaException(TeaConverter.buildMap(
@@ -33,7 +33,7 @@ public class Client {
         this._protocol = config.protocol;
         this._userAgent = config.userAgent;
         this._domainsuffix = "ha.aliyuncs.com";
-        this._httpProxy = config.httpProxy;
+        this._runtimeOptions = this.buildRuntimeOptions(config.runtimeOptions);
     }
 
     public java.util.Map<String, ?> _request(String method, String pathname, java.util.Map<String, ?> query, java.util.Map<String, String> headers, Object body, com.aliyun.teautil.models.RuntimeOptions runtime) throws Exception {
@@ -41,7 +41,6 @@ public class Client {
             new TeaPair("timeouted", "retry"),
             new TeaPair("readTimeout", runtime.readTimeout),
             new TeaPair("connectTimeout", runtime.connectTimeout),
-            new TeaPair("httpProxy", runtime.httpProxy),
             new TeaPair("httpsProxy", runtime.httpsProxy),
             new TeaPair("noProxy", runtime.noProxy),
             new TeaPair("maxIdleConns", runtime.maxIdleConns),
@@ -147,7 +146,6 @@ public class Client {
             new TeaPair("timeouted", "retry"),
             new TeaPair("readTimeout", runtime.readTimeout),
             new TeaPair("connectTimeout", runtime.connectTimeout),
-            new TeaPair("httpProxy", runtime.httpProxy),
             new TeaPair("httpsProxy", runtime.httpsProxy),
             new TeaPair("noProxy", runtime.noProxy),
             new TeaPair("maxIdleConns", runtime.maxIdleConns),
@@ -583,19 +581,19 @@ public class Client {
         }
 
         if (com.aliyun.teautil.Common.equalString(request.method, "GET")) {
-            return TeaModel.toModel(this._request(request.method, "/query", TeaModel.buildMap(request.query), request.headers, null, this.buildRuntimeOptions()), new SearchResponseModel());
+            return TeaModel.toModel(this._request(request.method, "/query", TeaModel.buildMap(request.query), request.headers, null, _runtimeOptions), new SearchResponseModel());
         }
 
         if (!com.aliyun.teautil.Common.empty(request.query.query)) {
             java.util.Map<String, String> queryBody = TeaConverter.buildMap(
                 new TeaPair("assemblyQuery", request.query.query)
             );
-            return TeaModel.toModel(this._request(request.method, "/query", null, request.headers, queryBody, this.buildRuntimeOptions()), new SearchResponseModel());
+            return TeaModel.toModel(this._request(request.method, "/query", null, request.headers, queryBody, _runtimeOptions), new SearchResponseModel());
         } else {
             java.util.Map<String, String> sqlBody = TeaConverter.buildMap(
                 new TeaPair("assemblyQuery", request.query.sql)
             );
-            return TeaModel.toModel(this._request(request.method, "/query?type=sql", null, request.headers, sqlBody, this.buildRuntimeOptions()), new SearchResponseModel());
+            return TeaModel.toModel(this._request(request.method, "/query?type=sql", null, request.headers, sqlBody, _runtimeOptions), new SearchResponseModel());
         }
 
     }
@@ -606,7 +604,7 @@ public class Client {
      * 返回数据的body为String格式
      */
     public SearchResponseModel SearchRest(SearchRequestModel request, String indexName) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/" + indexName + "/search", null, request.headers, request.body, this.buildRuntimeOptions()), new SearchResponseModel());
+        return TeaModel.toModel(this._request("POST", "/" + indexName + "/search", null, request.headers, request.body, _runtimeOptions), new SearchResponseModel());
     }
 
     /**
@@ -615,7 +613,7 @@ public class Client {
      * 返回数据的body为byte[]格式
      */
     public SearchBytesResponseModel SearchBytes(SearchRequestModel request) throws Exception {
-        return TeaModel.toModel(this._request_search_bytes("GET", "/query", TeaModel.buildMap(request.query), request.headers, null, this.buildRuntimeOptions()), new SearchBytesResponseModel());
+        return TeaModel.toModel(this._request_search_bytes("GET", "/query", TeaModel.buildMap(request.query), request.headers, null, _runtimeOptions), new SearchBytesResponseModel());
     }
 
     /**
@@ -624,7 +622,7 @@ public class Client {
      * 返回数据的body为byte[]格式
      */
     public SearchBytesResponseModel SearchRestBytes(SearchRequestModel request, String indexName) throws Exception {
-        return TeaModel.toModel(this._request_search_bytes("POST", "/" + indexName + "/search", null, request.headers, request.body, this.buildRuntimeOptions()), new SearchBytesResponseModel());
+        return TeaModel.toModel(this._request_search_bytes("POST", "/" + indexName + "/search", null, request.headers, request.body, _runtimeOptions), new SearchBytesResponseModel());
     }
 
     /**
@@ -637,7 +635,7 @@ public class Client {
             ),
             request.headers
         );
-        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, this.buildRuntimeOptions()), new PushDocumentsResponseModel());
+        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, _runtimeOptions), new PushDocumentsResponseModel());
     }
 
     /**
@@ -649,20 +647,47 @@ public class Client {
             new TeaPair("X-Opensearch-Swift-Topic", topic),
             new TeaPair("X-Opensearch-Swift-Swift", swift)
         );
-        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, this.buildRuntimeOptions()), new PushDocumentsResponseModel());
+        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, _runtimeOptions), new PushDocumentsResponseModel());
     }
 
     /**
      * 构建RuntimeOptions
      */
-    public com.aliyun.teautil.models.RuntimeOptions buildRuntimeOptions() throws Exception {
-        return com.aliyun.teautil.models.RuntimeOptions.build(TeaConverter.buildMap(
-            new TeaPair("connectTimeout", 5000),
-            new TeaPair("readTimeout", 10000),
-            new TeaPair("autoretry", false),
-            new TeaPair("ignoreSSL", false),
-            new TeaPair("maxIdleConns", 50),
-            new TeaPair("httpProxy", _httpProxy)
-        ));
+    public com.aliyun.teautil.models.RuntimeOptions buildRuntimeOptions(com.aliyun.teautil.models.RuntimeOptions runtimeOptions) throws Exception {
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions)) {
+            return com.aliyun.teautil.models.RuntimeOptions.build(TeaConverter.buildMap(
+                new TeaPair("readTimeout", 10000),
+                new TeaPair("connectTimeout", 5000),
+                new TeaPair("autoretry", false),
+                new TeaPair("ignoreSSL", false),
+                new TeaPair("maxIdleConns", 50)
+            ));
+        }
+
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions.readTimeout)) {
+            runtimeOptions.readTimeout = 10000;
+        }
+
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions.connectTimeout)) {
+            runtimeOptions.connectTimeout = 5000;
+        }
+
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions.maxIdleConns)) {
+            runtimeOptions.maxIdleConns = 50;
+        }
+
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions.maxAttempts)) {
+            runtimeOptions.maxAttempts = 5;
+        }
+
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions.backoffPolicy)) {
+            runtimeOptions.backoffPolicy = "no";
+        }
+
+        if (com.aliyun.teautil.Common.isUnset(runtimeOptions.backoffPeriod)) {
+            runtimeOptions.backoffPeriod = 1;
+        }
+
+        return runtimeOptions;
     }
 }

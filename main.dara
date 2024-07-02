@@ -9,7 +9,7 @@ type @protocol = string
 type @userAgent = string
 type @credential = string
 type @domainsuffix = string
-type @httpProxy = string
+type @runtimeOptions = Util.RuntimeOptions
 
 model Config {
   endpoint?: string,
@@ -18,7 +18,7 @@ model Config {
   accessUserName?: string,
   accessPassWord?: string,
   userAgent?: string,
-  httpProxy?: string
+  runtimeOptions?: Util.RuntimeOptions
 }
 
 init(config: Config) {
@@ -34,7 +34,7 @@ init(config: Config) {
   @protocol = config.protocol;
   @userAgent = config.userAgent;
   @domainsuffix = 'ha.aliyuncs.com';
-  @httpProxy = config.httpProxy;
+  @runtimeOptions = buildRuntimeOptions(config.runtimeOptions);
 }
 
 /**
@@ -416,19 +416,19 @@ async function Search(request: SearchRequestModel): SearchResponseModel {
     };
   }
   if (Util.equalString(request.method, 'GET')) {
-    return _request(request.method, `/query`, request.query, request.headers, null, buildRuntimeOptions());
+    return _request(request.method, `/query`, request.query, request.headers, null, @runtimeOptions);
   }
 
   if (!Util.empty(request.query.query)) {
     var queryBody: map[string]string = {
       assemblyQuery = request.query.query
     };
-    return _request(request.method, `/query`, null, request.headers, queryBody, buildRuntimeOptions());
+    return _request(request.method, `/query`, null, request.headers, queryBody, @runtimeOptions);
   } else {
     var sqlBody: map[string]string = {
       assemblyQuery = request.query.sql
     };
-    return _request(request.method, `/query?type=sql`, null, request.headers, sqlBody, buildRuntimeOptions());
+    return _request(request.method, `/query?type=sql`, null, request.headers, sqlBody, @runtimeOptions);
   }
 }
 
@@ -438,7 +438,7 @@ async function Search(request: SearchRequestModel): SearchResponseModel {
  * 返回数据的body为String格式
  */
 async function SearchRest(request: SearchRequestModel, indexName: string): SearchResponseModel {
-  return _request('POST', `/${indexName}/search`, null, request.headers, request.body, buildRuntimeOptions());
+  return _request('POST', `/${indexName}/search`, null, request.headers, request.body, @runtimeOptions);
 }
 
 /**
@@ -447,7 +447,7 @@ async function SearchRest(request: SearchRequestModel, indexName: string): Searc
  * 返回数据的body为byte[]格式
  */
 async function SearchBytes(request: SearchRequestModel): SearchBytesResponseModel {
-  return _request_search_bytes('GET', `/query`, request.query, request.headers, null, buildRuntimeOptions());
+  return _request_search_bytes('GET', `/query`, request.query, request.headers, null, @runtimeOptions);
 }
 
 /**
@@ -456,7 +456,7 @@ async function SearchBytes(request: SearchRequestModel): SearchBytesResponseMode
  * 返回数据的body为byte[]格式
  */
 async function SearchRestBytes(request: SearchRequestModel, indexName: string): SearchBytesResponseModel {
-  return _request_search_bytes('POST', `/${indexName}/search`, null, request.headers, request.body, buildRuntimeOptions());
+  return _request_search_bytes('POST', `/${indexName}/search`, null, request.headers, request.body, @runtimeOptions);
 }
 
 model PushDocumentsRequestModel {
@@ -477,7 +477,7 @@ async function pushDocuments(dataSourceName: string, keyField: string, request: 
     X-Opensearch-Swift-PK-Field = keyField,
     ...request.headers
   };
-  return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, buildRuntimeOptions());
+  return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, @runtimeOptions);
 }
 
 /**
@@ -489,7 +489,7 @@ async function pushDocumentsWithSwift(dataSourceName: string, keyField: string, 
     X-Opensearch-Swift-Topic = topic,
     X-Opensearch-Swift-Swift = swift
   };
-  return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, buildRuntimeOptions());
+  return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, @runtimeOptions);
 }
 
 api _request(method: string, pathname: string, query: map[string]any, headers: map[string]string, body: any, runtime: Util.RuntimeOptions): map[string]any {
@@ -551,7 +551,6 @@ api _request(method: string, pathname: string, query: map[string]any, headers: m
   timeouted = 'retry',
   readTimeout = runtime.readTimeout,
   connectTimeout = runtime.connectTimeout,
-  httpProxy = runtime.httpProxy,
   httpsProxy = runtime.httpsProxy,
   noProxy = runtime.noProxy,
   maxIdleConns = runtime.maxIdleConns,
@@ -626,7 +625,6 @@ api _request_search_bytes(method: string, pathname: string, query: map[string]an
   timeouted = 'retry',
   readTimeout = runtime.readTimeout,
   connectTimeout = runtime.connectTimeout,
-  httpProxy = runtime.httpProxy,
   httpsProxy = runtime.httpsProxy,
   noProxy = runtime.noProxy,
   maxIdleConns = runtime.maxIdleConns,
@@ -644,14 +642,35 @@ api _request_search_bytes(method: string, pathname: string, query: map[string]an
 /**
  * 构建RuntimeOptions
  */
-async function buildRuntimeOptions(): Util.RuntimeOptions {
-  return new Util.RuntimeOptions{
-     connectTimeout = 5000,
-     readTimeout = 10000,
-     autoretry = false,
-     ignoreSSL = false,
-     maxIdleConns = 50,
-     httpProxy = @httpProxy
-  };
+function buildRuntimeOptions(runtimeOptions: Util.RuntimeOptions): Util.RuntimeOptions {
+  if (Util.isUnset(runtimeOptions)) {
+    return new Util.RuntimeOptions{
+      readTimeout = 10000,
+      connectTimeout = 5000,
+      autoretry = false,
+      ignoreSSL = false,
+      maxIdleConns = 50
+    };
+  }
+
+  if (Util.isUnset(runtimeOptions.readTimeout)) {
+    runtimeOptions.readTimeout = 10000;
+  }
+  if (Util.isUnset(runtimeOptions.connectTimeout)) {
+    runtimeOptions.connectTimeout = 5000;
+  }
+  if (Util.isUnset(runtimeOptions.maxIdleConns)) {
+    runtimeOptions.maxIdleConns = 50;
+  }
+  if (Util.isUnset(runtimeOptions.maxAttempts)) {
+    runtimeOptions.maxAttempts = 5;
+  }
+  if (Util.isUnset(runtimeOptions.backoffPolicy)) {
+    runtimeOptions.backoffPolicy = 'no';
+  }
+  if (Util.isUnset(runtimeOptions.backoffPeriod)) {
+    runtimeOptions.backoffPeriod = 1;
+  }
+  return runtimeOptions;
 }
 
