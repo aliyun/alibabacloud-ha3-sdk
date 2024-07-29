@@ -29,12 +29,27 @@ init(config: Config) {
     };
   }
   @credential = getRealmSignStr(config.accessUserName, config.accessPassWord);
-  @endpoint = config.endpoint;
+  @endpoint = getEndpoint(config.endpoint);
   @instanceId = config.instanceId;
   @protocol = config.protocol;
   @userAgent = config.userAgent;
   @domainsuffix = 'ha.aliyuncs.com';
   @runtimeOptions = buildRuntimeOptions(config.runtimeOptions);
+}
+
+/**
+ * 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
+ */
+function getEndpoint(endpoint: string): string {
+  if (String.hasPrefix(endpoint, 'http://')) {
+    return String.replace(endpoint, 'http://', '', 1);
+  }
+
+  if (String.hasPrefix(endpoint, 'https://')) {
+   return String.replace(endpoint, 'https://', '', 1);
+  }
+
+  return endpoint;
 }
 
 /**

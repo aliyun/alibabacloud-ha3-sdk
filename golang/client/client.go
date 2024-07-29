@@ -535,7 +535,7 @@ func (client *Client)Init(config *Config)(_err error) {
   }
 
   client.Credential = client.GetRealmSignStr(config.AccessUserName, config.AccessPassWord)
-  client.Endpoint = config.Endpoint
+  client.Endpoint = client.GetEndpoint(config.Endpoint)
   client.InstanceId = config.InstanceId
   client.Protocol = config.Protocol
   client.UserAgent = config.UserAgent
@@ -792,6 +792,26 @@ func (client *Client) _request_search_bytes(method *string, pathname *string, qu
   return _resp, _err
 }
 
+
+// Description:
+// 
+// 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
+func (client *Client) GetEndpoint (endpoint *string) (_result *string) {
+  if tea.BoolValue(string_.HasPrefix(endpoint, tea.String("http://"))) {
+    _body := string_.Replace(endpoint, tea.String("http://"), tea.String(""), tea.Int(1))
+    _result = _body
+    return _result
+  }
+
+  if tea.BoolValue(string_.HasPrefix(endpoint, tea.String("https://"))) {
+    _body := string_.Replace(endpoint, tea.String("https://"), tea.String(""), tea.Int(1))
+    _result = _body
+    return _result
+  }
+
+  _result = endpoint
+  return _result
+}
 
 // Description:
 // 

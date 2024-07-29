@@ -34,7 +34,7 @@ class Client:
                 'message': "'config' can not be unset"
             })
         self._credential = self.get_realm_sign_str(config.access_user_name, config.access_pass_word)
-        self._endpoint = config.endpoint
+        self._endpoint = self.get_endpoint(config.endpoint)
         self._instance_id = config.instance_id
         self._protocol = config.protocol
         self._user_agent = config.user_agent
@@ -406,6 +406,19 @@ class Client:
                     continue
                 raise e
         raise UnretryableException(_last_request, _last_exception)
+
+    def get_endpoint(
+        self,
+        endpoint: str,
+    ) -> str:
+        """
+        如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
+        """
+        if StringClient.has_prefix(endpoint, 'http://'):
+            return StringClient.replace(endpoint, 'http://', '', 1)
+        if StringClient.has_prefix(endpoint, 'https://'):
+            return StringClient.replace(endpoint, 'https://', '', 1)
+        return endpoint
 
     def set_user_agent(
         self,
