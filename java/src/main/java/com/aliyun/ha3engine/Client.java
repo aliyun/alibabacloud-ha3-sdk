@@ -28,7 +28,7 @@ public class Client {
         }
 
         this._credential = this.getRealmSignStr(config.accessUserName, config.accessPassWord);
-        this._endpoint = config.endpoint;
+        this._endpoint = this.getEndpoint(config.endpoint);
         this._instanceId = config.instanceId;
         this._protocol = config.protocol;
         this._userAgent = config.userAgent;
@@ -257,6 +257,21 @@ public class Client {
 
     public void addResponseInterceptor(ResponseInterceptor interceptor) {
         interceptorChain.addResponseInterceptor(interceptor);
+    }
+
+    /**
+     * 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
+     */
+    public String getEndpoint(String endpoint) throws Exception {
+        if (com.aliyun.darabonbastring.Client.hasPrefix(endpoint, "http://")) {
+            return com.aliyun.darabonbastring.Client.replace(endpoint, "http://", "", 1);
+        }
+
+        if (com.aliyun.darabonbastring.Client.hasPrefix(endpoint, "https://")) {
+            return com.aliyun.darabonbastring.Client.replace(endpoint, "https://", "", 1);
+        }
+
+        return endpoint;
     }
 
     /**
