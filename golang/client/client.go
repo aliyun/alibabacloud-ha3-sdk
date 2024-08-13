@@ -121,6 +121,8 @@ type QueryRequest struct {
   VectorCount *int `json:"vectorCount,omitempty" xml:"vectorCount,omitempty"`
   // 排序表达式
   Sort *string `json:"sort,omitempty" xml:"sort,omitempty"`
+  // kvpairs
+  Kvpairs map[string]*string `json:"kvpairs,omitempty" xml:"kvpairs,omitempty"`
 }
 
 func (s QueryRequest) String() string {
@@ -213,6 +215,11 @@ func (s *QueryRequest) SetVectorCount(v int) *QueryRequest {
 
 func (s *QueryRequest) SetSort(v string) *QueryRequest {
   s.Sort = &v
+  return s
+}
+
+func (s *QueryRequest) SetKvpairs(v map[string]*string) *QueryRequest {
+  s.Kvpairs = v
   return s
 }
 
@@ -332,6 +339,8 @@ type FetchRequest struct {
   IncludeVector *bool `json:"includeVector,omitempty" xml:"includeVector,omitempty"`
   // 需要返回的字段，不指定默认返回所有的字段
   OutputFields []*string `json:"outputFields,omitempty" xml:"outputFields,omitempty" type:"Repeated"`
+  // kvpairs
+  Kvpairs map[string]*string `json:"kvpairs,omitempty" xml:"kvpairs,omitempty"`
 }
 
 func (s FetchRequest) String() string {
@@ -379,6 +388,11 @@ func (s *FetchRequest) SetIncludeVector(v bool) *FetchRequest {
 
 func (s *FetchRequest) SetOutputFields(v []*string) *FetchRequest {
   s.OutputFields = v
+  return s
+}
+
+func (s *FetchRequest) SetKvpairs(v map[string]*string) *FetchRequest {
+  s.Kvpairs = v
   return s
 }
 
@@ -595,9 +609,9 @@ func (client *Client) _request(method *string, pathname *string, query map[strin
 }
 
 
-// Description:
-// 
-// 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
+/**
+ * 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
+ */
 func (client *Client) GetEndpoint (endpoint *string) (_result *string) {
   if tea.BoolValue(string_.HasPrefix(endpoint, tea.String("http://"))) {
     _body := string_.Replace(endpoint, tea.String("http://"), tea.String(""), tea.Int(1))
@@ -615,32 +629,32 @@ func (client *Client) GetEndpoint (endpoint *string) (_result *string) {
   return _result
 }
 
-// Description:
-// 
-// 设置Client UA 配置.
+/**
+ * 设置Client UA 配置.
+ */
 func (client *Client) SetUserAgent (userAgent *string) {
   client.UserAgent = userAgent
 }
 
-// Description:
-// 
-// 添加Client UA 配置.
+/**
+ * 添加Client UA 配置.
+ */
 func (client *Client) AppendUserAgent (userAgent *string) {
   client.UserAgent = tea.String(tea.StringValue(client.UserAgent) + " " + tea.StringValue(userAgent))
 }
 
-// Description:
-// 
-// 获取Client 配置 UA 配置.
+/**
+ * 获取Client 配置 UA 配置.
+ */
 func (client *Client) GetUserAgent () (_result *string) {
   userAgent := util.GetUserAgent(client.UserAgent)
   _result = userAgent
   return _result
 }
 
-// Description:
-// 
-// 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
+/**
+ * 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
+ */
 func (client *Client) GetRealmSignStr (accessUserName *string, accessPassWord *string) (_result *string) {
   accessUserNameStr := string_.Trim(accessUserName)
   accessPassWordStr := string_.Trim(accessPassWord)
@@ -650,9 +664,9 @@ func (client *Client) GetRealmSignStr (accessUserName *string, accessPassWord *s
   return _result
 }
 
-// Description:
-// 
-// 向量查询
+/**
+ * 向量查询
+ */
 func (client *Client) Query (request *QueryRequest) (_result *SearchResponse, _err error) {
   _result = &SearchResponse{}
   _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/query"), nil, nil, util.ToJSONString(request), client.RuntimeOptions)
@@ -663,9 +677,9 @@ func (client *Client) Query (request *QueryRequest) (_result *SearchResponse, _e
   return _result, _err
 }
 
-// Description:
-// 
-// 向量预测查询
+/**
+ * 向量预测查询
+ */
 func (client *Client) InferenceQuery (request *QueryRequest) (_result *SearchResponse, _err error) {
   _result = &SearchResponse{}
   _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/inference-query"), nil, nil, util.ToJSONString(request), client.RuntimeOptions)
@@ -676,9 +690,9 @@ func (client *Client) InferenceQuery (request *QueryRequest) (_result *SearchRes
   return _result, _err
 }
 
-// Description:
-// 
-// 多namespace查询
+/**
+ * 多namespace查询
+ */
 func (client *Client) MultiQuery (request *MultiQueryRequest) (_result *SearchResponse, _err error) {
   _result = &SearchResponse{}
   _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/multi-query"), nil, nil, util.ToJSONString(request), client.RuntimeOptions)
@@ -689,9 +703,9 @@ func (client *Client) MultiQuery (request *MultiQueryRequest) (_result *SearchRe
   return _result, _err
 }
 
-// Description:
-// 
-// 查询数据
+/**
+ * 查询数据
+ */
 func (client *Client) Fetch (request *FetchRequest) (_result *SearchResponse, _err error) {
   _result = &SearchResponse{}
   _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/fetch"), nil, nil, util.ToJSONString(request), client.RuntimeOptions)
@@ -702,9 +716,9 @@ func (client *Client) Fetch (request *FetchRequest) (_result *SearchResponse, _e
   return _result, _err
 }
 
-// Description:
-// 
-// 文档统计
+/**
+ * 文档统计
+ */
 func (client *Client) Stats (tableName *string) (_result *SearchResponse, _err error) {
   body := map[string]interface{}{
     "tableName": tea.StringValue(tableName),
@@ -718,9 +732,9 @@ func (client *Client) Stats (tableName *string) (_result *SearchResponse, _err e
   return _result, _err
 }
 
-// Description:
-// 
-// 支持新增、更新、删除 等操作，以及对应批量操作
+/**
+ * 支持新增、更新、删除 等操作，以及对应批量操作
+ */
 func (client *Client) PushDocuments (dataSourceName *string, keyField *string, request *PushDocumentsRequest) (_result *PushDocumentsResponse, _err error) {
   request.Headers = tea.Merge(map[string]*string{
     "X-Opensearch-Swift-PK-Field": keyField,
@@ -734,9 +748,9 @@ func (client *Client) PushDocuments (dataSourceName *string, keyField *string, r
   return _result, _err
 }
 
-// Description:
-// 
-// 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
+/**
+ * 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
+ */
 func (client *Client) PushDocumentsWithSwift (dataSourceName *string, keyField *string, topic *string, swift *string, request *PushDocumentsRequest) (_result *PushDocumentsResponse, _err error) {
   request.Headers = map[string]*string{
     "X-Opensearch-Swift-PK-Field": keyField,
@@ -752,9 +766,9 @@ func (client *Client) PushDocumentsWithSwift (dataSourceName *string, keyField *
   return _result, _err
 }
 
-// Description:
-// 
-// 构建RuntimeOptions
+/**
+ * 构建RuntimeOptions
+ */
 func (client *Client) BuildRuntimeOptions (runtimeOptions *util.RuntimeOptions) (_result *util.RuntimeOptions) {
   if tea.BoolValue(util.IsUnset(runtimeOptions)) {
     _result = &util.RuntimeOptions{}
