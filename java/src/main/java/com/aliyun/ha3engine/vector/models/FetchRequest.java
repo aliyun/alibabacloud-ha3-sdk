@@ -53,6 +53,12 @@ public class FetchRequest extends TeaModel {
     @NameInMap("outputFields")
     public java.util.List<String> outputFields;
 
+    /**
+     * <p>kvpairs</p>
+     */
+    @NameInMap("kvpairs")
+    public java.util.Map<String, String> kvpairs;
+
     public static FetchRequest build(java.util.Map<String, ?> map) throws Exception {
         FetchRequest self = new FetchRequest();
         return TeaModel.build(map, self);
@@ -120,6 +126,14 @@ public class FetchRequest extends TeaModel {
     }
     public java.util.List<String> getOutputFields() {
         return this.outputFields;
+    }
+
+    public FetchRequest setKvpairs(java.util.Map<String, String> kvpairs) {
+        this.kvpairs = kvpairs;
+        return this;
+    }
+    public java.util.Map<String, String> getKvpairs() {
+        return this.kvpairs;
     }
 
 }

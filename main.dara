@@ -107,7 +107,8 @@ model QueryRequest {
   filter?: string(name='filter', description='过滤表达式'),
   scoreThreshold?: float(name='scoreThreshold', description='分数过滤， 使用欧式距离时，只返回小于scoreThreshold的结果。使用内积时，只返回大于scoreThreshold的结果'),
   vectorCount?: integer(name='vectorCount', description='vector字段中包含的向量个数'),
-  sort?: string(name='sort', description='排序表达式')
+  sort?: string(name='sort', description='排序表达式'),
+  kvpairs?: map[string]string(name='kvpairs', description='kvpairs')
 }
 
 model SparseData {
@@ -135,7 +136,8 @@ model FetchRequest {
   limit?: integer(name='limit', description='返回的数据个数'),
   offset?: integer(name='offset', description='返回的数据开始下标，用于翻页'),
   includeVector?: boolean(name='includeVector', description='是否返回向量数据'),
-  outputFields?: [ string ](name='outputFields', description='需要返回的字段，不指定默认返回所有的字段')
+  outputFields?: [ string ](name='outputFields', description='需要返回的字段，不指定默认返回所有的字段'),
+  kvpairs?: map[string]string(name='kvpairs', description='kvpairs')
 }
 
 /**

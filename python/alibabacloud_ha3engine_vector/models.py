@@ -169,6 +169,7 @@ class QueryRequest(TeaModel):
         score_threshold: float = None,
         vector_count: int = None,
         sort: str = None,
+        kvpairs: Dict[str, str] = None,
     ):
         # 数据源名
         self.table_name = table_name
@@ -204,6 +205,8 @@ class QueryRequest(TeaModel):
         self.vector_count = vector_count
         # 排序表达式
         self.sort = sort
+        # kvpairs
+        self.kvpairs = kvpairs
 
     def validate(self):
         self.validate_required(self.table_name, 'table_name')
@@ -251,6 +254,8 @@ class QueryRequest(TeaModel):
             result['vectorCount'] = self.vector_count
         if self.sort is not None:
             result['sort'] = self.sort
+        if self.kvpairs is not None:
+            result['kvpairs'] = self.kvpairs
         return result
 
     def from_map(self, m: dict = None):
@@ -290,6 +295,8 @@ class QueryRequest(TeaModel):
             self.vector_count = m.get('vectorCount')
         if m.get('sort') is not None:
             self.sort = m.get('sort')
+        if m.get('kvpairs') is not None:
+            self.kvpairs = m.get('kvpairs')
         return self
 
 
@@ -391,6 +398,7 @@ class FetchRequest(TeaModel):
         offset: int = None,
         include_vector: bool = None,
         output_fields: List[str] = None,
+        kvpairs: Dict[str, str] = None,
     ):
         # 数据源名
         self.table_name = table_name
@@ -408,6 +416,8 @@ class FetchRequest(TeaModel):
         self.include_vector = include_vector
         # 需要返回的字段，不指定默认返回所有的字段
         self.output_fields = output_fields
+        # kvpairs
+        self.kvpairs = kvpairs
 
     def validate(self):
         self.validate_required(self.table_name, 'table_name')
@@ -434,6 +444,8 @@ class FetchRequest(TeaModel):
             result['includeVector'] = self.include_vector
         if self.output_fields is not None:
             result['outputFields'] = self.output_fields
+        if self.kvpairs is not None:
+            result['kvpairs'] = self.kvpairs
         return result
 
     def from_map(self, m: dict = None):
@@ -454,6 +466,8 @@ class FetchRequest(TeaModel):
             self.include_vector = m.get('includeVector')
         if m.get('outputFields') is not None:
             self.output_fields = m.get('outputFields')
+        if m.get('kvpairs') is not None:
+            self.kvpairs = m.get('kvpairs')
         return self
 
 

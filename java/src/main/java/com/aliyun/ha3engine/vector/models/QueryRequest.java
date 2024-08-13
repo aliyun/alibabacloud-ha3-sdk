@@ -108,6 +108,12 @@ public class QueryRequest extends TeaModel {
     @NameInMap("sort")
     public String sort;
 
+    /**
+     * <p>kvpairs</p>
+     */
+    @NameInMap("kvpairs")
+    public java.util.Map<String, String> kvpairs;
+
     public static QueryRequest build(java.util.Map<String, ?> map) throws Exception {
         QueryRequest self = new QueryRequest();
         return TeaModel.build(map, self);
@@ -247,6 +253,14 @@ public class QueryRequest extends TeaModel {
     }
     public String getSort() {
         return this.sort;
+    }
+
+    public QueryRequest setKvpairs(java.util.Map<String, String> kvpairs) {
+        this.kvpairs = kvpairs;
+        return this;
+    }
+    public java.util.Map<String, String> getKvpairs() {
+        return this.kvpairs;
     }
 
 }
