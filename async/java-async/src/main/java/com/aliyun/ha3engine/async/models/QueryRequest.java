@@ -1,6 +1,8 @@
 // This file is auto-generated, don't edit it. Thanks.
 package com.aliyun.ha3engine.async.models;
 
+import java.util.Map;
+
 import com.aliyun.core.annotation.*;
 import darabonba.core.RequestModel;
 import com.aliyun.sdk.ha3engine.async.core.models.Request;
@@ -82,6 +84,10 @@ public class QueryRequest extends Request {
     @NameInMap("sort")
     private String sort;
 
+    @Body
+    @NameInMap("kvpairs")
+    public java.util.Map<String, String> kvpairs;
+
     private QueryRequest(Builder builder) {
         super(builder);
         this.tableName = builder.tableName;
@@ -101,6 +107,7 @@ public class QueryRequest extends Request {
         this.scoreThreshold = builder.scoreThreshold;
         this.vectorCount = builder.vectorCount;
         this.sort = builder.sort;
+        this.kvpairs = builder.kvpairs;
     }
 
     public static Builder builder() {
@@ -235,6 +242,13 @@ public class QueryRequest extends Request {
         return this.sort;
     }
 
+    /**
+     * @return kvpairs
+     */
+    public Map<String, String> getKvpairs() {
+        return kvpairs;
+    }
+
     public static final class Builder extends Request.Builder<QueryRequest, Builder> {
         private String tableName; 
         private java.util.List < Float > vector; 
@@ -252,7 +266,8 @@ public class QueryRequest extends Request {
         private String filter; 
         private Float scoreThreshold; 
         private Integer vectorCount; 
-        private String sort; 
+        private String sort;
+        private Map<String, String> kvpairs;
 
         private Builder() {
             super();
@@ -277,6 +292,7 @@ public class QueryRequest extends Request {
             this.scoreThreshold = request.scoreThreshold;
             this.vectorCount = request.vectorCount;
             this.sort = request.sort;
+            this.kvpairs = request.kvpairs;
         } 
 
         /**
@@ -429,6 +445,15 @@ public class QueryRequest extends Request {
         public Builder sort(String sort) {
             this.putBodyParameter("sort", sort);
             this.sort = sort;
+            return this;
+        }
+
+        /**
+         * kvpairs
+         */
+        public Builder kvpairs(java.util.Map<String, String> kvpairs) {
+            this.putBodyParameter("kvpairs", kvpairs);
+            this.kvpairs = kvpairs;
             return this;
         }
 

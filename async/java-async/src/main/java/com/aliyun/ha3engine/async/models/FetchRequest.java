@@ -2,6 +2,7 @@
 package com.aliyun.ha3engine.async.models;
 
 import java.util.List;
+import java.util.Map;
 
 import com.aliyun.core.annotation.Body;
 import com.aliyun.core.annotation.NameInMap;
@@ -30,21 +31,30 @@ public class FetchRequest extends Request {
     @Body
     @NameInMap("filter")
     private String filter;
+
     @Body
     @NameInMap("sort")
     private String sort;
+
     @Body
     @NameInMap("limit")
     private Integer limit;
+
     @Body
     @NameInMap("offset")
     private Integer offset;
+
     @Body
     @NameInMap("includeVector")
     private Boolean includeVector;
+
     @Body
     @NameInMap("outputFields")
     private java.util.List < String > outputFields;
+
+    @Body
+    @NameInMap("kvpairs")
+    public java.util.Map<String, String> kvpairs;
 
     public FetchRequest(Builder builder) {
         super(builder);
@@ -56,6 +66,7 @@ public class FetchRequest extends Request {
         this.offset = builder.offset;
         this.includeVector = builder.includeVector;
         this.outputFields = builder.outputFields;
+        this.kvpairs = builder.kvpairs;
     }
 
     public static Builder builder() {
@@ -91,35 +102,44 @@ public class FetchRequest extends Request {
     public String getFilter() {
         return filter;
     }
+
     /**
      * @return sort
      */
     public String getSort() {
         return sort;
     }
+
     /**
      * @return limit
      */
     public Integer getLimit() {
         return limit;
     }
+
     /**
      * @return offset
      */
     public Integer getOffset() {
         return offset;
     }
+
     /**
      * @return includeVector
      */
     public Boolean getIncludeVector() {
         return includeVector;
     }
+
     /**
      * @return outputFields
      */
     public List<String> getOutputFields() {
         return outputFields;
+    }
+
+    public Map<String, String> getKvpairs() {
+        return kvpairs;
     }
 
     public static final class Builder extends Request.Builder<FetchRequest, Builder> {
@@ -131,6 +151,7 @@ public class FetchRequest extends Request {
         private Integer offset;
         private Boolean includeVector;
         private java.util.List < String > outputFields;
+        private java.util.Map<String, String> kvpairs;
 
         private Builder() {
             super();
@@ -146,6 +167,7 @@ public class FetchRequest extends Request {
             this.offset = request.offset;
             this.includeVector = request.includeVector;
             this.outputFields = request.outputFields;
+            this.kvpairs = request.kvpairs;
         } 
 
         /**
@@ -158,7 +180,7 @@ public class FetchRequest extends Request {
         }
 
         /**
-         * 主键列表
+         * id列表，如果传了id列表，下面的条件参数不生效
          */
         public Builder ids(java.util.List < String > ids) {
             this.putBodyParameter("ids", ids);
@@ -174,6 +196,7 @@ public class FetchRequest extends Request {
             this.filter = filter;
             return this;
         }
+
         /**
          * 排序表达式
          */
@@ -182,6 +205,7 @@ public class FetchRequest extends Request {
             this.sort = sort;
             return this;
         }
+
         /**
          * 返回的数据个数
          */
@@ -190,6 +214,7 @@ public class FetchRequest extends Request {
             this.limit = limit;
             return this;
         }
+
         /**
          * 返回的数据开始下标，用于翻页
          */
@@ -198,6 +223,7 @@ public class FetchRequest extends Request {
             this.offset = offset;
             return this;
         }
+
         /**
          * 是否返回向量数据
          */
@@ -206,12 +232,22 @@ public class FetchRequest extends Request {
             this.includeVector = includeVector;
             return this;
         }
+
         /**
          * 需要返回的字段，不指定默认返回所有的字段
          */
         public Builder outputFields(java.util.List < String > outputFields) {
             this.putBodyParameter("outputFields", outputFields);
             this.outputFields = outputFields;
+            return this;
+        }
+
+        /**
+         * kvpairs字段
+         */
+        public Builder kvpairs(java.util.Map<String, String> kvpairs) {
+            this.putBodyParameter("kvpairs", kvpairs);
+            this.kvpairs = kvpairs;
             return this;
         }
 
