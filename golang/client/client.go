@@ -733,6 +733,20 @@ func (client *Client) Stats (tableName *string) (_result *SearchResponse, _err e
 }
 
 /**
+ * 校验网络是否通畅
+ * 检查vpc & 用户名密码配置是否正确
+ */
+func (client *Client) Active () (_result *SearchResponse, _err error) {
+  _result = &SearchResponse{}
+  _body, _err := client._request(tea.String("GET"), tea.String("/network/active"), nil, nil, nil, client.RuntimeOptions)
+  if _err != nil {
+    return _result, _err
+  }
+  _err = tea.Convert(_body, &_result)
+  return _result, _err
+}
+
+/**
  * 支持新增、更新、删除 等操作，以及对应批量操作
  */
 func (client *Client) PushDocuments (dataSourceName *string, keyField *string, request *PushDocumentsRequest) (_result *PushDocumentsResponse, _err error) {

@@ -177,6 +177,16 @@ async function stats(tableName: string): SearchResponse {
   return _request('POST', `/vector-service/stats`, null, null, Util.toJSONString(body), @runtimeOptions);
 }
 
+
+/**
+ * 校验网络是否通畅
+ * 检查vpc & 用户名密码配置是否正确
+ */
+async function active(): SearchResponse {
+  return _request('GET', `/network/active`, null, null, null, @runtimeOptions);
+}
+
+
 model PushDocumentsRequest {
   headers?: map[string]string(description='headers', name='headers'),
   body: [ map[string]any ](description='body', name='body')
