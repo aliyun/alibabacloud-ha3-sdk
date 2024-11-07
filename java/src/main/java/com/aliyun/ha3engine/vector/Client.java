@@ -242,6 +242,14 @@ public class Client {
     }
 
     /**
+     * 校验网络是否通畅
+     * 检查vpc & 用户名密码配置是否正确
+     */
+    public SearchResponse active() throws Exception {
+        return TeaModel.toModel(this._request("GET", "/network/active", null, null, null, _runtimeOptions), new SearchResponse());
+    }
+
+    /**
      * 支持新增、更新、删除 等操作，以及对应批量操作
      */
     public PushDocumentsResponse pushDocuments(String dataSourceName, String keyField, PushDocumentsRequest request) throws Exception {

@@ -400,6 +400,26 @@ class Client:
             await self._request_async('POST', f'/vector-service/stats', None, None, UtilClient.to_jsonstring(body), self._runtime_options)
         )
 
+    def active(self) -> ha_3engine_vector_models.SearchResponse:
+        """
+        校验网络是否通畅
+        检查vpc & 用户名密码配置是否正确
+        """
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            self._request('GET', f'/network/active', None, None, None, self._runtime_options)
+        )
+
+    async def active_async(self) -> ha_3engine_vector_models.SearchResponse:
+        """
+        校验网络是否通畅
+        检查vpc & 用户名密码配置是否正确
+        """
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            await self._request_async('GET', f'/network/active', None, None, None, self._runtime_options)
+        )
+
     def push_documents(
         self,
         data_source_name: str,
