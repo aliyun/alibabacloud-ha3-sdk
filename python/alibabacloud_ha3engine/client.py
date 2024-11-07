@@ -893,6 +893,26 @@ class Client:
                 await self._request_async(request.method, f'/query?type=sql', None, request.headers, sql_body, self._runtime_options)
             )
 
+    def active(self) -> ha_3engine_models.SearchResponseModel:
+        """
+        校验网络是否通畅
+        检查vpc & 用户名密码配置是否正确
+        """
+        return TeaCore.from_map(
+            ha_3engine_models.SearchResponseModel(),
+            self._request('GET', f'/network/active', None, None, None, self._runtime_options)
+        )
+
+    async def active_async(self) -> ha_3engine_models.SearchResponseModel:
+        """
+        校验网络是否通畅
+        检查vpc & 用户名密码配置是否正确
+        """
+        return TeaCore.from_map(
+            ha_3engine_models.SearchResponseModel(),
+            await self._request_async('GET', f'/network/active', None, None, None, self._runtime_options)
+        )
+
     def search_rest(
         self,
         request: ha_3engine_models.SearchRequestModel,

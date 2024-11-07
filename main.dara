@@ -448,6 +448,14 @@ async function Search(request: SearchRequestModel): SearchResponseModel {
 }
 
 /**
+ * 校验网络是否通畅
+ * 检查vpc & 用户名密码配置是否正确
+ */
+async function active(): SearchResponseModel {
+  return _request('GET', `/network/active`, null, null, null, @runtimeOptions);
+}
+
+/**
  * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索
  * 支持ha3的json查询语法
  * 返回数据的body为String格式

@@ -614,6 +614,14 @@ public class Client {
     }
 
     /**
+     * 校验网络是否通畅
+     * 检查vpc & 用户名密码配置是否正确
+     */
+    public SearchResponseModel active() throws Exception {
+        return TeaModel.toModel(this._request("GET", "/network/active", null, null, null, _runtimeOptions), new SearchResponseModel());
+    }
+
+    /**
      * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索
      * 支持ha3的json查询语法
      * 返回数据的body为String格式
