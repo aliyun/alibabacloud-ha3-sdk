@@ -140,6 +140,54 @@ model FetchRequest {
   kvpairs?: map[string]string(name='kvpairs', description='kvpairs')
 }
 
+model RankQuery {
+  rrf?: map[string]string(name='rrf', description='查询表达式'),
+}
+
+model TextQuery {
+  queryString: string(name='queryString', description='ha3 query语法，支持多个文本索引的AND、OR嵌套'),
+  queryParams?: map[string]string(name='queryParams', description='query查询参数：
+      default_op: 指定在该次查询中使用的默认query 分词后的连接操作符，AND or OR。默认为AND。
+      global_analyzer: 查询中指定全局的分词器，该分词器会覆盖schema的分词器，指定的值必须在analyzer.json里有配置。
+      specific_index_analyzer: 查询中指定index使用另外的分词器，该分词器会覆盖global_analyzer和schema的分词器。
+      no_token_indexes: 支持查询中指定的index不分词（除分词以外的其他流程如归一化、去停用词会正常执行），多个index之间用;分割。
+      remove_stopwords: true or false 表示是否需要删除stop words，stop words在分词器中配置。默认true'),
+  filter?: string(name='filter', description='过滤条件表达式'),
+  weight?: float(name='weight', description='text查询结果的权重，以score * weight的结果作为该路的排序分'),
+  terminateAfter?: integer(name='terminateAfter', description='每个分片查找满足条件的文档的最大数量。到达这个数量后，查询将提前结束，不再继续查询索引。默认为0，不设置限制。')
+}
+
+model SearchRequest{
+ tableName: string(name='tableName', description='数据源名'),
+ size?: integer(name='size', description='返回结果的个数'),
+ from?: integer(name='from', description='从结果集的第from返回doc'),
+ order?: string(name='order', description='结果排序方向:DESC: 降序排序;ASC: 升序排序'),
+ outputFields?: [ string ](name='outputFields', description='指定需要在结果中返回的字段，默认为空'),
+ knn?: QueryRequest(name='knnQuery', description='KNN查询参数'),
+ text?: TextQuery(name='textQuery', description='text查询参数'),
+ rank?: RankQuery(name='rankQuery', description='指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果')
+}
+
+model AggFuncDesc {
+  name?: string(name='name', description='可以指定统计值在结果集中字段的名称。默认结果字段为: FUNC_NAME(args)'),
+  func: string(name='func', description='统计函数名：max, min, avg, sum, count', required=true),
+  args: [ string ](name='args', description='统计函数的参数', required=true)
+}
+
+model OrderByDesc {
+  field: string(name='field', description='排序字段名称，必须指定结果集中的字段', required=true),
+  direction?: string(name='direction', description='排序方向，DESC: 降序排列；ASC: 升序排列')
+}
+
+model AggregateRequest {
+  tableName: string(name='tableName', description='需要统计的表名', required=true),
+  filter?: string(name='filter', description='过滤条件'),
+  groupKeys?: [ string ](name='groupKeys', description='分组统计的字段列表'),
+  aggFuncs: [ AggFuncDesc ](name='aggFuncs', description='统计函数列表', required=true),
+  orderBy?: [ OrderByDesc ](name='orderBy', description='统计结果排序方式，支持多维排序'),
+  timeout?: integer(name='timeout', description='超时时间，单位毫秒')
+}
+
 /**
  * 向量查询
  */
@@ -166,6 +214,20 @@ async function multiQuery(request: MultiQueryRequest): SearchResponse {
  */
 async function fetch(request: FetchRequest): SearchResponse {
   return _request('POST', `/vector-service/fetch`, null, null, Util.toJSONString(request), @runtimeOptions);
+}
+
+/**
+ * 文本向量混合检索
+ */
+async function search(request: SearchRequest): SearchResponse {
+  return _request('POST', `/vector-service/search`, null, null, Util.toJSONString(request), @runtimeOptions);
+}
+
+/**
+ * 向量引擎统计语法
+ */
+async function aggregate(request: AggregateRequest): SearchResponse {
+  return _request('POST', `/vector-service/aggregate`, null, null, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**

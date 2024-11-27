@@ -471,6 +471,341 @@ class FetchRequest(TeaModel):
         return self
 
 
+class RankQuery(TeaModel):
+    def __init__(
+        self,
+        rrf: Dict[str, str] = None,
+    ):
+        # 查询表达式
+        self.rrf = rrf
+
+    def validate(self):
+        pass
+
+    def to_map(self):
+        _map = super().to_map()
+        if _map is not None:
+            return _map
+
+        result = dict()
+        if self.rrf is not None:
+            result['rrf'] = self.rrf
+        return result
+
+    def from_map(self, m: dict = None):
+        m = m or dict()
+        if m.get('rrf') is not None:
+            self.rrf = m.get('rrf')
+        return self
+
+
+class TextQuery(TeaModel):
+    def __init__(
+        self,
+        query_string: str = None,
+        query_params: Dict[str, str] = None,
+        filter: str = None,
+        weight: float = None,
+        terminate_after: int = None,
+    ):
+        # ha3 query语法，支持多个文本索引的AND、OR嵌套
+        self.query_string = query_string
+        # query查询参数：
+        #       default_op: 指定在该次查询中使用的默认query 分词后的连接操作符，AND or OR。默认为AND。
+        #       global_analyzer: 查询中指定全局的分词器，该分词器会覆盖schema的分词器，指定的值必须在analyzer.json里有配置。
+        #       specific_index_analyzer: 查询中指定index使用另外的分词器，该分词器会覆盖global_analyzer和schema的分词器。
+        #       no_token_indexes: 支持查询中指定的index不分词（除分词以外的其他流程如归一化、去停用词会正常执行），多个index之间用;分割。
+        #       remove_stopwords: true or false 表示是否需要删除stop words，stop words在分词器中配置。默认true
+        self.query_params = query_params
+        # 过滤条件表达式
+        self.filter = filter
+        # text查询结果的权重，以score * weight的结果作为该路的排序分
+        self.weight = weight
+        # 每个分片查找满足条件的文档的最大数量。到达这个数量后，查询将提前结束，不再继续查询索引。默认为0，不设置限制。
+        self.terminate_after = terminate_after
+
+    def validate(self):
+        self.validate_required(self.query_string, 'query_string')
+
+    def to_map(self):
+        _map = super().to_map()
+        if _map is not None:
+            return _map
+
+        result = dict()
+        if self.query_string is not None:
+            result['queryString'] = self.query_string
+        if self.query_params is not None:
+            result['queryParams'] = self.query_params
+        if self.filter is not None:
+            result['filter'] = self.filter
+        if self.weight is not None:
+            result['weight'] = self.weight
+        if self.terminate_after is not None:
+            result['terminateAfter'] = self.terminate_after
+        return result
+
+    def from_map(self, m: dict = None):
+        m = m or dict()
+        if m.get('queryString') is not None:
+            self.query_string = m.get('queryString')
+        if m.get('queryParams') is not None:
+            self.query_params = m.get('queryParams')
+        if m.get('filter') is not None:
+            self.filter = m.get('filter')
+        if m.get('weight') is not None:
+            self.weight = m.get('weight')
+        if m.get('terminateAfter') is not None:
+            self.terminate_after = m.get('terminateAfter')
+        return self
+
+
+class SearchRequest(TeaModel):
+    def __init__(
+        self,
+        table_name: str = None,
+        size: int = None,
+        from_: int = None,
+        order: str = None,
+        output_fields: List[str] = None,
+        knn: QueryRequest = None,
+        text: TextQuery = None,
+        rank: RankQuery = None,
+    ):
+        # 数据源名
+        self.table_name = table_name
+        # 返回结果的个数
+        self.size = size
+        # 从结果集的第from返回doc
+        self.from_ = from_
+        # 结果排序方向:DESC: 降序排序;ASC: 升序排序
+        self.order = order
+        # 指定需要在结果中返回的字段，默认为空
+        self.output_fields = output_fields
+        # KNN查询参数
+        self.knn = knn
+        # text查询参数
+        self.text = text
+        # 指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果
+        self.rank = rank
+
+    def validate(self):
+        self.validate_required(self.table_name, 'table_name')
+        if self.knn:
+            self.knn.validate()
+        if self.text:
+            self.text.validate()
+        if self.rank:
+            self.rank.validate()
+
+    def to_map(self):
+        _map = super().to_map()
+        if _map is not None:
+            return _map
+
+        result = dict()
+        if self.table_name is not None:
+            result['tableName'] = self.table_name
+        if self.size is not None:
+            result['size'] = self.size
+        if self.from_ is not None:
+            result['from'] = self.from_
+        if self.order is not None:
+            result['order'] = self.order
+        if self.output_fields is not None:
+            result['outputFields'] = self.output_fields
+        if self.knn is not None:
+            result['knnQuery'] = self.knn.to_map()
+        if self.text is not None:
+            result['textQuery'] = self.text.to_map()
+        if self.rank is not None:
+            result['rankQuery'] = self.rank.to_map()
+        return result
+
+    def from_map(self, m: dict = None):
+        m = m or dict()
+        if m.get('tableName') is not None:
+            self.table_name = m.get('tableName')
+        if m.get('size') is not None:
+            self.size = m.get('size')
+        if m.get('from') is not None:
+            self.from_ = m.get('from')
+        if m.get('order') is not None:
+            self.order = m.get('order')
+        if m.get('outputFields') is not None:
+            self.output_fields = m.get('outputFields')
+        if m.get('knnQuery') is not None:
+            temp_model = QueryRequest()
+            self.knn = temp_model.from_map(m['knnQuery'])
+        if m.get('textQuery') is not None:
+            temp_model = TextQuery()
+            self.text = temp_model.from_map(m['textQuery'])
+        if m.get('rankQuery') is not None:
+            temp_model = RankQuery()
+            self.rank = temp_model.from_map(m['rankQuery'])
+        return self
+
+
+class AggFuncDesc(TeaModel):
+    def __init__(
+        self,
+        name: str = None,
+        func: str = None,
+        args: List[str] = None,
+    ):
+        # 可以指定统计值在结果集中字段的名称。默认结果字段为: FUNC_NAME(args)
+        self.name = name
+        # 统计函数名：max, min, avg, sum, count
+        self.func = func
+        # 统计函数的参数
+        self.args = args
+
+    def validate(self):
+        self.validate_required(self.func, 'func')
+        self.validate_required(self.args, 'args')
+
+    def to_map(self):
+        _map = super().to_map()
+        if _map is not None:
+            return _map
+
+        result = dict()
+        if self.name is not None:
+            result['name'] = self.name
+        if self.func is not None:
+            result['func'] = self.func
+        if self.args is not None:
+            result['args'] = self.args
+        return result
+
+    def from_map(self, m: dict = None):
+        m = m or dict()
+        if m.get('name') is not None:
+            self.name = m.get('name')
+        if m.get('func') is not None:
+            self.func = m.get('func')
+        if m.get('args') is not None:
+            self.args = m.get('args')
+        return self
+
+
+class OrderByDesc(TeaModel):
+    def __init__(
+        self,
+        field: str = None,
+        direction: str = None,
+    ):
+        # 排序字段名称，必须指定结果集中的字段
+        self.field = field
+        # 排序方向，DESC: 降序排列；ASC: 升序排列
+        self.direction = direction
+
+    def validate(self):
+        self.validate_required(self.field, 'field')
+
+    def to_map(self):
+        _map = super().to_map()
+        if _map is not None:
+            return _map
+
+        result = dict()
+        if self.field is not None:
+            result['field'] = self.field
+        if self.direction is not None:
+            result['direction'] = self.direction
+        return result
+
+    def from_map(self, m: dict = None):
+        m = m or dict()
+        if m.get('field') is not None:
+            self.field = m.get('field')
+        if m.get('direction') is not None:
+            self.direction = m.get('direction')
+        return self
+
+
+class AggregateRequest(TeaModel):
+    def __init__(
+        self,
+        table_name: str = None,
+        filter: str = None,
+        group_keys: List[str] = None,
+        agg_funcs: List[AggFuncDesc] = None,
+        order_by: List[OrderByDesc] = None,
+        timeout: int = None,
+    ):
+        # 需要统计的表名
+        self.table_name = table_name
+        # 过滤条件
+        self.filter = filter
+        # 分组统计的字段列表
+        self.group_keys = group_keys
+        # 统计函数列表
+        self.agg_funcs = agg_funcs
+        # 统计结果排序方式，支持多维排序
+        self.order_by = order_by
+        # 超时时间，单位毫秒
+        self.timeout = timeout
+
+    def validate(self):
+        self.validate_required(self.table_name, 'table_name')
+        self.validate_required(self.agg_funcs, 'agg_funcs')
+        if self.agg_funcs:
+            for k in self.agg_funcs:
+                if k:
+                    k.validate()
+        if self.order_by:
+            for k in self.order_by:
+                if k:
+                    k.validate()
+
+    def to_map(self):
+        _map = super().to_map()
+        if _map is not None:
+            return _map
+
+        result = dict()
+        if self.table_name is not None:
+            result['tableName'] = self.table_name
+        if self.filter is not None:
+            result['filter'] = self.filter
+        if self.group_keys is not None:
+            result['groupKeys'] = self.group_keys
+        result['aggFuncs'] = []
+        if self.agg_funcs is not None:
+            for k in self.agg_funcs:
+                result['aggFuncs'].append(k.to_map() if k else None)
+        result['orderBy'] = []
+        if self.order_by is not None:
+            for k in self.order_by:
+                result['orderBy'].append(k.to_map() if k else None)
+        if self.timeout is not None:
+            result['timeout'] = self.timeout
+        return result
+
+    def from_map(self, m: dict = None):
+        m = m or dict()
+        if m.get('tableName') is not None:
+            self.table_name = m.get('tableName')
+        if m.get('filter') is not None:
+            self.filter = m.get('filter')
+        if m.get('groupKeys') is not None:
+            self.group_keys = m.get('groupKeys')
+        self.agg_funcs = []
+        if m.get('aggFuncs') is not None:
+            for k in m.get('aggFuncs'):
+                temp_model = AggFuncDesc()
+                self.agg_funcs.append(temp_model.from_map(k))
+        self.order_by = []
+        if m.get('orderBy') is not None:
+            for k in m.get('orderBy'):
+                temp_model = OrderByDesc()
+                self.order_by.append(temp_model.from_map(k))
+        if m.get('timeout') is not None:
+            self.timeout = m.get('timeout')
+        return self
+
+
 class PushDocumentsRequest(TeaModel):
     def __init__(
         self,

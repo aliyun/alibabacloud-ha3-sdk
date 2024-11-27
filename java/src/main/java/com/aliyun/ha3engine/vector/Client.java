@@ -157,7 +157,8 @@ public class Client {
     }
 
     /**
-     * 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
+     * <b>description</b> :
+     * <p>如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回</p>
      */
     public String getEndpoint(String endpoint) throws Exception {
         if (com.aliyun.darabonbastring.Client.hasPrefix(endpoint, "http://")) {
@@ -172,21 +173,24 @@ public class Client {
     }
 
     /**
-     * 设置Client UA 配置.
+     * <b>description</b> :
+     * <p>设置Client UA 配置.</p>
      */
     public void setUserAgent(String userAgent) throws Exception {
         this._userAgent = userAgent;
     }
 
     /**
-     * 添加Client UA 配置.
+     * <b>description</b> :
+     * <p>添加Client UA 配置.</p>
      */
     public void appendUserAgent(String userAgent) throws Exception {
         this._userAgent = "" + _userAgent + " " + userAgent + "";
     }
 
     /**
-     * 获取Client 配置 UA 配置.
+     * <b>description</b> :
+     * <p>获取Client 配置 UA 配置.</p>
      */
     public String getUserAgent() throws Exception {
         String userAgent = com.aliyun.teautil.Common.getUserAgent(_userAgent);
@@ -194,7 +198,8 @@ public class Client {
     }
 
     /**
-     * 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
+     * <b>description</b> :
+     * <p>计算用户请求识别特征, 遵循 Basic Auth 生成规范.</p>
      */
     public String getRealmSignStr(String accessUserName, String accessPassWord) throws Exception {
         String accessUserNameStr = com.aliyun.darabonbastring.Client.trim(accessUserName);
@@ -204,35 +209,56 @@ public class Client {
     }
 
     /**
-     * 向量查询
+     * <b>description</b> :
+     * <p>向量查询</p>
      */
     public SearchResponse query(QueryRequest request) throws Exception {
         return TeaModel.toModel(this._request("POST", "/vector-service/query", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
-     * 向量预测查询
+     * <b>description</b> :
+     * <p>向量预测查询</p>
      */
     public SearchResponse inferenceQuery(QueryRequest request) throws Exception {
         return TeaModel.toModel(this._request("POST", "/vector-service/inference-query", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
-     * 多namespace查询
+     * <b>description</b> :
+     * <p>多namespace查询</p>
      */
     public SearchResponse multiQuery(MultiQueryRequest request) throws Exception {
         return TeaModel.toModel(this._request("POST", "/vector-service/multi-query", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
-     * 查询数据
+     * <b>description</b> :
+     * <p>查询数据</p>
      */
     public SearchResponse fetch(FetchRequest request) throws Exception {
         return TeaModel.toModel(this._request("POST", "/vector-service/fetch", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
-     * 文档统计
+     * <b>description</b> :
+     * <p>文本向量混合检索</p>
+     */
+    public SearchResponse search(SearchRequest request) throws Exception {
+        return TeaModel.toModel(this._request("POST", "/vector-service/search", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>向量引擎统计语法</p>
+     */
+    public SearchResponse aggregate(AggregateRequest request) throws Exception {
+        return TeaModel.toModel(this._request("POST", "/vector-service/aggregate", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>文档统计</p>
      */
     public SearchResponse stats(String tableName) throws Exception {
         java.util.Map<String, Object> body = TeaConverter.buildMap(
@@ -242,15 +268,17 @@ public class Client {
     }
 
     /**
-     * 校验网络是否通畅
-     * 检查vpc & 用户名密码配置是否正确
+     * <b>description</b> :
+     * <p>校验网络是否通畅
+     * 检查vpc &amp; 用户名密码配置是否正确</p>
      */
     public SearchResponse active() throws Exception {
         return TeaModel.toModel(this._request("GET", "/network/active", null, null, null, _runtimeOptions), new SearchResponse());
     }
 
     /**
-     * 支持新增、更新、删除 等操作，以及对应批量操作
+     * <b>description</b> :
+     * <p>支持新增、更新、删除 等操作，以及对应批量操作</p>
      */
     public PushDocumentsResponse pushDocuments(String dataSourceName, String keyField, PushDocumentsRequest request) throws Exception {
         request.headers = TeaConverter.merge(String.class,
@@ -263,7 +291,8 @@ public class Client {
     }
 
     /**
-     * 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
+     * <b>description</b> :
+     * <p>用于内网环境的新增、更新、删除 等操作，以及对应批量操作</p>
      */
     public PushDocumentsResponse pushDocumentsWithSwift(String dataSourceName, String keyField, String topic, String swift, PushDocumentsRequest request) throws Exception {
         request.headers = TeaConverter.buildMap(
@@ -275,7 +304,8 @@ public class Client {
     }
 
     /**
-     * 构建RuntimeOptions
+     * <b>description</b> :
+     * <p>构建RuntimeOptions</p>
      */
     public com.aliyun.teautil.models.RuntimeOptions buildRuntimeOptions(com.aliyun.teautil.models.RuntimeOptions runtimeOptions) throws Exception {
         if (com.aliyun.teautil.Common.isUnset(runtimeOptions)) {
