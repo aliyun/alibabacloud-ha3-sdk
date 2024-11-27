@@ -370,6 +370,54 @@ class Client:
             await self._request_async('POST', f'/vector-service/fetch', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
+    def search(
+        self,
+        request: ha_3engine_vector_models.SearchRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
+        """
+        文本向量混合检索
+        """
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            self._request('POST', f'/vector-service/search', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
+        )
+
+    async def search_async(
+        self,
+        request: ha_3engine_vector_models.SearchRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
+        """
+        文本向量混合检索
+        """
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            await self._request_async('POST', f'/vector-service/search', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
+        )
+
+    def aggregate(
+        self,
+        request: ha_3engine_vector_models.AggregateRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
+        """
+        向量引擎统计语法
+        """
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            self._request('POST', f'/vector-service/aggregate', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
+        )
+
+    async def aggregate_async(
+        self,
+        request: ha_3engine_vector_models.AggregateRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
+        """
+        向量引擎统计语法
+        """
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            await self._request_async('POST', f'/vector-service/aggregate', None, None, UtilClient.to_jsonstring(request), self._runtime_options)
+        )
+
     def stats(
         self,
         table_name: str,
