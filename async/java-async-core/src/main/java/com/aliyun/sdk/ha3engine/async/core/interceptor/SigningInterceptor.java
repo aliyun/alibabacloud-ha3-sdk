@@ -31,7 +31,7 @@ public class SigningInterceptor implements HttpRequestInterceptor {
                         new TeaPair("user-agent", getUserAgent()),
                         new TeaPair("host", configuration.endpoint()),
                         new TeaPair("authorization", "Basic " + getRealmSignStr(provider.getUsername(), provider.getPassword()) + ""),
-                        new TeaPair("content-type", "application/json; charset=utf-8")
+                        new TeaPair("Content-Type", "application/json; charset=utf-8")
                 ),
                 request.headers().toMap()
         );
@@ -46,8 +46,16 @@ public class SigningInterceptor implements HttpRequestInterceptor {
 
         HttpRequest httpRequest = new HttpRequest(Optional.ofNullable(configuration.method()).orElseGet(request::method),
                 ModelUtil.composeUrl(configuration.endpoint(), request.query(), configuration.protocol(), request.pathname()));
+
         httpRequest.setHeaders(httpHeaders);
-        httpRequest.setBody(com.aliyun.teautil.Common.toJSONString(request.body()));
+        String contentType = headers.get("Content-Type");
+        String contentEncoding = headers.get("Content-Encoding");
+        if ("deflate".equals(contentEncoding) || "application/protobuf".equals(contentType)) {
+            httpRequest.setBody((byte[])request.body());
+        } else {
+            httpRequest.setBody(com.aliyun.teautil.Common.toJSONString(request.body()));
+        }
+
         return httpRequest;
     }
 

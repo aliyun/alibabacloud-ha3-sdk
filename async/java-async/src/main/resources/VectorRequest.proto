@@ -1,0 +1,127 @@
+syntax = "proto2";
+
+package com.aliyun.ha3engine.async.models.protobuf;
+
+option cc_enable_arenas = true;
+option cc_generic_services = true;
+option py_generic_services = true;
+
+message SparseData {
+    repeated uint32 count = 1;
+    repeated uint32 indices = 2;
+    repeated float values = 3;
+}
+
+message VectorSearchQuery {
+    repeated float vector = 1;
+    optional uint32 vectorCount  = 2 [ default = 1 ];
+    optional uint32 topK = 3 [ default = 100 ];
+    optional string namespace = 4 [ default = "" ];
+    optional string searchParams = 5 [ default = "" ];
+    optional float scoreThreshold  = 6;
+
+    optional string content  = 7 [ default = "" ];
+    optional string modal = 8 [ default = "" ];
+    optional string indexName = 9 [ default = "" ];
+
+    optional string tableName = 10;
+    optional string filter = 11 [ default = "" ];
+    optional bool includeVector = 12 [ default = false ];
+    repeated string outputFields = 13;
+    optional string order = 14 [ default = "ASC" ];
+    optional float weight = 16 [ default = 1.0 ];
+    optional string sort = 17 [ default = "" ];
+
+    optional SparseData sparseData = 20;
+    optional int64 timeout = 21 [ default = -1 ];
+    map<string, string> kvpairs = 22;
+}
+
+message VectorSearchQueries {
+    optional string tableName = 1;
+
+    repeated VectorSearchQuery queries = 10;
+    optional string filter = 11 [ default = "" ];
+    optional bool includeVector = 12 [ default = false ];
+    repeated string outputFields = 13;
+    optional string order = 14 [ default = "ASC" ];
+    optional uint32 topK = 15 [ default = 100 ];
+    optional string sort = 16 [ default = "" ];
+    optional int64 timeout = 18 [ default = -1 ];
+}
+
+message TextSearchQuery {
+    optional string queryString = 1 [ default = "" ];
+    map<string, string> queryParams = 2;
+    optional string filter = 3 [ default = "" ];
+    optional float weight = 4 [ default = 1.0 ];
+    optional uint32 terminateAfter = 5 [ default = 0 ];
+}
+
+message RRFRank {
+    optional uint32 rankConstant = 1 [ default = 60 ];
+}
+
+message HybridRank {
+    optional RRFRank rrf = 1;
+}
+
+message HybridSearchQuery {
+    optional string tableName = 1;
+    optional VectorSearchQuery knn = 2;
+    optional TextSearchQuery text = 3;
+    optional uint32 size = 4 [ default = 100 ];
+    optional uint32 from = 5 [ default = 0 ];
+    repeated string outputFields = 6;
+    optional string order = 7 [ default = "DESC" ];
+    optional HybridRank rank = 8;
+    optional int64 timeout = 9 [ default = 10000 ];
+}
+
+message PartitionStatsInfo {
+    optional uint64 totalDocCount = 1 [ default = 0 ];
+    optional uint64 totalSegmentCount = 2 [ default = 0 ];
+    optional int32 partId = 3 [ default = -1 ];
+}
+
+message VectorStatsInfo {
+    repeated PartitionStatsInfo stats = 1;
+}
+
+message StatsQuery {
+    optional string tableName = 1;
+}
+
+message FetchQuery {
+    optional string tableName = 1;
+    repeated string ids = 2;
+    optional string filter = 4 [ default = "" ];
+    optional string sort = 5 [ default = "" ];
+    optional string order = 6 [ default = "ASC" ];
+    optional uint32 offset = 7 [ default = 0 ];
+    optional uint32 limit = 8 [ default = 100 ];
+    repeated string outputFields = 10;
+    optional bool includeVector = 11 [ default = true ];
+    optional int64 timeout = 12 [ default = -1 ];
+}
+
+message AggFuncDesc {
+    optional string name = 1 [ default = "" ];
+    optional string func = 2;
+    repeated string args = 3;
+}
+
+message AggOrderDesc {
+    optional string field = 1 [ default = "" ];
+    optional string direction = 2 [ default = "" ];
+}
+
+message AggregateQuery {
+    optional string tableName = 1;
+    optional string filter = 2 [ default = "" ];
+    optional uint32 limit = 3 [ default = 0xffffffff ];
+    repeated string groupKeys = 4;
+    repeated AggFuncDesc aggFuncs = 5;
+    repeated AggOrderDesc orderBy = 6;
+    optional int64 timeout = 7 [ default = 10000 ];
+}
