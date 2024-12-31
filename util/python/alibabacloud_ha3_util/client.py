@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 # This file is auto-generated, don't edit it. Thanks.
+import zlib
+
+
 class Client:
     """
     Compress data by specified compress type, use isCompressorAvailable to check if the compress type is supported.
@@ -15,10 +18,12 @@ class Client:
     def deflate_compress(
         src: bytes,
     ) -> bytes:
-        raise Exception('Un-implemented')
+        encoded_str = zlib.compress(src)
+        return encoded_str
 
     @staticmethod
     async def deflate_compress_async(
         src: bytes,
     ) -> bytes:
-        raise Exception('Un-implemented')
+        encoded_str = zlib.compress(src)
+        return encoded_str

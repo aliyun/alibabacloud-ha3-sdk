@@ -9,11 +9,21 @@
 package client
 
 import (
-  "github.com/alibabacloud-go/tea/tea"
+	"bytes"
+	"compress/zlib"
 )
 
+func DeflateCompress(src []byte) (_result []byte, _err error) {
+	var buf bytes.Buffer
+	writer := zlib.NewWriter(&buf)
+	_, err := writer.Write(src)
+	if err != nil {
+		return nil, err
+	}
+	err = writer.Close()
+	if err != nil {
+		return nil, err
+	}
 
-func DeflateCompress (src []byte) (_result []byte, _err error) {
-  panic("No Support!")
+	return buf.Bytes(), nil
 }
-
