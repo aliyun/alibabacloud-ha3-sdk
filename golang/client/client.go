@@ -5,6 +5,7 @@ import (
   util  "github.com/alibabacloud-go/tea-utils/v2/service"
   string_  "github.com/alibabacloud-go/darabonba-string/client"
   encodeutil  "github.com/alibabacloud-go/darabonba-encode-util/client"
+  ha3util  "github.com/alibabacloud-go/alibabacloud-ha3-util/client"
   "github.com/alibabacloud-go/tea/tea"
 )
 
@@ -418,20 +419,15 @@ type TextQuery struct {
   // ha3 query语法，支持多个文本索引的AND、OR嵌套
   QueryString *string `json:"queryString,omitempty" xml:"queryString,omitempty" require:"true"`
   // query查询参数：
-  // 
   //       default_op: 指定在该次查询中使用的默认query 分词后的连接操作符，AND or OR。默认为AND。
-  // 
   //       global_analyzer: 查询中指定全局的分词器，该分词器会覆盖schema的分词器，指定的值必须在analyzer.json里有配置。
-  // 
   //       specific_index_analyzer: 查询中指定index使用另外的分词器，该分词器会覆盖global_analyzer和schema的分词器。
-  // 
   //       no_token_indexes: 支持查询中指定的index不分词（除分词以外的其他流程如归一化、去停用词会正常执行），多个index之间用;分割。
-  // 
   //       remove_stopwords: true or false 表示是否需要删除stop words，stop words在分词器中配置。默认true
   QueryParams map[string]*string `json:"queryParams,omitempty" xml:"queryParams,omitempty"`
   // 过滤条件表达式
   Filter *string `json:"filter,omitempty" xml:"filter,omitempty"`
-  // text查询结果的权重，以score 	- weight的结果作为该路的排序分
+  // text查询结果的权重，以score * weight的结果作为该路的排序分
   Weight *float32 `json:"weight,omitempty" xml:"weight,omitempty"`
   // 每个分片查找满足条件的文档的最大数量。到达这个数量后，查询将提前结束，不再继续查询索引。默认为0，不设置限制。
   TerminateAfter *int `json:"terminateAfter,omitempty" xml:"terminateAfter,omitempty"`
@@ -482,11 +478,11 @@ type SearchRequest struct {
   // 指定需要在结果中返回的字段，默认为空
   OutputFields []*string `json:"outputFields,omitempty" xml:"outputFields,omitempty" type:"Repeated"`
   // KNN查询参数
-  Knn *QueryRequest `json:"knnQuery,omitempty" xml:"knnQuery,omitempty"`
+  Knn *QueryRequest `json:"knn,omitempty" xml:"knn,omitempty"`
   // text查询参数
-  Text *TextQuery `json:"textQuery,omitempty" xml:"textQuery,omitempty"`
+  Text *TextQuery `json:"text,omitempty" xml:"text,omitempty"`
   // 指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果
-  Rank *RankQuery `json:"rankQuery,omitempty" xml:"rankQuery,omitempty"`
+  Rank *RankQuery `json:"rank,omitempty" xml:"rank,omitempty"`
 }
 
 func (s SearchRequest) String() string {
@@ -786,7 +782,17 @@ func (client *Client) _request(method *string, pathname *string, query map[strin
 
       if !tea.BoolValue(util.IsUnset(body)) {
         request_.Headers["X-Opensearch-Swift-Request-ID"] = util.GetNonce()
-        request_.Body = tea.ToReader(util.ToJSONString(body))
+        if tea.BoolValue(string_.Equals(tea.String("deflate"), request_.Headers["Content-Encoding"])) && !tea.BoolValue(string_.Contains(pathname, tea.String("actions/bulk"))) {
+          compressed, _err := ha3util.DeflateCompress(string_.ToBytes(util.ToJSONString(body), tea.String("UTF-8")))
+          if _err != nil {
+            return _result, _err
+          }
+
+          request_.Body = tea.ToReader(compressed)
+        } else {
+          request_.Body = tea.ToReader(util.ToJSONString(body))
+        }
+
       }
 
       response_, _err := tea.DoRequest(request_, _runtime)
@@ -860,9 +866,9 @@ func (client *Client) _request(method *string, pathname *string, query map[strin
 }
 
 
-// Description:
-// 
-// 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
+/**
+ * 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
+ */
 func (client *Client) GetEndpoint (endpoint *string) (_result *string) {
   if tea.BoolValue(string_.HasPrefix(endpoint, tea.String("http://"))) {
     _body := string_.Replace(endpoint, tea.String("http://"), tea.String(""), tea.Int(1))
@@ -880,32 +886,32 @@ func (client *Client) GetEndpoint (endpoint *string) (_result *string) {
   return _result
 }
 
-// Description:
-// 
-// 设置Client UA 配置.
+/**
+ * 设置Client UA 配置.
+ */
 func (client *Client) SetUserAgent (userAgent *string) {
   client.UserAgent = userAgent
 }
 
-// Description:
-// 
-// 添加Client UA 配置.
+/**
+ * 添加Client UA 配置.
+ */
 func (client *Client) AppendUserAgent (userAgent *string) {
   client.UserAgent = tea.String(tea.StringValue(client.UserAgent) + " " + tea.StringValue(userAgent))
 }
 
-// Description:
-// 
-// 获取Client 配置 UA 配置.
+/**
+ * 获取Client 配置 UA 配置.
+ */
 func (client *Client) GetUserAgent () (_result *string) {
   userAgent := util.GetUserAgent(client.UserAgent)
   _result = userAgent
   return _result
 }
 
-// Description:
-// 
-// 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
+/**
+ * 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
+ */
 func (client *Client) GetRealmSignStr (accessUserName *string, accessPassWord *string) (_result *string) {
   accessUserNameStr := string_.Trim(accessUserName)
   accessPassWordStr := string_.Trim(accessPassWord)
@@ -915,12 +921,13 @@ func (client *Client) GetRealmSignStr (accessUserName *string, accessPassWord *s
   return _result
 }
 
-// Description:
-// 
-// 向量查询
+/**
+ * 向量查询
+ */
 func (client *Client) Query (request *QueryRequest) (_result *SearchResponse, _err error) {
+  headers := client.GetHeadersFromRunTimeOption()
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/query"), nil, nil, util.ToJSONString(request), client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/query"), nil, headers, util.ToJSONString(request), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -928,12 +935,13 @@ func (client *Client) Query (request *QueryRequest) (_result *SearchResponse, _e
   return _result, _err
 }
 
-// Description:
-// 
-// 向量预测查询
+/**
+ * 向量预测查询
+ */
 func (client *Client) InferenceQuery (request *QueryRequest) (_result *SearchResponse, _err error) {
+  headers := client.GetHeadersFromRunTimeOption()
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/inference-query"), nil, nil, util.ToJSONString(request), client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/inference-query"), nil, headers, util.ToJSONString(request), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -941,12 +949,13 @@ func (client *Client) InferenceQuery (request *QueryRequest) (_result *SearchRes
   return _result, _err
 }
 
-// Description:
-// 
-// 多namespace查询
+/**
+ * 多namespace查询
+ */
 func (client *Client) MultiQuery (request *MultiQueryRequest) (_result *SearchResponse, _err error) {
+  headers := client.GetHeadersFromRunTimeOption()
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/multi-query"), nil, nil, util.ToJSONString(request), client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/multi-query"), nil, headers, util.ToJSONString(request), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -954,12 +963,13 @@ func (client *Client) MultiQuery (request *MultiQueryRequest) (_result *SearchRe
   return _result, _err
 }
 
-// Description:
-// 
-// 查询数据
+/**
+ * 查询数据
+ */
 func (client *Client) Fetch (request *FetchRequest) (_result *SearchResponse, _err error) {
+  headers := client.GetHeadersFromRunTimeOption()
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/fetch"), nil, nil, util.ToJSONString(request), client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/fetch"), nil, headers, util.ToJSONString(request), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -967,12 +977,13 @@ func (client *Client) Fetch (request *FetchRequest) (_result *SearchResponse, _e
   return _result, _err
 }
 
-// Description:
-// 
-// 文本向量混合检索
+/**
+ * 文本向量混合检索
+ */
 func (client *Client) Search (request *SearchRequest) (_result *SearchResponse, _err error) {
+  headers := client.GetHeadersFromRunTimeOption()
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/search"), nil, nil, util.ToJSONString(request), client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/search"), nil, headers, util.ToJSONString(request), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -980,12 +991,13 @@ func (client *Client) Search (request *SearchRequest) (_result *SearchResponse, 
   return _result, _err
 }
 
-// Description:
-// 
-// 向量引擎统计语法
+/**
+ * 向量引擎统计语法
+ */
 func (client *Client) Aggregate (request *AggregateRequest) (_result *SearchResponse, _err error) {
+  headers := client.GetHeadersFromRunTimeOption()
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/aggregate"), nil, nil, util.ToJSONString(request), client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/aggregate"), nil, headers, util.ToJSONString(request), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -993,9 +1005,9 @@ func (client *Client) Aggregate (request *AggregateRequest) (_result *SearchResp
   return _result, _err
 }
 
-// Description:
-// 
-// 文档统计
+/**
+ * 文档统计
+ */
 func (client *Client) Stats (tableName *string) (_result *SearchResponse, _err error) {
   body := map[string]interface{}{
     "tableName": tea.StringValue(tableName),
@@ -1009,11 +1021,10 @@ func (client *Client) Stats (tableName *string) (_result *SearchResponse, _err e
   return _result, _err
 }
 
-// Description:
-// 
-// 校验网络是否通畅
-// 
-// 检查vpc & 用户名密码配置是否正确
+/**
+ * 校验网络是否通畅
+ * 检查vpc & 用户名密码配置是否正确
+ */
 func (client *Client) Active () (_result *SearchResponse, _err error) {
   _result = &SearchResponse{}
   _body, _err := client._request(tea.String("GET"), tea.String("/network/active"), nil, nil, nil, client.RuntimeOptions)
@@ -1024,9 +1035,9 @@ func (client *Client) Active () (_result *SearchResponse, _err error) {
   return _result, _err
 }
 
-// Description:
-// 
-// 支持新增、更新、删除 等操作，以及对应批量操作
+/**
+ * 支持新增、更新、删除 等操作，以及对应批量操作
+ */
 func (client *Client) PushDocuments (dataSourceName *string, keyField *string, request *PushDocumentsRequest) (_result *PushDocumentsResponse, _err error) {
   request.Headers = tea.Merge(map[string]*string{
     "X-Opensearch-Swift-PK-Field": keyField,
@@ -1040,27 +1051,9 @@ func (client *Client) PushDocuments (dataSourceName *string, keyField *string, r
   return _result, _err
 }
 
-// Description:
-// 
-// 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
-func (client *Client) PushDocumentsWithSwift (dataSourceName *string, keyField *string, topic *string, swift *string, request *PushDocumentsRequest) (_result *PushDocumentsResponse, _err error) {
-  request.Headers = map[string]*string{
-    "X-Opensearch-Swift-PK-Field": keyField,
-    "X-Opensearch-Swift-Topic": topic,
-    "X-Opensearch-Swift-Swift": swift,
-  }
-  _result = &PushDocumentsResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/update/" + tea.StringValue(dataSourceName) + "/actions/bulk"), nil, request.Headers, request.Body, client.RuntimeOptions)
-  if _err != nil {
-    return _result, _err
-  }
-  _err = tea.Convert(_body, &_result)
-  return _result, _err
-}
-
-// Description:
-// 
-// 构建RuntimeOptions
+/**
+ * 构建RuntimeOptions
+ */
 func (client *Client) BuildRuntimeOptions (runtimeOptions *util.RuntimeOptions) (_result *util.RuntimeOptions) {
   if tea.BoolValue(util.IsUnset(runtimeOptions)) {
     _result = &util.RuntimeOptions{}
@@ -1092,6 +1085,24 @@ func (client *Client) BuildRuntimeOptions (runtimeOptions *util.RuntimeOptions) 
   }
 
   _result = runtimeOptions
+  return _result
+}
+
+/**
+ * 从runtimeoptions中获取headers
+ */
+func (client *Client) GetHeadersFromRunTimeOption () (_result map[string]*string) {
+  options := client.RuntimeOptions
+  headers := make(map[string]*string)
+  if !tea.BoolValue(util.IsUnset(options.ExtendsParameters)) && !tea.BoolValue(util.IsUnset(options.ExtendsParameters.Headers)) && !tea.BoolValue(util.Empty(options.ExtendsParameters.Headers["Content-Encoding"])) {
+    contentEncoding := options.ExtendsParameters.Headers["Content-Encoding"]
+    if tea.BoolValue(string_.Equals(tea.String("deflate"), contentEncoding)) {
+      headers["Content-Encoding"] = tea.String("deflate")
+    }
+
+  }
+
+  _result = headers
   return _result
 }
 

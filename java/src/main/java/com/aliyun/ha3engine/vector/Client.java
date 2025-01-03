@@ -91,7 +91,13 @@ public class Client {
 
                 if (!com.aliyun.teautil.Common.isUnset(body)) {
                     request_.headers.put("X-Opensearch-Swift-Request-ID", com.aliyun.teautil.Common.getNonce());
-                    request_.body = Tea.toReadable(com.aliyun.teautil.Common.toJSONString(body));
+                    if (com.aliyun.darabonbastring.Client.equals("deflate", request_.headers.get("Content-Encoding")) && !com.aliyun.darabonbastring.Client.contains(pathname, "actions/bulk")) {
+                        byte[] compressed = com.aliyun.ha3.util.Client.deflateCompress(com.aliyun.darabonbastring.Client.toBytes(com.aliyun.teautil.Common.toJSONString(body), "UTF-8"));
+                        request_.body = Tea.toReadable(compressed);
+                    } else {
+                        request_.body = Tea.toReadable(com.aliyun.teautil.Common.toJSONString(body));
+                    }
+
                 }
 
                 _lastRequest = request_;
@@ -157,8 +163,7 @@ public class Client {
     }
 
     /**
-     * <b>description</b> :
-     * <p>如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回</p>
+     * 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
      */
     public String getEndpoint(String endpoint) throws Exception {
         if (com.aliyun.darabonbastring.Client.hasPrefix(endpoint, "http://")) {
@@ -173,24 +178,21 @@ public class Client {
     }
 
     /**
-     * <b>description</b> :
-     * <p>设置Client UA 配置.</p>
+     * 设置Client UA 配置.
      */
     public void setUserAgent(String userAgent) throws Exception {
         this._userAgent = userAgent;
     }
 
     /**
-     * <b>description</b> :
-     * <p>添加Client UA 配置.</p>
+     * 添加Client UA 配置.
      */
     public void appendUserAgent(String userAgent) throws Exception {
         this._userAgent = "" + _userAgent + " " + userAgent + "";
     }
 
     /**
-     * <b>description</b> :
-     * <p>获取Client 配置 UA 配置.</p>
+     * 获取Client 配置 UA 配置.
      */
     public String getUserAgent() throws Exception {
         String userAgent = com.aliyun.teautil.Common.getUserAgent(_userAgent);
@@ -198,8 +200,7 @@ public class Client {
     }
 
     /**
-     * <b>description</b> :
-     * <p>计算用户请求识别特征, 遵循 Basic Auth 生成规范.</p>
+     * 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
      */
     public String getRealmSignStr(String accessUserName, String accessPassWord) throws Exception {
         String accessUserNameStr = com.aliyun.darabonbastring.Client.trim(accessUserName);
@@ -209,56 +210,55 @@ public class Client {
     }
 
     /**
-     * <b>description</b> :
-     * <p>向量查询</p>
+     * 向量查询
      */
     public SearchResponse query(QueryRequest request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/query", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
+        java.util.Map<String, String> headers = this.getHeadersFromRunTimeOption();
+        return TeaModel.toModel(this._request("POST", "/vector-service/query", null, headers, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
-     * <b>description</b> :
-     * <p>向量预测查询</p>
+     * 向量预测查询
      */
     public SearchResponse inferenceQuery(QueryRequest request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/inference-query", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
+        java.util.Map<String, String> headers = this.getHeadersFromRunTimeOption();
+        return TeaModel.toModel(this._request("POST", "/vector-service/inference-query", null, headers, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
-     * <b>description</b> :
-     * <p>多namespace查询</p>
+     * 多namespace查询
      */
     public SearchResponse multiQuery(MultiQueryRequest request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/multi-query", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
+        java.util.Map<String, String> headers = this.getHeadersFromRunTimeOption();
+        return TeaModel.toModel(this._request("POST", "/vector-service/multi-query", null, headers, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
-     * <b>description</b> :
-     * <p>查询数据</p>
+     * 查询数据
      */
     public SearchResponse fetch(FetchRequest request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/fetch", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
+        java.util.Map<String, String> headers = this.getHeadersFromRunTimeOption();
+        return TeaModel.toModel(this._request("POST", "/vector-service/fetch", null, headers, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
-     * <b>description</b> :
-     * <p>文本向量混合检索</p>
+     * 文本向量混合检索
      */
     public SearchResponse search(SearchRequest request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/search", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
+        java.util.Map<String, String> headers = this.getHeadersFromRunTimeOption();
+        return TeaModel.toModel(this._request("POST", "/vector-service/search", null, headers, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
-     * <b>description</b> :
-     * <p>向量引擎统计语法</p>
+     * 向量引擎统计语法
      */
     public SearchResponse aggregate(AggregateRequest request) throws Exception {
-        return TeaModel.toModel(this._request("POST", "/vector-service/aggregate", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
+        java.util.Map<String, String> headers = this.getHeadersFromRunTimeOption();
+        return TeaModel.toModel(this._request("POST", "/vector-service/aggregate", null, headers, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
-     * <b>description</b> :
-     * <p>文档统计</p>
+     * 文档统计
      */
     public SearchResponse stats(String tableName) throws Exception {
         java.util.Map<String, Object> body = TeaConverter.buildMap(
@@ -268,17 +268,15 @@ public class Client {
     }
 
     /**
-     * <b>description</b> :
-     * <p>校验网络是否通畅
-     * 检查vpc &amp; 用户名密码配置是否正确</p>
+     * 校验网络是否通畅
+     * 检查vpc & 用户名密码配置是否正确
      */
     public SearchResponse active() throws Exception {
         return TeaModel.toModel(this._request("GET", "/network/active", null, null, null, _runtimeOptions), new SearchResponse());
     }
 
     /**
-     * <b>description</b> :
-     * <p>支持新增、更新、删除 等操作，以及对应批量操作</p>
+     * 支持新增、更新、删除 等操作，以及对应批量操作
      */
     public PushDocumentsResponse pushDocuments(String dataSourceName, String keyField, PushDocumentsRequest request) throws Exception {
         request.headers = TeaConverter.merge(String.class,
@@ -291,21 +289,7 @@ public class Client {
     }
 
     /**
-     * <b>description</b> :
-     * <p>用于内网环境的新增、更新、删除 等操作，以及对应批量操作</p>
-     */
-    public PushDocumentsResponse pushDocumentsWithSwift(String dataSourceName, String keyField, String topic, String swift, PushDocumentsRequest request) throws Exception {
-        request.headers = TeaConverter.buildMap(
-            new TeaPair("X-Opensearch-Swift-PK-Field", keyField),
-            new TeaPair("X-Opensearch-Swift-Topic", topic),
-            new TeaPair("X-Opensearch-Swift-Swift", swift)
-        );
-        return TeaModel.toModel(this._request("POST", "/update/" + dataSourceName + "/actions/bulk", null, request.headers, request.body, _runtimeOptions), new PushDocumentsResponse());
-    }
-
-    /**
-     * <b>description</b> :
-     * <p>构建RuntimeOptions</p>
+     * 构建RuntimeOptions
      */
     public com.aliyun.teautil.models.RuntimeOptions buildRuntimeOptions(com.aliyun.teautil.models.RuntimeOptions runtimeOptions) throws Exception {
         if (com.aliyun.teautil.Common.isUnset(runtimeOptions)) {
@@ -343,5 +327,22 @@ public class Client {
         }
 
         return runtimeOptions;
+    }
+
+    /**
+     * 从runtimeoptions中获取headers
+     */
+    public java.util.Map<String, String> getHeadersFromRunTimeOption() throws Exception {
+        com.aliyun.teautil.models.RuntimeOptions options = _runtimeOptions;
+        java.util.Map<String, String> headers = new java.util.HashMap<>();
+        if (!com.aliyun.teautil.Common.isUnset(options.extendsParameters) && !com.aliyun.teautil.Common.isUnset(options.extendsParameters.headers) && !com.aliyun.teautil.Common.empty(options.extendsParameters.headers.get("Content-Encoding"))) {
+            String contentEncoding = options.extendsParameters.headers.get("Content-Encoding");
+            if (com.aliyun.darabonbastring.Client.equals("deflate", contentEncoding)) {
+                headers.put("Content-Encoding", "deflate");
+            }
+
+        }
+
+        return headers;
     }
 }
