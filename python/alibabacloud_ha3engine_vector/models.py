@@ -615,11 +615,11 @@ class SearchRequest(TeaModel):
         if self.output_fields is not None:
             result['outputFields'] = self.output_fields
         if self.knn is not None:
-            result['knnQuery'] = self.knn.to_map()
+            result['knn'] = self.knn.to_map()
         if self.text is not None:
-            result['textQuery'] = self.text.to_map()
+            result['text'] = self.text.to_map()
         if self.rank is not None:
-            result['rankQuery'] = self.rank.to_map()
+            result['rank'] = self.rank.to_map()
         return result
 
     def from_map(self, m: dict = None):
@@ -634,15 +634,15 @@ class SearchRequest(TeaModel):
             self.order = m.get('order')
         if m.get('outputFields') is not None:
             self.output_fields = m.get('outputFields')
-        if m.get('knnQuery') is not None:
+        if m.get('knn') is not None:
             temp_model = QueryRequest()
-            self.knn = temp_model.from_map(m['knnQuery'])
-        if m.get('textQuery') is not None:
+            self.knn = temp_model.from_map(m['knn'])
+        if m.get('text') is not None:
             temp_model = TextQuery()
-            self.text = temp_model.from_map(m['textQuery'])
-        if m.get('rankQuery') is not None:
+            self.text = temp_model.from_map(m['text'])
+        if m.get('rank') is not None:
             temp_model = RankQuery()
-            self.rank = temp_model.from_map(m['rankQuery'])
+            self.rank = temp_model.from_map(m['rank'])
         return self
 
 

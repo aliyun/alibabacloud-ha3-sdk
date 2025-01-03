@@ -22,26 +22,21 @@ import os
 from setuptools import setup, find_packages
 
 """
-setup module for alibabacloud_ha3engine_vector.
+setup module for alibabacloud_ha3_util.
 
-Created on 03/01/2025
+Created on 25/12/2024
 
 @author: Alibaba Cloud SDK
 """
 
-PACKAGE = "alibabacloud_ha3engine_vector"
-NAME = "alibabacloud_ha3engine_vector" or "alibabacloud-package"
-DESCRIPTION = "Alibaba Cloud Ha3engine-Vector SDK Library for Python"
+PACKAGE = "alibabacloud_ha3_util"
+NAME = "alibabacloud_ha3_util" or "alibabacloud-package"
+DESCRIPTION = "Alibaba Cloud Searchengine Util Library for Python"
 AUTHOR = "Alibaba Cloud SDK"
 AUTHOR_EMAIL = "sdk-team@alibabacloud.com"
-URL = "https://github.com/aliyun/alibabacloud-ha3-sdk"
+URL = "https://github.com/aliyun/alibabacloud-ha3-sdk/util"
 VERSION = __import__(PACKAGE).__version__
-REQUIRES = [
-    "alibabacloud_tea_util>=0.3.13, <1.0.0",
-    "alibabacloud_darabonba_string>=0.0.4, <1.0.0",
-    "alibabacloud_darabonba_encode_util>=0.0.2, <1.0.0",
-    "alibabacloud_ha3_util>=0.0.1, <1.0.0"
-]
+REQUIRES = []
 
 LONG_DESCRIPTION = ''
 if os.path.exists('./README.md'):
@@ -58,7 +53,7 @@ setup(
     author_email=AUTHOR_EMAIL,
     license="Apache License 2.0",
     url=URL,
-    keywords=["alibabacloud","ha3engine","vector"],
+    keywords=["alibabacloud","ha3","util"],
     packages=find_packages(exclude=["tests*"]),
     include_package_data=True,
     platforms="any",

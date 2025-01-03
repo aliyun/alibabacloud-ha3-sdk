@@ -38,19 +38,19 @@ public class SearchRequest extends TeaModel {
     /**
      * <p>KNN查询参数</p>
      */
-    @NameInMap("knnQuery")
+    @NameInMap("knn")
     public QueryRequest knn;
 
     /**
      * <p>text查询参数</p>
      */
-    @NameInMap("textQuery")
+    @NameInMap("text")
     public TextQuery text;
 
     /**
      * <p>指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果</p>
      */
-    @NameInMap("rankQuery")
+    @NameInMap("rank")
     public RankQuery rank;
 
     public static SearchRequest build(java.util.Map<String, ?> map) throws Exception {

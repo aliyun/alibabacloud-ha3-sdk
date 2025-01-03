@@ -1,6 +1,7 @@
 import Util;
 import String;
 import EncodeUtil;
+import Ha3Util;
 
 type @endpoint = string
 type @instanceId = string
@@ -163,9 +164,9 @@ model SearchRequest{
  from?: integer(name='from', description='从结果集的第from返回doc'),
  order?: string(name='order', description='结果排序方向:DESC: 降序排序;ASC: 升序排序'),
  outputFields?: [ string ](name='outputFields', description='指定需要在结果中返回的字段，默认为空'),
- knn?: QueryRequest(name='knnQuery', description='KNN查询参数'),
- text?: TextQuery(name='textQuery', description='text查询参数'),
- rank?: RankQuery(name='rankQuery', description='指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果')
+ knn?: QueryRequest(name='knn', description='KNN查询参数'),
+ text?: TextQuery(name='text', description='text查询参数'),
+ rank?: RankQuery(name='rank', description='指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果')
 }
 
 model AggFuncDesc {
@@ -188,46 +189,58 @@ model AggregateRequest {
   timeout?: integer(name='timeout', description='超时时间，单位毫秒')
 }
 
+
 /**
  * 向量查询
  */
 async function query(request: QueryRequest): SearchResponse {
-  return _request('POST', `/vector-service/query`, null, null, Util.toJSONString(request), @runtimeOptions);
+  var headers = getHeadersFromRunTimeOption();
+  return _request('POST', `/vector-service/query`, null, headers, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
  * 向量预测查询
  */
 async function inferenceQuery(request: QueryRequest): SearchResponse {
-  return _request('POST', `/vector-service/inference-query`, null, null, Util.toJSONString(request), @runtimeOptions);
+  var headers = getHeadersFromRunTimeOption();
+
+  return _request('POST', `/vector-service/inference-query`, null, headers, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
  * 多namespace查询
  */
 async function multiQuery(request: MultiQueryRequest): SearchResponse {
-  return _request('POST', `/vector-service/multi-query`, null, null, Util.toJSONString(request), @runtimeOptions);
+  var headers = getHeadersFromRunTimeOption();
+
+  return _request('POST', `/vector-service/multi-query`, null, headers, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
  * 查询数据
  */
 async function fetch(request: FetchRequest): SearchResponse {
-  return _request('POST', `/vector-service/fetch`, null, null, Util.toJSONString(request), @runtimeOptions);
+  var headers = getHeadersFromRunTimeOption();
+
+  return _request('POST', `/vector-service/fetch`, null, headers, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
  * 文本向量混合检索
  */
 async function search(request: SearchRequest): SearchResponse {
-  return _request('POST', `/vector-service/search`, null, null, Util.toJSONString(request), @runtimeOptions);
+  var headers = getHeadersFromRunTimeOption();
+
+  return _request('POST', `/vector-service/search`, null, headers, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
  * 向量引擎统计语法
  */
 async function aggregate(request: AggregateRequest): SearchResponse {
-  return _request('POST', `/vector-service/aggregate`, null, null, Util.toJSONString(request), @runtimeOptions);
+  var headers = getHeadersFromRunTimeOption();
+
+  return _request('POST', `/vector-service/aggregate`, null, headers, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
@@ -270,18 +283,6 @@ async function pushDocuments(dataSourceName: string, keyField: string, request: 
   return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, @runtimeOptions);
 }
 
-/**
- * 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
- */
-async function pushDocumentsWithSwift(dataSourceName: string, keyField: string, topic: string, swift: string, request: PushDocumentsRequest): PushDocumentsResponse {
-  request.headers = {
-    X-Opensearch-Swift-PK-Field = keyField,
-    X-Opensearch-Swift-Topic = topic,
-    X-Opensearch-Swift-Swift = swift
-  };
-  return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, @runtimeOptions);
-}
-
 api _request(method: string, pathname: string, query: map[string]any, headers: map[string]string, body: any, runtime: Util.RuntimeOptions): map[string]any {
   __request.protocol = Util.defaultString(@protocol, 'HTTP');
   __request.method = method;
@@ -301,7 +302,12 @@ api _request(method: string, pathname: string, query: map[string]any, headers: m
 
   if (!Util.isUnset(body)) {
     __request.headers.X-Opensearch-Swift-Request-ID = Util.getNonce();
-    __request.body = Util.toJSONString(body);
+    if (String.equals("deflate", __request.headers.Content-Encoding) && !String.contains(pathname, "actions/bulk")) {
+        var compressed = Ha3Util.deflateCompress(String.toBytes(Util.toJSONString(body), 'UTF-8'));
+        __request.body = compressed;
+    } else {
+        __request.body = Util.toJSONString(body);
+    }
   }
 } returns {
   var objStr = Util.readAsString(__response.body);
@@ -365,7 +371,7 @@ function buildRuntimeOptions(runtimeOptions: Util.RuntimeOptions): Util.RuntimeO
       connectTimeout = 5000,
       autoretry = false,
       ignoreSSL = false,
-      maxIdleConns = 50,
+      maxIdleConns = 50
     };
   }
 
@@ -389,3 +395,21 @@ function buildRuntimeOptions(runtimeOptions: Util.RuntimeOptions): Util.RuntimeO
   }
   return runtimeOptions;
 }
+
+
+/**
+ * 从runtimeoptions中获取headers
+ */
+function getHeadersFromRunTimeOption(): map[string]string {
+  var options = @runtimeOptions;
+  var headers: map[string]string = {};
+
+  if (!Util.isUnset(options.extendsParameters) && !Util.isUnset(options.extendsParameters.headers) && !Util.empty(options.extendsParameters.headers.Content-Encoding)) {
+    var contentEncoding = options.extendsParameters.headers.Content-Encoding;
+    if (String.equals("deflate", contentEncoding)) {
+      headers.Content-Encoding = "deflate";
+    }
+  }
+  return headers;
+}
+
