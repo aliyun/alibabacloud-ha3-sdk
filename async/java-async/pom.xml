@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.aliyun</groupId>
   <artifactId>aliyun-sdk-ha3engine-async</artifactId>
-  <version>1.1.4</version>
+  <version>1.1.5</version>
   <packaging>jar</packaging>
   <name>aliyun-sdk-ha3engine-async</name>
   <description>Alibaba Cloud Ha3engine SDK for Java
@@ -59,7 +59,7 @@
     <dependency>
       <groupId>com.aliyun</groupId>
       <artifactId>aliyun-sdk-ha3engine-async-core</artifactId>
-      <version>1.1.4</version>
+      <version>1.1.5</version>
     </dependency>
     <dependency>
       <groupId>com.aliyun</groupId>

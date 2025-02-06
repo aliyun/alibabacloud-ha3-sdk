@@ -87,6 +87,21 @@ public interface AsyncClient {
     CompletableFuture<SearchResponse> aggregate(VectorRequest.AggregateQuery request, boolean compress);
 
     /**
+     * 批量查询
+     * @param request
+     * @return
+     */
+    CompletableFuture<SearchResponse> batchQuery(BatchRequest request);
+
+    /**
+     * 批量查询（pb协议）
+     * @param request
+     * @param compress
+     * @return
+     */
+    CompletableFuture<SearchResponse> batchQuery(VectorRequest.VectorBatchQuery request, boolean compress);
+
+    /**
      * 文档统计
      */
     CompletableFuture<SearchResponse> stats(StatsRequest request);

@@ -393,6 +393,69 @@ public final class DefaultAsyncClient implements AsyncClient {
     }
 
     /**
+     * 批量查询
+     * @param request
+     * @return
+     */
+    @Override
+    public CompletableFuture<SearchResponse> batchQuery(BatchRequest request) {
+        try {
+            compressRequest(request);
+
+            TeaRequest teaRequest = REQUEST.copy()
+                .setStyle(RequestStyle.RESTFUL)
+                .setAction("BatchQuery")
+                .setMethod(HttpMethod.POST)
+                .setPathRegex("/vector-service/batch-query")
+                .setBodyType(BodyType.JSON)
+                .setBodyIsForm(false)
+                .setReqBodyType(BodyType.JSON)
+                .formModel(request);
+            ClientExecutionParams params = new ClientExecutionParams().withInput(request).withRequest(teaRequest).withOutput(SearchResponse.create());
+            return this.handler.execute(params);
+        } catch (Exception e) {
+            CompletableFuture<SearchResponse> future = new CompletableFuture<>();
+            future.completeExceptionally(e);
+            return future;
+        }
+    }
+
+    /**
+     * 批量查询（pb协议）
+     * @param request
+     * @param compress
+     * @return
+     */
+    @Override
+    public CompletableFuture<SearchResponse> batchQuery(VectorRequest.VectorBatchQuery request, boolean compress) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "application/protobuf");
+
+            TeaRequest teaRequest = REQUEST.copy()
+                .setStyle(RequestStyle.RESTFUL)
+                .setAction("BatchQuery")
+                .setMethod(HttpMethod.POST)
+                .setPathname("/vector-service/batch-query")
+                .setBodyType(BodyType.JSON)
+                .setBodyIsForm(false)
+                .setHeaders(headers)
+                .setQuery(new HashMap<>())
+                .setReqBodyType(BodyType.BINARY);
+            teaRequest.setBody(request.toByteArray());
+
+            compressPbRequest(teaRequest, compress);
+
+            ClientExecutionParams params = new ClientExecutionParams().withRequest(teaRequest).withOutput(SearchResponse.create());
+            return this.handler.execute(params);
+        } catch (Exception e) {
+            CompletableFuture<SearchResponse> future = new CompletableFuture<>();
+            future.completeExceptionally(e);
+            return future;
+        }
+    }
+
+    /**
      * 文档统计
      */
     @Override

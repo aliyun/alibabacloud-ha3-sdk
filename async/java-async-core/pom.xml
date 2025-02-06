@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.aliyun</groupId>
     <artifactId>aliyun-sdk-ha3engine-async-core</artifactId>
-    <version>1.1.4</version>
+    <version>1.1.5</version>
     <description>Alibaba Cloud Ha3engine Async SDK for Java</description>
     <url>https://github.com/aliyun/alibabacloud-ha3-sdk</url>
 

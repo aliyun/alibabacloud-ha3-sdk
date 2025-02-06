@@ -125,3 +125,8 @@ message AggregateQuery {
     repeated AggOrderDesc orderBy = 6;
     optional int64 timeout = 7 [ default = 10000 ];
 }
+
+message VectorBatchQuery {
+    repeated VectorSearchQuery queries = 1;
+    optional int64 timeout = 2 [ default = -1 ];
+}

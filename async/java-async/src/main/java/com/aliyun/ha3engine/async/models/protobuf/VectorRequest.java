@@ -22,7 +22,7 @@ public final class VectorRequest {
      * <code>repeated uint32 count = 1;</code>
      * @return A list containing the count.
      */
-    java.util.List<Integer> getCountList();
+    java.util.List<java.lang.Integer> getCountList();
     /**
      * <code>repeated uint32 count = 1;</code>
      * @return The count of count.
@@ -39,7 +39,7 @@ public final class VectorRequest {
      * <code>repeated uint32 indices = 2;</code>
      * @return A list containing the indices.
      */
-    java.util.List<Integer> getIndicesList();
+    java.util.List<java.lang.Integer> getIndicesList();
     /**
      * <code>repeated uint32 indices = 2;</code>
      * @return The count of indices.
@@ -56,7 +56,7 @@ public final class VectorRequest {
      * <code>repeated float values = 3;</code>
      * @return A list containing the values.
      */
-    java.util.List<Float> getValuesList();
+    java.util.List<java.lang.Float> getValuesList();
     /**
      * <code>repeated float values = 3;</code>
      * @return The count of values.
@@ -87,14 +87,14 @@ public final class VectorRequest {
       values_ = emptyFloatList();
     }
 
-    @Override
+    @java.lang.Override
     @SuppressWarnings({"unused"})
-    protected Object newInstance(
+    protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
       return new SparseData();
     }
 
-    @Override
+    @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
@@ -105,7 +105,7 @@ public final class VectorRequest {
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
-        throw new NullPointerException();
+        throw new java.lang.NullPointerException();
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
@@ -211,15 +211,15 @@ public final class VectorRequest {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_SparseData_descriptor;
+      return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_SparseData_descriptor;
     }
 
-    @Override
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_SparseData_fieldAccessorTable
+      return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_SparseData_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              SparseData.class, Builder.class);
+              com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData.class, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData.Builder.class);
     }
 
     public static final int COUNT_FIELD_NUMBER = 1;
@@ -228,7 +228,7 @@ public final class VectorRequest {
      * <code>repeated uint32 count = 1;</code>
      * @return A list containing the count.
      */
-    public java.util.List<Integer>
+    public java.util.List<java.lang.Integer>
         getCountList() {
       return count_;
     }
@@ -254,7 +254,7 @@ public final class VectorRequest {
      * <code>repeated uint32 indices = 2;</code>
      * @return A list containing the indices.
      */
-    public java.util.List<Integer>
+    public java.util.List<java.lang.Integer>
         getIndicesList() {
       return indices_;
     }
@@ -280,7 +280,7 @@ public final class VectorRequest {
      * <code>repeated float values = 3;</code>
      * @return A list containing the values.
      */
-    public java.util.List<Float>
+    public java.util.List<java.lang.Float>
         getValuesList() {
       return values_;
     }
@@ -301,7 +301,7 @@ public final class VectorRequest {
     }
 
     private byte memoizedIsInitialized = -1;
-    @Override
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -311,7 +311,7 @@ public final class VectorRequest {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       for (int i = 0; i < count_.size(); i++) {
@@ -326,7 +326,7 @@ public final class VectorRequest {
       unknownFields.writeTo(output);
     }
 
-    @Override
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -361,15 +361,15 @@ public final class VectorRequest {
       return size;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof SparseData)) {
+      if (!(obj instanceof com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData)) {
         return super.equals(obj);
       }
-      SparseData other = (SparseData) obj;
+      com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData other = (com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData) obj;
 
       if (!getCountList()
           .equals(other.getCountList())) return false;
@@ -381,7 +381,7 @@ public final class VectorRequest {
       return true;
     }
 
-    @Override
+    @java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -405,63 +405,63 @@ public final class VectorRequest {
       return hash;
     }
 
-    public static SparseData parseFrom(
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static SparseData parseFrom(
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static SparseData parseFrom(
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static SparseData parseFrom(
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static SparseData parseFrom(byte[] data)
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static SparseData parseFrom(
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static SparseData parseFrom(java.io.InputStream input)
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static SparseData parseFrom(
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static SparseData parseDelimitedFrom(java.io.InputStream input)
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static SparseData parseDelimitedFrom(
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static SparseData parseFrom(
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
@@ -18613,6 +18613,894 @@ public final class VectorRequest {
 
   }
 
+  public interface VectorBatchQueryOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.aliyun.ha3engine.async.models.protobuf.VectorBatchQuery)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+     */
+    java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery> 
+        getQueriesList();
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+     */
+    com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery getQueries(int index);
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+     */
+    int getQueriesCount();
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+     */
+    java.util.List<? extends com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQueryOrBuilder> 
+        getQueriesOrBuilderList();
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+     */
+    com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQueryOrBuilder getQueriesOrBuilder(
+        int index);
+
+    /**
+     * <code>optional int64 timeout = 2 [default = -1];</code>
+     * @return Whether the timeout field is set.
+     */
+    boolean hasTimeout();
+    /**
+     * <code>optional int64 timeout = 2 [default = -1];</code>
+     * @return The timeout.
+     */
+    long getTimeout();
+  }
+  /**
+   * Protobuf type {@code com.aliyun.ha3engine.async.models.protobuf.VectorBatchQuery}
+   */
+  public  static final class VectorBatchQuery extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.aliyun.ha3engine.async.models.protobuf.VectorBatchQuery)
+      VectorBatchQueryOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use VectorBatchQuery.newBuilder() to construct.
+    private VectorBatchQuery(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private VectorBatchQuery() {
+      queries_ = java.util.Collections.emptyList();
+      timeout_ = -1L;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new VectorBatchQuery();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private VectorBatchQuery(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                queries_ = new java.util.ArrayList<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              queries_.add(
+                  input.readMessage(com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.PARSER, extensionRegistry));
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000001;
+              timeout_ = input.readInt64();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          queries_ = java.util.Collections.unmodifiableList(queries_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery.class, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int QUERIES_FIELD_NUMBER = 1;
+    private java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery> queries_;
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+     */
+    public java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery> getQueriesList() {
+      return queries_;
+    }
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+     */
+    public java.util.List<? extends com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQueryOrBuilder> 
+        getQueriesOrBuilderList() {
+      return queries_;
+    }
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+     */
+    public int getQueriesCount() {
+      return queries_.size();
+    }
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+     */
+    public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery getQueries(int index) {
+      return queries_.get(index);
+    }
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+     */
+    public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQueryOrBuilder getQueriesOrBuilder(
+        int index) {
+      return queries_.get(index);
+    }
+
+    public static final int TIMEOUT_FIELD_NUMBER = 2;
+    private long timeout_;
+    /**
+     * <code>optional int64 timeout = 2 [default = -1];</code>
+     * @return Whether the timeout field is set.
+     */
+    public boolean hasTimeout() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>optional int64 timeout = 2 [default = -1];</code>
+     * @return The timeout.
+     */
+    public long getTimeout() {
+      return timeout_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < queries_.size(); i++) {
+        output.writeMessage(1, queries_.get(i));
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        output.writeInt64(2, timeout_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < queries_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, queries_.get(i));
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(2, timeout_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery)) {
+        return super.equals(obj);
+      }
+      com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery other = (com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery) obj;
+
+      if (!getQueriesList()
+          .equals(other.getQueriesList())) return false;
+      if (hasTimeout() != other.hasTimeout()) return false;
+      if (hasTimeout()) {
+        if (getTimeout()
+            != other.getTimeout()) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getQueriesCount() > 0) {
+        hash = (37 * hash) + QUERIES_FIELD_NUMBER;
+        hash = (53 * hash) + getQueriesList().hashCode();
+      }
+      if (hasTimeout()) {
+        hash = (37 * hash) + TIMEOUT_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getTimeout());
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.aliyun.ha3engine.async.models.protobuf.VectorBatchQuery}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.aliyun.ha3engine.async.models.protobuf.VectorBatchQuery)
+        com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQueryOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery.class, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery.Builder.class);
+      }
+
+      // Construct using com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getQueriesFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (queriesBuilder_ == null) {
+          queries_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          queriesBuilder_.clear();
+        }
+        timeout_ = -1L;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_descriptor;
+      }
+
+      @java.lang.Override
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery getDefaultInstanceForType() {
+        return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery build() {
+        com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery buildPartial() {
+        com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery result = new com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (queriesBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            queries_ = java.util.Collections.unmodifiableList(queries_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.queries_ = queries_;
+        } else {
+          result.queries_ = queriesBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.timeout_ = timeout_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery) {
+          return mergeFrom((com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery other) {
+        if (other == com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery.getDefaultInstance()) return this;
+        if (queriesBuilder_ == null) {
+          if (!other.queries_.isEmpty()) {
+            if (queries_.isEmpty()) {
+              queries_ = other.queries_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureQueriesIsMutable();
+              queries_.addAll(other.queries_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.queries_.isEmpty()) {
+            if (queriesBuilder_.isEmpty()) {
+              queriesBuilder_.dispose();
+              queriesBuilder_ = null;
+              queries_ = other.queries_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              queriesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getQueriesFieldBuilder() : null;
+            } else {
+              queriesBuilder_.addAllMessages(other.queries_);
+            }
+          }
+        }
+        if (other.hasTimeout()) {
+          setTimeout(other.getTimeout());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery> queries_ =
+        java.util.Collections.emptyList();
+      private void ensureQueriesIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          queries_ = new java.util.ArrayList<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery>(queries_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.Builder, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQueryOrBuilder> queriesBuilder_;
+
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery> getQueriesList() {
+        if (queriesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(queries_);
+        } else {
+          return queriesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public int getQueriesCount() {
+        if (queriesBuilder_ == null) {
+          return queries_.size();
+        } else {
+          return queriesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery getQueries(int index) {
+        if (queriesBuilder_ == null) {
+          return queries_.get(index);
+        } else {
+          return queriesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public Builder setQueries(
+          int index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery value) {
+        if (queriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureQueriesIsMutable();
+          queries_.set(index, value);
+          onChanged();
+        } else {
+          queriesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public Builder setQueries(
+          int index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.Builder builderForValue) {
+        if (queriesBuilder_ == null) {
+          ensureQueriesIsMutable();
+          queries_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          queriesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public Builder addQueries(com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery value) {
+        if (queriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureQueriesIsMutable();
+          queries_.add(value);
+          onChanged();
+        } else {
+          queriesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public Builder addQueries(
+          int index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery value) {
+        if (queriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureQueriesIsMutable();
+          queries_.add(index, value);
+          onChanged();
+        } else {
+          queriesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public Builder addQueries(
+          com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.Builder builderForValue) {
+        if (queriesBuilder_ == null) {
+          ensureQueriesIsMutable();
+          queries_.add(builderForValue.build());
+          onChanged();
+        } else {
+          queriesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public Builder addQueries(
+          int index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.Builder builderForValue) {
+        if (queriesBuilder_ == null) {
+          ensureQueriesIsMutable();
+          queries_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          queriesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public Builder addAllQueries(
+          java.lang.Iterable<? extends com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery> values) {
+        if (queriesBuilder_ == null) {
+          ensureQueriesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, queries_);
+          onChanged();
+        } else {
+          queriesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public Builder clearQueries() {
+        if (queriesBuilder_ == null) {
+          queries_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          queriesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public Builder removeQueries(int index) {
+        if (queriesBuilder_ == null) {
+          ensureQueriesIsMutable();
+          queries_.remove(index);
+          onChanged();
+        } else {
+          queriesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.Builder getQueriesBuilder(
+          int index) {
+        return getQueriesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQueryOrBuilder getQueriesOrBuilder(
+          int index) {
+        if (queriesBuilder_ == null) {
+          return queries_.get(index);  } else {
+          return queriesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public java.util.List<? extends com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQueryOrBuilder> 
+           getQueriesOrBuilderList() {
+        if (queriesBuilder_ != null) {
+          return queriesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(queries_);
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.Builder addQueriesBuilder() {
+        return getQueriesFieldBuilder().addBuilder(
+            com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.Builder addQueriesBuilder(
+          int index) {
+        return getQueriesFieldBuilder().addBuilder(
+            index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery queries = 1;</code>
+       */
+      public java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.Builder> 
+           getQueriesBuilderList() {
+        return getQueriesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.Builder, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQueryOrBuilder> 
+          getQueriesFieldBuilder() {
+        if (queriesBuilder_ == null) {
+          queriesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQuery.Builder, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorSearchQueryOrBuilder>(
+                  queries_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          queries_ = null;
+        }
+        return queriesBuilder_;
+      }
+
+      private long timeout_ = -1L;
+      /**
+       * <code>optional int64 timeout = 2 [default = -1];</code>
+       * @return Whether the timeout field is set.
+       */
+      public boolean hasTimeout() {
+        return ((bitField0_ & 0x00000002) != 0);
+      }
+      /**
+       * <code>optional int64 timeout = 2 [default = -1];</code>
+       * @return The timeout.
+       */
+      public long getTimeout() {
+        return timeout_;
+      }
+      /**
+       * <code>optional int64 timeout = 2 [default = -1];</code>
+       * @param value The timeout to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTimeout(long value) {
+        bitField0_ |= 0x00000002;
+        timeout_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int64 timeout = 2 [default = -1];</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTimeout() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        timeout_ = -1L;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.aliyun.ha3engine.async.models.protobuf.VectorBatchQuery)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.aliyun.ha3engine.async.models.protobuf.VectorBatchQuery)
+    private static final com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery();
+    }
+
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<VectorBatchQuery>
+        PARSER = new com.google.protobuf.AbstractParser<VectorBatchQuery>() {
+      @java.lang.Override
+      public VectorBatchQuery parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new VectorBatchQuery(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<VectorBatchQuery> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<VectorBatchQuery> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.VectorBatchQuery getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_aliyun_ha3engine_async_models_protobuf_SparseData_descriptor;
   private static final 
@@ -18693,6 +19581,11 @@ public final class VectorRequest {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_aliyun_ha3engine_async_models_protobuf_AggregateQuery_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -18765,8 +19658,11 @@ public final class VectorRequest {
       "7.com.aliyun.ha3engine.async.models.prot" +
       "obuf.AggFuncDesc\022I\n\007orderBy\030\006 \003(\01328.com." +
       "aliyun.ha3engine.async.models.protobuf.A" +
-      "ggOrderDesc\022\026\n\007timeout\030\007 \001(\003:\00510000B\t\200\001\001" +
-      "\220\001\001\370\001\001"
+      "ggOrderDesc\022\026\n\007timeout\030\007 \001(\003:\00510000\"w\n\020V" +
+      "ectorBatchQuery\022N\n\007queries\030\001 \003(\0132=.com.a" +
+      "liyun.ha3engine.async.models.protobuf.Ve" +
+      "ctorSearchQuery\022\023\n\007timeout\030\002 \001(\003:\002-1B\t\200\001" +
+      "\001\220\001\001\370\001\001"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -18868,6 +19764,12 @@ public final class VectorRequest {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_AggregateQuery_descriptor,
         new java.lang.String[] { "TableName", "Filter", "Limit", "GroupKeys", "AggFuncs", "OrderBy", "Timeout", });
+    internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_descriptor =
+      getDescriptor().getMessageTypes().get(14);
+    internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_descriptor,
+        new java.lang.String[] { "Queries", "Timeout", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
