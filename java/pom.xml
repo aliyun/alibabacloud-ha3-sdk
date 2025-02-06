@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.aliyun</groupId>
   <artifactId>aliyun-sdk-ha3engine-vector</artifactId>
-  <version>1.1.11</version>
+  <version>1.1.13</version>
   <packaging>jar</packaging>
   <name>aliyun-sdk-ha3engine-vector</name>
   <description>Alibaba Cloud Ha3engine-Vector SDK for Java</description>

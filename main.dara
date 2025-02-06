@@ -189,6 +189,11 @@ model AggregateRequest {
   timeout?: integer(name='timeout', description='超时时间，单位毫秒')
 }
 
+model BatchRequest {
+  queries: [ QueryRequest ](name='queries', description='批量查询列表'),
+  timeout?: integer(name='timeout', description='超时时间，单位毫秒')
+}
+
 
 /**
  * 向量查询
@@ -242,6 +247,16 @@ async function aggregate(request: AggregateRequest): SearchResponse {
 
   return _request('POST', `/vector-service/aggregate`, null, headers, Util.toJSONString(request), @runtimeOptions);
 }
+
+/**
+ * 批量查询
+ */
+async function batchQuery(request: BatchRequest): SearchResponse {
+  var headers = getHeadersFromRunTimeOption();
+
+  return _request('POST', `/vector-service/batch-query`, null, headers, Util.toJSONString(request), @runtimeOptions);
+}
+
 
 /**
  * 文档统计

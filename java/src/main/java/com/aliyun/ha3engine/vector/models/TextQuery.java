@@ -12,12 +12,12 @@ public class TextQuery extends TeaModel {
     public String queryString;
 
     /**
-     * <p>query查询参数：</p>
-     * <p>      default_op: 指定在该次查询中使用的默认query 分词后的连接操作符，AND or OR。默认为AND。</p>
-     * <p>      global_analyzer: 查询中指定全局的分词器，该分词器会覆盖schema的分词器，指定的值必须在analyzer.json里有配置。</p>
-     * <p>      specific_index_analyzer: 查询中指定index使用另外的分词器，该分词器会覆盖global_analyzer和schema的分词器。</p>
-     * <p>      no_token_indexes: 支持查询中指定的index不分词（除分词以外的其他流程如归一化、去停用词会正常执行），多个index之间用;分割。</p>
-     * <p>      remove_stopwords: true or false 表示是否需要删除stop words，stop words在分词器中配置。默认true</p>
+     * <p>query查询参数：
+     *       default_op: 指定在该次查询中使用的默认query 分词后的连接操作符，AND or OR。默认为AND。
+     *       global_analyzer: 查询中指定全局的分词器，该分词器会覆盖schema的分词器，指定的值必须在analyzer.json里有配置。
+     *       specific_index_analyzer: 查询中指定index使用另外的分词器，该分词器会覆盖global_analyzer和schema的分词器。
+     *       no_token_indexes: 支持查询中指定的index不分词（除分词以外的其他流程如归一化、去停用词会正常执行），多个index之间用;分割。
+     *       remove_stopwords: true or false 表示是否需要删除stop words，stop words在分词器中配置。默认true</p>
      */
     @NameInMap("queryParams")
     public java.util.Map<String, String> queryParams;

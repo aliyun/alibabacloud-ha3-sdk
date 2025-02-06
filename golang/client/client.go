@@ -419,15 +419,20 @@ type TextQuery struct {
   // ha3 query语法，支持多个文本索引的AND、OR嵌套
   QueryString *string `json:"queryString,omitempty" xml:"queryString,omitempty" require:"true"`
   // query查询参数：
+  // 
   //       default_op: 指定在该次查询中使用的默认query 分词后的连接操作符，AND or OR。默认为AND。
+  // 
   //       global_analyzer: 查询中指定全局的分词器，该分词器会覆盖schema的分词器，指定的值必须在analyzer.json里有配置。
+  // 
   //       specific_index_analyzer: 查询中指定index使用另外的分词器，该分词器会覆盖global_analyzer和schema的分词器。
+  // 
   //       no_token_indexes: 支持查询中指定的index不分词（除分词以外的其他流程如归一化、去停用词会正常执行），多个index之间用;分割。
+  // 
   //       remove_stopwords: true or false 表示是否需要删除stop words，stop words在分词器中配置。默认true
   QueryParams map[string]*string `json:"queryParams,omitempty" xml:"queryParams,omitempty"`
   // 过滤条件表达式
   Filter *string `json:"filter,omitempty" xml:"filter,omitempty"`
-  // text查询结果的权重，以score * weight的结果作为该路的排序分
+  // text查询结果的权重，以score 	- weight的结果作为该路的排序分
   Weight *float32 `json:"weight,omitempty" xml:"weight,omitempty"`
   // 每个分片查找满足条件的文档的最大数量。到达这个数量后，查询将提前结束，不再继续查询索引。默认为0，不设置限制。
   TerminateAfter *int `json:"terminateAfter,omitempty" xml:"terminateAfter,omitempty"`
@@ -639,6 +644,31 @@ func (s *AggregateRequest) SetOrderBy(v []*OrderByDesc) *AggregateRequest {
 }
 
 func (s *AggregateRequest) SetTimeout(v int) *AggregateRequest {
+  s.Timeout = &v
+  return s
+}
+
+type BatchRequest struct {
+  // 批量查询列表
+  Queries []*QueryRequest `json:"queries,omitempty" xml:"queries,omitempty" require:"true" type:"Repeated"`
+  // 超时时间，单位毫秒
+  Timeout *int `json:"timeout,omitempty" xml:"timeout,omitempty"`
+}
+
+func (s BatchRequest) String() string {
+  return tea.Prettify(s)
+}
+
+func (s BatchRequest) GoString() string {
+  return s.String()
+}
+
+func (s *BatchRequest) SetQueries(v []*QueryRequest) *BatchRequest {
+  s.Queries = v
+  return s
+}
+
+func (s *BatchRequest) SetTimeout(v int) *BatchRequest {
   s.Timeout = &v
   return s
 }
@@ -866,9 +896,9 @@ func (client *Client) _request(method *string, pathname *string, query map[strin
 }
 
 
-/**
- * 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
- */
+// Description:
+// 
+// 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
 func (client *Client) GetEndpoint (endpoint *string) (_result *string) {
   if tea.BoolValue(string_.HasPrefix(endpoint, tea.String("http://"))) {
     _body := string_.Replace(endpoint, tea.String("http://"), tea.String(""), tea.Int(1))
@@ -886,32 +916,32 @@ func (client *Client) GetEndpoint (endpoint *string) (_result *string) {
   return _result
 }
 
-/**
- * 设置Client UA 配置.
- */
+// Description:
+// 
+// 设置Client UA 配置.
 func (client *Client) SetUserAgent (userAgent *string) {
   client.UserAgent = userAgent
 }
 
-/**
- * 添加Client UA 配置.
- */
+// Description:
+// 
+// 添加Client UA 配置.
 func (client *Client) AppendUserAgent (userAgent *string) {
   client.UserAgent = tea.String(tea.StringValue(client.UserAgent) + " " + tea.StringValue(userAgent))
 }
 
-/**
- * 获取Client 配置 UA 配置.
- */
+// Description:
+// 
+// 获取Client 配置 UA 配置.
 func (client *Client) GetUserAgent () (_result *string) {
   userAgent := util.GetUserAgent(client.UserAgent)
   _result = userAgent
   return _result
 }
 
-/**
- * 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
- */
+// Description:
+// 
+// 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
 func (client *Client) GetRealmSignStr (accessUserName *string, accessPassWord *string) (_result *string) {
   accessUserNameStr := string_.Trim(accessUserName)
   accessPassWordStr := string_.Trim(accessPassWord)
@@ -921,9 +951,9 @@ func (client *Client) GetRealmSignStr (accessUserName *string, accessPassWord *s
   return _result
 }
 
-/**
- * 向量查询
- */
+// Description:
+// 
+// 向量查询
 func (client *Client) Query (request *QueryRequest) (_result *SearchResponse, _err error) {
   headers := client.GetHeadersFromRunTimeOption()
   _result = &SearchResponse{}
@@ -935,9 +965,9 @@ func (client *Client) Query (request *QueryRequest) (_result *SearchResponse, _e
   return _result, _err
 }
 
-/**
- * 向量预测查询
- */
+// Description:
+// 
+// 向量预测查询
 func (client *Client) InferenceQuery (request *QueryRequest) (_result *SearchResponse, _err error) {
   headers := client.GetHeadersFromRunTimeOption()
   _result = &SearchResponse{}
@@ -949,9 +979,9 @@ func (client *Client) InferenceQuery (request *QueryRequest) (_result *SearchRes
   return _result, _err
 }
 
-/**
- * 多namespace查询
- */
+// Description:
+// 
+// 多namespace查询
 func (client *Client) MultiQuery (request *MultiQueryRequest) (_result *SearchResponse, _err error) {
   headers := client.GetHeadersFromRunTimeOption()
   _result = &SearchResponse{}
@@ -963,9 +993,9 @@ func (client *Client) MultiQuery (request *MultiQueryRequest) (_result *SearchRe
   return _result, _err
 }
 
-/**
- * 查询数据
- */
+// Description:
+// 
+// 查询数据
 func (client *Client) Fetch (request *FetchRequest) (_result *SearchResponse, _err error) {
   headers := client.GetHeadersFromRunTimeOption()
   _result = &SearchResponse{}
@@ -977,9 +1007,9 @@ func (client *Client) Fetch (request *FetchRequest) (_result *SearchResponse, _e
   return _result, _err
 }
 
-/**
- * 文本向量混合检索
- */
+// Description:
+// 
+// 文本向量混合检索
 func (client *Client) Search (request *SearchRequest) (_result *SearchResponse, _err error) {
   headers := client.GetHeadersFromRunTimeOption()
   _result = &SearchResponse{}
@@ -991,9 +1021,9 @@ func (client *Client) Search (request *SearchRequest) (_result *SearchResponse, 
   return _result, _err
 }
 
-/**
- * 向量引擎统计语法
- */
+// Description:
+// 
+// 向量引擎统计语法
 func (client *Client) Aggregate (request *AggregateRequest) (_result *SearchResponse, _err error) {
   headers := client.GetHeadersFromRunTimeOption()
   _result = &SearchResponse{}
@@ -1005,9 +1035,23 @@ func (client *Client) Aggregate (request *AggregateRequest) (_result *SearchResp
   return _result, _err
 }
 
-/**
- * 文档统计
- */
+// Description:
+// 
+// 批量查询
+func (client *Client) BatchQuery (request *BatchRequest) (_result *SearchResponse, _err error) {
+  headers := client.GetHeadersFromRunTimeOption()
+  _result = &SearchResponse{}
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/batch-query"), nil, headers, util.ToJSONString(request), client.RuntimeOptions)
+  if _err != nil {
+    return _result, _err
+  }
+  _err = tea.Convert(_body, &_result)
+  return _result, _err
+}
+
+// Description:
+// 
+// 文档统计
 func (client *Client) Stats (tableName *string) (_result *SearchResponse, _err error) {
   body := map[string]interface{}{
     "tableName": tea.StringValue(tableName),
@@ -1021,10 +1065,11 @@ func (client *Client) Stats (tableName *string) (_result *SearchResponse, _err e
   return _result, _err
 }
 
-/**
- * 校验网络是否通畅
- * 检查vpc & 用户名密码配置是否正确
- */
+// Description:
+// 
+// 校验网络是否通畅
+// 
+// 检查vpc & 用户名密码配置是否正确
 func (client *Client) Active () (_result *SearchResponse, _err error) {
   _result = &SearchResponse{}
   _body, _err := client._request(tea.String("GET"), tea.String("/network/active"), nil, nil, nil, client.RuntimeOptions)
@@ -1035,9 +1080,9 @@ func (client *Client) Active () (_result *SearchResponse, _err error) {
   return _result, _err
 }
 
-/**
- * 支持新增、更新、删除 等操作，以及对应批量操作
- */
+// Description:
+// 
+// 支持新增、更新、删除 等操作，以及对应批量操作
 func (client *Client) PushDocuments (dataSourceName *string, keyField *string, request *PushDocumentsRequest) (_result *PushDocumentsResponse, _err error) {
   request.Headers = tea.Merge(map[string]*string{
     "X-Opensearch-Swift-PK-Field": keyField,
@@ -1051,9 +1096,9 @@ func (client *Client) PushDocuments (dataSourceName *string, keyField *string, r
   return _result, _err
 }
 
-/**
- * 构建RuntimeOptions
- */
+// Description:
+// 
+// 构建RuntimeOptions
 func (client *Client) BuildRuntimeOptions (runtimeOptions *util.RuntimeOptions) (_result *util.RuntimeOptions) {
   if tea.BoolValue(util.IsUnset(runtimeOptions)) {
     _result = &util.RuntimeOptions{}
@@ -1088,9 +1133,9 @@ func (client *Client) BuildRuntimeOptions (runtimeOptions *util.RuntimeOptions) 
   return _result
 }
 
-/**
- * 从runtimeoptions中获取headers
- */
+// Description:
+// 
+// 从runtimeoptions中获取headers
 func (client *Client) GetHeadersFromRunTimeOption () (_result map[string]*string) {
   options := client.RuntimeOptions
   headers := make(map[string]*string)

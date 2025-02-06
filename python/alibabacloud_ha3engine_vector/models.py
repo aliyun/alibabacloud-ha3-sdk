@@ -806,6 +806,50 @@ class AggregateRequest(TeaModel):
         return self
 
 
+class BatchRequest(TeaModel):
+    def __init__(
+        self,
+        queries: List[QueryRequest] = None,
+        timeout: int = None,
+    ):
+        # 批量查询列表
+        self.queries = queries
+        # 超时时间，单位毫秒
+        self.timeout = timeout
+
+    def validate(self):
+        self.validate_required(self.queries, 'queries')
+        if self.queries:
+            for k in self.queries:
+                if k:
+                    k.validate()
+
+    def to_map(self):
+        _map = super().to_map()
+        if _map is not None:
+            return _map
+
+        result = dict()
+        result['queries'] = []
+        if self.queries is not None:
+            for k in self.queries:
+                result['queries'].append(k.to_map() if k else None)
+        if self.timeout is not None:
+            result['timeout'] = self.timeout
+        return result
+
+    def from_map(self, m: dict = None):
+        m = m or dict()
+        self.queries = []
+        if m.get('queries') is not None:
+            for k in m.get('queries'):
+                temp_model = QueryRequest()
+                self.queries.append(temp_model.from_map(k))
+        if m.get('timeout') is not None:
+            self.timeout = m.get('timeout')
+        return self
+
+
 class PushDocumentsRequest(TeaModel):
     def __init__(
         self,

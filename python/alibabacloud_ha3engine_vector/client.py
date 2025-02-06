@@ -439,6 +439,32 @@ class Client:
             await self._request_async('POST', f'/vector-service/aggregate', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
+    def batch_query(
+        self,
+        request: ha_3engine_vector_models.BatchRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
+        """
+        批量查询
+        """
+        headers = self.get_headers_from_run_time_option()
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            self._request('POST', f'/vector-service/batch-query', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
+        )
+
+    async def batch_query_async(
+        self,
+        request: ha_3engine_vector_models.BatchRequest,
+    ) -> ha_3engine_vector_models.SearchResponse:
+        """
+        批量查询
+        """
+        headers = self.get_headers_from_run_time_option()
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            await self._request_async('POST', f'/vector-service/batch-query', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
+        )
+
     def stats(
         self,
         table_name: str,
