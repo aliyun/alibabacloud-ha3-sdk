@@ -288,7 +288,8 @@ class Client:
                     except Exception as err:
                         raw_msg = error_msg
                     raw_map = {
-                        'errors': raw_msg
+                        'errors': raw_msg,
+                        'headers': _response.headers
                     }
                     raise TeaException({
                         'message': _response.status_message,
@@ -380,7 +381,8 @@ class Client:
                     except Exception as err:
                         raw_msg = error_msg
                     raw_map = {
-                        'errors': raw_msg
+                        'errors': raw_msg,
+                        'headers': _response.headers
                     }
                     raise TeaException({
                         'message': _response.status_message,

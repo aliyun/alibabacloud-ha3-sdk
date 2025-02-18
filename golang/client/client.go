@@ -755,6 +755,7 @@ func (client *Client) _request_search_bytes(method *string, pathname *string, qu
         }
         rawMap := map[string]interface{}{
           "errors": rawMsg,
+          "headers": response_.Headers,
         }
         _err = tea.NewSDKError(map[string]interface{}{
           "message": tea.StringValue(response_.StatusMessage),
@@ -793,9 +794,9 @@ func (client *Client) _request_search_bytes(method *string, pathname *string, qu
 }
 
 
-/**
- * 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
- */
+// Description:
+// 
+// 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
 func (client *Client) GetEndpoint (endpoint *string) (_result *string) {
   if tea.BoolValue(string_.HasPrefix(endpoint, tea.String("http://"))) {
     _body := string_.Replace(endpoint, tea.String("http://"), tea.String(""), tea.Int(1))
@@ -813,32 +814,32 @@ func (client *Client) GetEndpoint (endpoint *string) (_result *string) {
   return _result
 }
 
-/**
- * 设置Client UA 配置.
- */
+// Description:
+// 
+// 设置Client UA 配置.
 func (client *Client) SetUserAgent (userAgent *string) {
   client.UserAgent = userAgent
 }
 
-/**
- * 添加Client UA 配置.
- */
+// Description:
+// 
+// 添加Client UA 配置.
 func (client *Client) AppendUserAgent (userAgent *string) {
   client.UserAgent = tea.String(tea.StringValue(client.UserAgent) + " " + tea.StringValue(userAgent))
 }
 
-/**
- * 获取Client 配置 UA 配置.
- */
+// Description:
+// 
+// 获取Client 配置 UA 配置.
 func (client *Client) GetUserAgent () (_result *string) {
   userAgent := util.GetUserAgent(client.UserAgent)
   _result = userAgent
   return _result
 }
 
-/**
- * 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
- */
+// Description:
+// 
+// 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
 func (client *Client) GetRealmSignStr (accessUserName *string, accessPassWord *string) (_result *string) {
   accessUserNameStr := string_.Trim(accessUserName)
   accessPassWordStr := string_.Trim(accessPassWord)
@@ -1144,11 +1145,13 @@ func (client *Client) BuildSearcKvPairClauseStr (kvPair map[string]*string, sepa
   return _result
 }
 
-/**
- * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索
- * 支持ha3的query和sql查询语法
- * 返回数据的body为String格式
- */
+// Description:
+// 
+// 系统提供了丰富的搜索语法以满足用户各种场景下的搜索
+// 
+// 支持ha3的query和sql查询语法
+// 
+// 返回数据的body为String格式
 func (client *Client) Search (request *SearchRequestModel) (_result *SearchResponseModel, _err error) {
   if tea.BoolValue(util.Empty(request.Method)) {
     request.Method = tea.String("GET")
@@ -1198,10 +1201,11 @@ func (client *Client) Search (request *SearchRequestModel) (_result *SearchRespo
 
 }
 
-/**
- * 校验网络是否通畅
- * 检查vpc & 用户名密码配置是否正确
- */
+// Description:
+// 
+// 校验网络是否通畅
+// 
+// 检查vpc & 用户名密码配置是否正确
 func (client *Client) Active () (_result *SearchResponseModel, _err error) {
   _result = &SearchResponseModel{}
   _body, _err := client._request(tea.String("GET"), tea.String("/network/active"), nil, nil, nil, client.RuntimeOptions)
@@ -1212,11 +1216,13 @@ func (client *Client) Active () (_result *SearchResponseModel, _err error) {
   return _result, _err
 }
 
-/**
- * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索
- * 支持ha3的json查询语法
- * 返回数据的body为String格式
- */
+// Description:
+// 
+// 系统提供了丰富的搜索语法以满足用户各种场景下的搜索
+// 
+// 支持ha3的json查询语法
+// 
+// 返回数据的body为String格式
 func (client *Client) SearchRest (request *SearchRequestModel, indexName *string) (_result *SearchResponseModel, _err error) {
   _result = &SearchResponseModel{}
   _body, _err := client._request(tea.String("POST"), tea.String("/" + tea.StringValue(indexName) + "/search"), nil, request.Headers, request.Body, client.RuntimeOptions)
@@ -1227,11 +1233,13 @@ func (client *Client) SearchRest (request *SearchRequestModel, indexName *string
   return _result, _err
 }
 
-/**
- * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求
- * 支持ha3的query和sql查询语法
- * 返回数据的body为byte[]格式
- */
+// Description:
+// 
+// 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求
+// 
+// 支持ha3的query和sql查询语法
+// 
+// 返回数据的body为byte[]格式
 func (client *Client) SearchBytes (request *SearchRequestModel) (_result *SearchBytesResponseModel, _err error) {
   _result = &SearchBytesResponseModel{}
   _body, _err := client._request_search_bytes(tea.String("GET"), tea.String("/query"), tea.ToMap(request.Query), request.Headers, nil, client.RuntimeOptions)
@@ -1242,11 +1250,13 @@ func (client *Client) SearchBytes (request *SearchRequestModel) (_result *Search
   return _result, _err
 }
 
-/**
- * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求
- * 支持ha3的json查询语法
- * 返回数据的body为byte[]格式
- */
+// Description:
+// 
+// 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求
+// 
+// 支持ha3的json查询语法
+// 
+// 返回数据的body为byte[]格式
 func (client *Client) SearchRestBytes (request *SearchRequestModel, indexName *string) (_result *SearchBytesResponseModel, _err error) {
   _result = &SearchBytesResponseModel{}
   _body, _err := client._request_search_bytes(tea.String("POST"), tea.String("/" + tea.StringValue(indexName) + "/search"), nil, request.Headers, request.Body, client.RuntimeOptions)
@@ -1257,9 +1267,9 @@ func (client *Client) SearchRestBytes (request *SearchRequestModel, indexName *s
   return _result, _err
 }
 
-/**
- * 支持新增、更新、删除 等操作，以及对应批量操作
- */
+// Description:
+// 
+// 支持新增、更新、删除 等操作，以及对应批量操作
 func (client *Client) PushDocuments (dataSourceName *string, keyField *string, request *PushDocumentsRequestModel) (_result *PushDocumentsResponseModel, _err error) {
   request.Headers = tea.Merge(map[string]*string{
     "X-Opensearch-Swift-PK-Field": keyField,
@@ -1273,9 +1283,9 @@ func (client *Client) PushDocuments (dataSourceName *string, keyField *string, r
   return _result, _err
 }
 
-/**
- * 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
- */
+// Description:
+// 
+// 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
 func (client *Client) PushDocumentsWithSwift (dataSourceName *string, keyField *string, topic *string, swift *string, request *PushDocumentsRequestModel) (_result *PushDocumentsResponseModel, _err error) {
   request.Headers = map[string]*string{
     "X-Opensearch-Swift-PK-Field": keyField,
@@ -1291,9 +1301,9 @@ func (client *Client) PushDocumentsWithSwift (dataSourceName *string, keyField *
   return _result, _err
 }
 
-/**
- * 构建RuntimeOptions
- */
+// Description:
+// 
+// 构建RuntimeOptions
 func (client *Client) BuildRuntimeOptions (runtimeOptions *util.RuntimeOptions) (_result *util.RuntimeOptions) {
   if tea.BoolValue(util.IsUnset(runtimeOptions)) {
     _result = &util.RuntimeOptions{}

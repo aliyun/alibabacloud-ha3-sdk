@@ -621,7 +621,8 @@ api _request_search_bytes(method: string, pathname: string, query: map[string]an
         rawMsg = errorMsg;
       }
     var rawMap: map[string]any = {
-      errors = rawMsg
+      errors = rawMsg,
+      headers = __response.headers
     };
     throw {
       message = __response.statusMessage,

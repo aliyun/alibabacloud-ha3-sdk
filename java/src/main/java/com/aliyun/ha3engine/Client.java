@@ -212,7 +212,8 @@ public class Client {
                         rawMsg = errorMsg;
                     }                    
                     java.util.Map<String, Object> rawMap = TeaConverter.buildMap(
-                        new TeaPair("errors", rawMsg)
+                        new TeaPair("errors", rawMsg),
+                        new TeaPair("headers", response_.headers)
                     );
                     throw new TeaException(TeaConverter.buildMap(
                         new TeaPair("message", response_.statusMessage),
@@ -260,7 +261,8 @@ public class Client {
     }
 
     /**
-     * 如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回
+     * <b>description</b> :
+     * <p>如果endpoint 配置以 http:// 或 https:// 开头，则去掉头部的 http:// 或 https://, 否则直接返回</p>
      */
     public String getEndpoint(String endpoint) throws Exception {
         if (com.aliyun.darabonbastring.Client.hasPrefix(endpoint, "http://")) {
@@ -275,21 +277,24 @@ public class Client {
     }
 
     /**
-     * 设置Client UA 配置.
+     * <b>description</b> :
+     * <p>设置Client UA 配置.</p>
      */
     public void setUserAgent(String userAgent) throws Exception {
         this._userAgent = userAgent;
     }
 
     /**
-     * 添加Client UA 配置.
+     * <b>description</b> :
+     * <p>添加Client UA 配置.</p>
      */
     public void appendUserAgent(String userAgent) throws Exception {
         this._userAgent = "" + _userAgent + " " + userAgent + "";
     }
 
     /**
-     * 获取Client 配置 UA 配置.
+     * <b>description</b> :
+     * <p>获取Client 配置 UA 配置.</p>
      */
     public String getUserAgent() throws Exception {
         String userAgent = com.aliyun.teautil.Common.getUserAgent(_userAgent);
@@ -297,7 +302,8 @@ public class Client {
     }
 
     /**
-     * 计算用户请求识别特征, 遵循 Basic Auth 生成规范.
+     * <b>description</b> :
+     * <p>计算用户请求识别特征, 遵循 Basic Auth 生成规范.</p>
      */
     public String getRealmSignStr(String accessUserName, String accessPassWord) throws Exception {
         String accessUserNameStr = com.aliyun.darabonbastring.Client.trim(accessUserName);
@@ -579,9 +585,10 @@ public class Client {
     }
 
     /**
-     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索
+     * <b>description</b> :
+     * <p>系统提供了丰富的搜索语法以满足用户各种场景下的搜索
      * 支持ha3的query和sql查询语法
-     * 返回数据的body为String格式
+     * 返回数据的body为String格式</p>
      */
     public SearchResponseModel Search(SearchRequestModel request) throws Exception {
         if (com.aliyun.teautil.Common.empty(request.method)) {
@@ -614,42 +621,47 @@ public class Client {
     }
 
     /**
-     * 校验网络是否通畅
-     * 检查vpc & 用户名密码配置是否正确
+     * <b>description</b> :
+     * <p>校验网络是否通畅
+     * 检查vpc &amp; 用户名密码配置是否正确</p>
      */
     public SearchResponseModel active() throws Exception {
         return TeaModel.toModel(this._request("GET", "/network/active", null, null, null, _runtimeOptions), new SearchResponseModel());
     }
 
     /**
-     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索
+     * <b>description</b> :
+     * <p>系统提供了丰富的搜索语法以满足用户各种场景下的搜索
      * 支持ha3的json查询语法
-     * 返回数据的body为String格式
+     * 返回数据的body为String格式</p>
      */
     public SearchResponseModel SearchRest(SearchRequestModel request, String indexName) throws Exception {
         return TeaModel.toModel(this._request("POST", "/" + indexName + "/search", null, request.headers, request.body, _runtimeOptions), new SearchResponseModel());
     }
 
     /**
-     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求
+     * <b>description</b> :
+     * <p>系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求
      * 支持ha3的query和sql查询语法
-     * 返回数据的body为byte[]格式
+     * 返回数据的body为byte[]格式</p>
      */
     public SearchBytesResponseModel SearchBytes(SearchRequestModel request) throws Exception {
         return TeaModel.toModel(this._request_search_bytes("GET", "/query", TeaModel.buildMap(request.query), request.headers, null, _runtimeOptions), new SearchBytesResponseModel());
     }
 
     /**
-     * 系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求
+     * <b>description</b> :
+     * <p>系统提供了丰富的搜索语法以满足用户各种场景下的搜索需求
      * 支持ha3的json查询语法
-     * 返回数据的body为byte[]格式
+     * 返回数据的body为byte[]格式</p>
      */
     public SearchBytesResponseModel SearchRestBytes(SearchRequestModel request, String indexName) throws Exception {
         return TeaModel.toModel(this._request_search_bytes("POST", "/" + indexName + "/search", null, request.headers, request.body, _runtimeOptions), new SearchBytesResponseModel());
     }
 
     /**
-     * 支持新增、更新、删除 等操作，以及对应批量操作
+     * <b>description</b> :
+     * <p>支持新增、更新、删除 等操作，以及对应批量操作</p>
      */
     public PushDocumentsResponseModel pushDocuments(String dataSourceName, String keyField, PushDocumentsRequestModel request) throws Exception {
         request.headers = TeaConverter.merge(String.class,
@@ -662,7 +674,8 @@ public class Client {
     }
 
     /**
-     * 用于内网环境的新增、更新、删除 等操作，以及对应批量操作
+     * <b>description</b> :
+     * <p>用于内网环境的新增、更新、删除 等操作，以及对应批量操作</p>
      */
     public PushDocumentsResponseModel pushDocumentsWithSwift(String dataSourceName, String keyField, String topic, String swift, PushDocumentsRequestModel request) throws Exception {
         request.headers = TeaConverter.buildMap(
@@ -674,7 +687,8 @@ public class Client {
     }
 
     /**
-     * 构建RuntimeOptions
+     * <b>description</b> :
+     * <p>构建RuntimeOptions</p>
      */
     public com.aliyun.teautil.models.RuntimeOptions buildRuntimeOptions(com.aliyun.teautil.models.RuntimeOptions runtimeOptions) throws Exception {
         if (com.aliyun.teautil.Common.isUnset(runtimeOptions)) {
