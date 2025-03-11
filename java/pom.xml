@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.aliyun</groupId>
   <artifactId>aliyun-sdk-ha3engine-vector</artifactId>
-  <version>1.1.13</version>
+  <version>1.1.14</version>
   <packaging>jar</packaging>
   <name>aliyun-sdk-ha3engine-vector</name>
   <description>Alibaba Cloud Ha3engine-Vector SDK for Java</description>
@@ -66,6 +66,16 @@
       <groupId>com.aliyun</groupId>
       <artifactId>alibabacloud-ha3-util</artifactId>
       <version>0.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.aliyun</groupId>
+      <artifactId>darabonba-number</artifactId>
+      <version>0.0.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.aliyun</groupId>
+      <artifactId>darabonba-time</artifactId>
+      <version>0.0.2</version>
     </dependency>
   </dependencies>
   <build>

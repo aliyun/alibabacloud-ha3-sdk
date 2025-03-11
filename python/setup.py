@@ -24,7 +24,7 @@ from setuptools import setup, find_packages
 """
 setup module for alibabacloud_ha3engine_vector.
 
-Created on 06/02/2025
+Created on 11/03/2025
 
 @author: Alibaba Cloud SDK
 """
@@ -40,7 +40,9 @@ REQUIRES = [
     "alibabacloud_tea_util>=0.3.13, <1.0.0",
     "alibabacloud_darabonba_string>=0.0.4, <1.0.0",
     "alibabacloud_darabonba_encode_util>=0.0.2, <1.0.0",
-    "alibabacloud_ha3_util>=0.0.1, <1.0.0"
+    "alibabacloud_ha3_util>=0.0.1, <1.0.0",
+    "alibabacloud_darabonba_time>=0.0.1, <1.0.0",
+    "alibabacloud_darabonba_number>=0.0.4, <1.0.0"
 ]
 
 LONG_DESCRIPTION = ''
