@@ -1,10 +1,12 @@
 {
   "scope": "alibabacloud",
   "name": "ha3engine-vector",
-  "version": "1.1.13",
+  "version": "1.1.14",
   "main": "./main.dara",
   "libraries": {
     "Util": "darabonba:Util:*",
+    "Time": "darabonba:Time:*",
+    "Number": "darabonba:Number:*",
     "String": "darabonba:String:*",
     "EncodeUtil": "darabonba:EncodeUtil:*",
     "Map": "darabonba:Map:*",
@@ -17,9 +19,9 @@
     }
   ],
   "releases": {
-    "java": "com.aliyun:ha3engine-vector:1.1.13",
-    "go": "github.com/alibabacloud-go/ha3engine/client:v1.1.13",
-    "python": "alibabacloud_ha3engine-vector:1.1.13"
+    "java": "com.aliyun:ha3engine-vector:1.1.14",
+    "go": "github.com/alibabacloud-go/ha3engine/client:v1.1.14",
+    "python": "alibabacloud_ha3engine-vector:1.1.14"
   },
   "java": {
     "package": "com.aliyun.ha3engine.vector",
@@ -35,7 +37,7 @@
       "developerEmail": "sdk-team@alibabacloud.com",
       "groupId": "com.aliyun",
       "artifactId": "aliyun-sdk-ha3engine-vector",
-      "version": "1.1.13"
+      "version": "1.1.14"
     }
   },
   "python": {

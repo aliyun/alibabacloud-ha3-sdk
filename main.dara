@@ -2,6 +2,8 @@ import Util;
 import String;
 import EncodeUtil;
 import Ha3Util;
+import Time;
+import Number;
 
 type @endpoint = string
 type @instanceId = string
@@ -28,15 +30,34 @@ init(config: Config) {
       message = '\'config\' can not be unset'
     };
   }
+  if (Util.isUnset(config.endpoint)) {
+    throw {
+      name = 'ParameterMissing',
+      message = '\'config.endpoint\' can not be unset'
+    };
+  }
   if (!Util.empty(config.accessUserName) && !Util.empty(config.accessPassWord)) {
       @credential = getRealmSignStr(config.accessUserName, config.accessPassWord);
   }
   @endpoint = getEndpoint(config.endpoint);
-  @instanceId = config.instanceId;
+  @instanceId = getInstanceId(config);
   @protocol = config.protocol;
   @userAgent = config.userAgent;
   @domainsuffix = 'ha.aliyuncs.com';
   @runtimeOptions = buildRuntimeOptions(config.runtimeOptions);
+}
+
+/**
+ * 如果用户传了实例id，则直接使用，否则从endpoint中解析实例id,
+ */
+function getInstanceId(config: Config): string {
+  if (!Util.isUnset(config.instanceId)) {
+    return config.instanceId;
+  }
+
+  var values = String.split(@endpoint, '.', 2);
+  var value = values[0];
+  return value;
 }
 
 /**
@@ -335,7 +356,8 @@ api _request(method: string, pathname: string, query: map[string]any, headers: m
         rawMsg = objStr;
       }
     var rawMap: map[string]any = {
-      errors = rawMsg
+      errors = rawMsg,
+      headers = __response.headers
     };
     throw {
       message = __response.statusMessage,
@@ -357,6 +379,67 @@ api _request(method: string, pathname: string, query: map[string]any, headers: m
   return {
     body = objStr,
     headers = __response.headers
+  };
+} runtime {
+  timeouted = 'retry',
+  readTimeout = runtime.readTimeout,
+  connectTimeout = runtime.connectTimeout,
+  httpsProxy = runtime.httpsProxy,
+  noProxy = runtime.noProxy,
+  maxIdleConns = runtime.maxIdleConns,
+  retry = {
+    retryable = runtime.autoretry,
+    maxAttempts = runtime.maxAttempts
+  },
+  backoff = {
+    policy = runtime.backoffPolicy,
+    period = runtime.backoffPeriod
+  },
+  ignoreSSL = runtime.ignoreSSL
+}
+
+api _openApiRequest(method: string, pathname: string, query: map[string]any, headers: map[string]string, body: any, runtime: Util.RuntimeOptions): object {
+  __request.protocol = Util.defaultString(@protocol, 'HTTP');
+  __request.method = method;
+  __request.pathname = pathname;
+  __request.headers = {
+    host = @endpoint,
+    authorization = `Basic ${@credential}`,
+    content-type = 'application/json; charset=utf-8',
+    ...headers
+  };
+
+  if (!Util.isUnset(query)) {
+    __request.query = Util.stringifyMapValue(query);
+  }
+
+  if (!Util.isUnset(body)) {
+    __request.body = Util.toJSONString(body);
+  }
+} returns {
+  var objStr = Util.readAsString(__response.body);
+
+  if (Util.is4xx(__response.statusCode) || Util.is5xx(__response.statusCode)) {
+    var rawMsg:any = null;
+    try {
+      rawMsg = Util.parseJSON(objStr);
+    } catch(err){
+      rawMsg = objStr;
+    }
+
+    throw {
+      message = objStr,
+      data = rawMsg,
+      code = __response.statusCode
+    };
+  }
+
+  var obj = Util.parseJSON(objStr);
+
+  return {
+    body = obj,
+    headers = __response.headers,
+    statusCode = __response.statusCode
   };
 } runtime {
   timeouted = 'retry',
@@ -428,3 +511,459 @@ function getHeadersFromRunTimeOption(): map[string]string {
   return headers;
 }
 
+/**
+ * 获取所有表信息
+ */
+model ListTablesResponseBody = {
+  requestId?: string(name='requestId', description='requestId', example='10D5E615-69F7-5F49-B850-00169ADE513C'),
+  result?: [
+    {
+      indexStatus?: string(name='indexStatus', description='The state of the index table. Valid values: NEW, PUBLISH, IN_USE, NOT_USE, STOP_USE, RESTORE_USE, and FAIL. After an index is created in an OpenSearch Retrieval Engine Edition instance, the index enters the IN_USE state. If the first full index fails to be created in an OpenSearch Vector Search Edition instance of the new version, the index is in the FAIL state.', example='IN_USE'),
+      name?: string(name='name', description='The index name.', example='es_test_1b'),
+      status?: string(name='status', description='The state of the index table. Valid values: NEW, PUBLISH, IN_USE, NOT_USE, STOP_USE, RESTORE_USE, and FAIL. After an index is created in an OpenSearch Retrieval Engine Edition instance, the index enters the IN_USE state. If the first full index fails to be created in an OpenSearch Vector Search Edition instance of the new version, the index is in the FAIL state.', example='IN_USE'),
+    }
+  ](name='result', description='The result.'),
+}
+
+model ListTablesResponse = {
+  headers?: map[string]string(name='headers'),
+  statusCode?: int32(name='statusCode'),
+  body?: ListTablesResponseBody(name='body'),
+}
+
+/**
+ * 获取单表详情
+ */
+model GetTableResponseBody = {
+  requestId?: string(name='requestId', description='requestId', example='2AE63638-5420-56DC-BF59-37D8174039A0'),
+  result?: {
+    name?: string(name='name', example='test_oss'),
+    partitionCount?: int32(name='partitionCount', example='1'),
+    primaryKey?: string(name='primaryKey', example='id'),
+    rawSchema?: string(name='rawSchema', example='{}'),
+    dataProcessorCount?: int32(name='dataProcessorCount', example='1'),
+    fieldSchema?: map[string]string(name='fieldSchema', description='The field. The value is a key-value pair in which the key indicates the field name and value indicates the field type.'),
+    status?: string(name='status', description='The state of the index table. Valid values: NEW, PUBLISH, IN_USE, NOT_USE, STOP_USE, RESTORE_USE, and FAIL. After an index is created in an OpenSearch Retrieval Engine Edition instance, the index enters the IN_USE state. If the first full index fails to be created in an OpenSearch Vector Search Edition instance of the new version, the index is in the FAIL state.', example='IN_USE'),
+    vectorIndex?: [
+      {
+        advanceParams?: {
+          buildIndexParams?: string(name='buildIndexParams', description='The index building parameters.', example='{}'),
+          linearBuildThreshold?: string(name='linearBuildThreshold', description='The threshold for linear building.', example='5000'),
+          minScanDocCnt?: string(name='minScanDocCnt', description='The minimum number of retrieved candidate sets.', example='20000'),
+          searchIndexParams?: string(name='searchIndexParams', description='The index retrieval parameters.', example='{}'),
+        }(name='advanceParams', description='The configurations of the index schema.'),
+        dimension?: string(name='dimension', description='The dimension of the vector.', example='128'),
+        distanceType?: string(name='distanceType', description='The distance type.', example='SquaredEuclidean'),
+        indexName?: string(name='indexName', description='The name of the index schema.', example='test_odps'),
+        namespace?: string(name='namespace', description='The namespace field.', example='namespace'),
+        sparseIndexField?: string(name='sparseIndexField', description='The field that stores the indexes of the elements in sparse vectors.', example='sparse_indices'),
+        sparseValueField?: string(name='sparseValueField', description='The field that stores the elements in sparse vectors.', example='sparse_values'),
+        vectorField?: string(name='vectorField', description='The vector field.', example='source_image_vector'),
+        vectorIndexType?: string(name='vectorIndexType', description='The vector retrieval algorithm.', example='Qc'),
+      }
+    ](name='vectorIndex', description='The index schema.'),
+    dataSource?: {
+      autoBuildIndex?: boolean(name='autoBuildIndex', example='true'),
+      config?: {
+        accessKey?: string(name='accessKey', description='AK', example='ak'),
+        accessSecret?: string(name='accessSecret', description='AS', example='as'),
+        bucket?: string(name='bucket', example='heytea-ops-oss'),
+        endpoint?: string(name='endpoint', example='http://service.cn-hangzhou.maxcompute.aliyun-inc.com/api'),
+        namespace?: string(name='namespace', example='namespace'),
+        ossPath?: string(name='ossPath', example='/opensearch_index_data/sift_oss_test.data'),
+        partition?: string(name='partition', example='ds=20220808'),
+        path?: string(name='path', example='vendor/sebastian/comparator/src/exceptions'),
+        project?: string(name='project', example='dp_pdm_marketing_prod'),
+        table?: string(name='table', example='test_add'),
+      }(name='config'),
+      dataTimeSec?: int32(name='dataTimeSec', example='1715160176'),
+      type?: string(name='type', example='odps'),
+    }(name='dataSource'),
+    dataProcessConfig?: [
+      {
+        dstField?: string(name='dstField', description='The destination field.', example='source_image_vector'),
+        operator?: string(name='operator', description='The method used to process the field. Valid values: copy and vectorize. A value of copy indicates that the value of the source field is copied to the destination field. A value of vectorize indicates that the value of the source field is vectorized by a vectorization model and the output vector is stored in the destination field.', example='vectorize'),
+        params?: {
+          srcFieldConfig?: {
+            ossBucket?: string(name='ossBucket', description='OSS Bucket', example='test'),
+            ossEndpoint?: string(name='ossEndpoint', description='The Object Storage Service (OSS) endpoint.', example='oss-cn-hangzhou-internal.aliyuncs.com'),
+            uid?: string(name='uid', description='The ID of the Alibaba Cloud account.', example='uid'),
+          }(name='srcFieldConfig', description='The source of the data to be vectorized.'),
+          vectorModal?: string(name='vectorModal', description='The data type.', example='image'),
+          vectorModel?: string(name='vectorModel', description='The vectorization model.', example='clip'),
+        }(name='params', description='The information about the model.'),
+        srcField?: string(name='srcField', description='The source field.', example='source_image'),
+      }
+    ](name='dataProcessConfig', description='The configurations about field processing.')
+  }(name='result', description='The results returned.'),
+}
+
+model GetTableResponse = {
+  headers?: map[string]string(name='headers'),
+  statusCode?: int32(name='statusCode'),
+  body?: GetTableResponseBody(name='body'),
+}
+
+/**
+ * 创建表
+ */
+model CreateTableRequest {
+  name?: string(name='name', description='The index name.', example='index_1'),
+  partitionCount?: int32(name='partitionCount', description='The number of data shards.', example='1'),
+  primaryKey?: string(name='primaryKey', description='The primary key field.', example='id'),
+  fieldSchema?: map[string]string(name='fieldSchema', description='The fields.'),
+  vectorIndex?: [
+    {
+      advanceParams?: {
+        buildIndexParams?: string(name='buildIndexParams', description='The index building parameters.', example='{}'),
+        linearBuildThreshold?: string(name='linearBuildThreshold', description='The threshold for linear building.', example='5000'),
+        minScanDocCnt?: string(name='minScanDocCnt', description='The minimum number of retrieved candidate sets.', example='20000'),
+        searchIndexParams?: string(name='searchIndexParams', description='The index retrieval parameters.', example='{}'),
+      }(name='advanceParams', description='The configurations of the index schema.'),
+      dimension?: string(name='dimension', description='The dimension of the vector.', example='128'),
+      distanceType?: string(name='distanceType', description='The distance type.', example='SquaredEuclidean'),
+      indexName?: string(name='indexName', description='The name of the index schema.', example='case_index'),
+      namespace?: string(name='namespace', description='The namespace field.', example='namespace'),
+      sparseIndexField?: string(name='sparseIndexField', description='The field that stores the indexes of the elements in sparse vectors.', example='sparse_indices'),
+      sparseValueField?: string(name='sparseValueField', description='The field that stores the elements in sparse vectors.', example='sparse_values'),
+      vectorField?: string(name='vectorField', description='The vector field.', example='source_image_vector'),
+      vectorIndexType?: string(name='vectorIndexType', description='The vector retrieval algorithm.', example='Qc'),
+    }
+  ](name='vectorIndex', description='The index schema.'),
+  dataProcessorCount?: int32(name='dataProcessorCount', description='The number of resources used for data update.', example='1'),
+  dataProcessConfig?: [
+    {
+      dstField?: string(name='dstField', description='The destination field.', example='source_image_vector'),
+      operator?: string(name='operator', description='The method used to process the field. Valid values: copy and vectorize. A value of copy specifies that the value of the source field is copied to the destination field. A value of vectorize specifies that the value of the source field is vectorized by a vectorization model and the output vector is stored in the destination field.', example='vectorize'),
+      params?: {
+        srcFieldConfig?: {
+          ossBucket?: string(name='ossBucket', description='The OSS bucket.', example='test'),
+          ossEndpoint?: string(name='ossEndpoint', description='The OSS endpoint.', example='oss-cn-hangzhou-internal.aliyuncs.com'),
+          uid?: string(name='uid', description='The ID of the Alibaba Cloud account.', example='uid'),
+        }(name='srcFieldConfig', description='The source of the data to be vectorized.'),
+        vectorModal?: string(name='vectorModal', description='The data type.', example='image'),
+        vectorModel?: string(name='vectorModel', description='The vectorization model.', example='clip'),
+      }(name='params', description='The information about the model.'),
+      srcField?: string(name='srcField', description='The source field.', example='source_image'),
+    }
+  ](name='dataProcessConfig', description='The configurations about field processing.'),
+  dataSource?: {
+    autoBuildIndex?: boolean(name='autoBuildIndex', description='Specifies whether to automatically rebuild the index.', example='true'),
+    config?: {
+      accessKey?: string(name='accessKey', description='The AccessKey ID of the MaxCompute data source.', example='ak'),
+      accessSecret?: string(name='accessSecret', description='The AccessKey secret of the MaxCompute data source.', example='as'),
+      bucket?: string(name='bucket', description='The OSS bucket.', example='antsys-flytest-ci'),
+      catalog?: string(name='catalog'),
+      database?: string(name='database'),
+      endpoint?: string(name='endpoint', description='The endpoint of the MaxCompute data source.', example='http://service.cn-hangzhou.maxcompute.aliyun-inc.com/api'),
+      ossPath?: string(name='ossPath', description='The Object Storage Service (OSS) path.', example='oss://opensearch'),
+      partition?: string(name='partition', description='The partition in the MaxCompute table. This parameter is required if type is set to odps.', example='ds=20220713'),
+      project?: string(name='project', description='The name of the MaxCompute project that is used as the data source.', example='project_20210220122847_3218'),
+      table?: string(name='table', description='The name of the MaxCompute table that is used as the data source.', example='test56'),
+      tag?: string(name='tag'),
+    }(name='config', description='The configurations of the data source.'),
+    dataTimeSec?: int32(name='dataTimeSec', description='The start timestamp from which incremental data is retrieved.', example='1715160176'),
+    type?: string(name='type', description='The data source type. Valid values: odps, swift, and oss.', example='odps'),
+  }(name='dataSource', description='The configurations of the data source.'),
+  dryRun?: boolean(name='dryRun', description='Specifies whether to perform only a dry run, without performing the actual request. The system only checks the validity of the data source. Valid values:true,false', example='true'),
+}
+
+model CreateTableResponseBody = {
+  requestId?: string(name='requestId', description='id of request', example='2AE63638-5420-56DC-BF59-37D8174039A0'),
+  result?: map[string]any(name='result', description='Map', example='{}'),
+}
+
+model CreateTableResponse = {
+  headers?: map[string]string(name='headers'),
+  statusCode?: int32(name='statusCode'),
+  body?: CreateTableResponseBody(name='body'),
+}
+
+/**
+ * 修改表.
+ */
+model ModifyTableRequest {
+  dataProcessConfig?: [
+    {
+      dstField?: string(name='dstField', description='The destination field.', example='source_image_vector'),
+      operator?: string(name='operator', description='The method used to process the field. Valid values: copy and vectorize. A value of copy specifies that the value of the source field is copied to the destination field. A value of vectorize specifies that the value of the source field is vectorized by a vectorization model and the output vector is stored in the destination field.', example='vectorize'),
+      params?: {
+        srcFieldConfig?: {
+          ossBucket?: string(name='ossBucket', description='The name of the OSS bucket.', example='test'),
+          ossEndpoint?: string(name='ossEndpoint', description='The OSS endpoint.', example='oss-cn-hangzhou-internal.aliyuncs.com'),
+          uid?: string(name='uid', description='The ID of the Alibaba Cloud account.', example='uid'),
+        }(name='srcFieldConfig', description='The source of the data to be vectorized.'),
+        vectorModal?: string(name='vectorModal', description='The data type.', example='image'),
+        vectorModel?: string(name='vectorModel', description='The vectorization model.', example='clip'),
+      }(name='params', description='The information about the model.'),
+      srcField?: string(name='srcField', description='The source field.', example='source_image'),
+    }
+  ](name='dataProcessConfig', description='The configurations about field processing.'),
+  dataSource?: {
+    autoBuildIndex?: boolean(name='autoBuildIndex', description='Specifies whether to automatically rebuild the index.', example='true'),
+    config?: {
+      accessKey?: string(name='accessKey', description='The AccessKey ID of the MaxCompute data source.', example='AK'),
+      accessSecret?: string(name='accessSecret', description='The AccessKey secret of the MaxCompute data source.', example='AS'),
+      bucket?: string(name='bucket', description='The name of the OSS bucket.', example='antsys-shujiang-osstest'),
+      catalog?: string(name='catalog'),
+      database?: string(name='database'),
+      endpoint?: string(name='endpoint', description='The endpoint of the MaxCompute data source.', example='http://service.cn-hangzhou.maxcompute.aliyun-inc.com/api'),
+      ossPath?: string(name='ossPath', description='The path of the Object Storage Service (OSS) object.', example='oss://opensearch'),
+      partition?: string(name='partition', description='The partition in the MaxCompute table.', example='ds=20231220'),
+      project?: string(name='project', description='The name of the MaxCompute project that is used as the data source.', example='yw_dw_rpt'),
+      table?: string(name='table', description='The name of the MaxCompute table that is used as the data source.', example='behavior'),
+      tag?: string(name='tag'),
+    }(name='config', description='The configurations of the data source.'),
+    dataTimeSec?: int32(name='dataTimeSec', description='The start timestamp from which incremental data is retrieved.', example='1715160176'),
+  }(name='dataSource', description='The configurations of the data source.'),
+  fieldSchema?: map[string]string(name='fieldSchema', description='The fields.'),
+  partitionCount?: int32(name='partitionCount', description='The number of data shards.', example='1'),
+  primaryKey?: string(name='primaryKey', description='The primary key field.', example='id'),
+  rawSchema?: string(name='rawSchema', description='The instance schema. If this parameter is specified, the parameters about the index are not required.', example='{}'),
+  vectorIndex?: [
+    {
+      advanceParams?: {
+        buildIndexParams?: string(name='buildIndexParams', description='The index building parameters.', example='{}'),
+        linearBuildThreshold?: string(name='linearBuildThreshold', description='The threshold for linear building.', example='5000'),
+        minScanDocCnt?: string(name='minScanDocCnt', description='The minimum number of retrieved candidate sets.', example='20000'),
+        searchIndexParams?: string(name='searchIndexParams', description='The index retrieval parameters.', example='{}'),
+      }(name='advanceParams', description='The configurations of the index schema.'),
+      dimension?: string(name='dimension', description='The dimension of the vector.', example='128'),
+      distanceType?: string(name='distanceType', description='The distance type.', example='SquaredEuclidean'),
+      indexName?: string(name='indexName', description='The name of the index schema.', example='test_api'),
+      namespace?: string(name='namespace', description='The namespace field.', example='namespace'),
+      sparseIndexField?: string(name='sparseIndexField', description='The field that stores the indexes of the elements in sparse vectors.', example='sparse_indices'),
+      sparseValueField?: string(name='sparseValueField', description='The field that stores the elements in sparse vectors.', example='sparse_values'),
+      vectorField?: string(name='vectorField', description='The vector field.', example='source_image_vector'),
+      vectorIndexType?: string(name='vectorIndexType', description='The vector retrieval algorithm.', example='Qc'),
+    }
+  ](name='vectorIndex', description='The index schema.'),
+  dryRun?: boolean(name='dryRun', description='Specifies whether to perform only a dry run, without performing the actual request. The system only checks the validity of the data source. Valid values:true,false', example='true'),
+}
+
+model ModifyTableResponseBody = {
+  requestId?: string(name='requestId', description='id of request', example='FE03180A-0E29-5474-8A86-33F0683294A4'),
+  result?: map[string]any(name='result', description='Map', example='{}'),
+}
+
+model ModifyTableResponse = {
+  headers?: map[string]string(name='headers'),
+  statusCode?: int32(name='statusCode'),
+  body?: ModifyTableResponseBody(name='body'),
+}
+
+/**
+ * 删除表
+ */
+model DeleteTableResponseBody = {
+  requestId?: string(name='requestId', description='requestId', example='E7B7D598-B080-5C8E-AA35-D43EC0D5F886'),
+  result?: map[string]any(name='result', description='Map', example='{}'),
+}
+
+model DeleteTableResponse = {
+  headers?: map[string]string(name='headers'),
+  statusCode?: int32(name='statusCode'),
+  body?: DeleteTableResponseBody(name='body'),
+}
+
+/**
+ * 表停止使用
+ */
+model StopTableResponseBody = {
+  requestId?: string(name='requestId', description='The request ID.', example='E7B7D598-B080-5C8E-AA35-D43EC0D5F886'),
+  result?: map[string]any(name='result', description='The index map.', example='{}'),
+}
+
+model StopTableResponse = {
+  headers?: map[string]string(name='headers'),
+  statusCode?: int32(name='statusCode'),
+  body?: StopTableResponseBody(name='body'),
+}
+
+/**
+ * 表恢复使用
+ */
+model StartTableResponseBody = {
+  requestId?: string(name='requestId', description='The request ID.', example='D39EE0F1-D7EF-5F46-B781-6BF4185308B0'),
+  result?: map[string]any(name='result', description='The index map.', example='{}'),
+}
+
+model StartTableResponse = {
+  headers?: map[string]string(name='headers'),
+  statusCode?: int32(name='statusCode'),
+  body?: StartTableResponseBody(name='body'),
+}
+
+/***
+ * 索引重建
+ */
+model ReindexRequest {
+  dataTimeSec?: int32(name='dataTimeSec', description='The timestamp in seconds. The value must be of the INTEGER type. This parameter is required if you specify an API data source.', example='1640867288'),
+  ossDataPath?: string(name='ossDataPath', description='oss data path', example='oss://opensearch'),
+  partition?: string(name='partition', description='The partition in the MaxCompute table. This parameter is required if type is set to odps.', example='ds=20220713'),
+}
+
+model ReindexResponseBody = {
+  requestId?: string(name='requestId', description='requestId', example='10D5E615-69F7-5F49-B850-00169ADE513C'),
+  result?: map[string]any(name='result', description='Map', example='{}'),
+}
+
+model ReindexResponse = {
+  headers?: map[string]string(name='headers'),
+  statusCode?: int32(name='statusCode'),
+  body?: ReindexResponseBody(name='body'),
+}
+
+/**
+ * 获取索引版本列表
+ */
+model ListTableGenerationsResponseBody = {
+  requestId?: string(name='requestId', description='requestId', example='F6E3D968-529C-5C40-AFDD-133A8B8FD930'),
+  result?: [
+    {
+      generationId?: long(name='generationId', description='The ID of the full index version.', example='1708674867'),
+    }
+  ](name='result', description='The result.'),
+}
+
+model ListTableGenerationsResponse = {
+  headers?: map[string]string(name='headers'),
+  statusCode?: int32(name='statusCode'),
+  body?: ListTableGenerationsResponseBody(name='body'),
+}
+
+/**
+ * 获取索引版本详情
+ */
+model GetTableGenerationResponseBody = {
+  requestId?: string(name='requestId', description='requestId', example='E7B7D598-B080-5C8E-AA35-D43EC0D5F886'),
+  result?: {
+    generationId?: long(name='generationId', description='generationId', example='1708674867'),
+    status?: string(name='status', description='starting, building, ready, stopped, failed', example='ready'),
+  }(name='result', description='The result returned.'),
+}
+
+model GetTableGenerationResponse = {
+  headers?: map[string]string(name='headers'),
+  statusCode?: int32(name='statusCode'),
+  body?: GetTableGenerationResponseBody(name='body'),
+}
+
+/**
+ * 获取任务列表
+ */
+model ListTasksRequest {
+  end?: long(name='end', description='The timestamp that indicates the end of the time range to query.', example='1690423741577'),
+  start?: long(name='start', description='The timestamp that indicates the beginning of the time range to query.', example='1687238865434'),
+}
+
+model ListTasksResponseBody = {
+  requestId?: string(name='requestId', description='The request ID.', example='D39EE0F1-D7EF-5F46-B781-6BF4185308B0'),
+  result?: any(name='result', description='The result.', example='{}'),
+}
+
+model ListTasksResponse = {
+  headers?: map[string]string(name='headers'),
+  statusCode?: int32(name='statusCode'),
+  body?: ListTasksResponseBody(name='body'),
+}
+
+/**
+ * 获取表列表
+ */
+async function listTables(): ListTablesResponse {
+  return _openApiRequest('GET', `/openapi/ha3/instances/${@instanceId}/tables`, null, null, null, @runtimeOptions);
+}
+
+/**
+ * 获取表详情
+ */
+async function getTable(tableName: string): GetTableResponse {
+  return _openApiRequest('GET', `/openapi/ha3/instances/${@instanceId}/tables/${tableName}`, null, null, null, @runtimeOptions);
+}
+
+/**
+ * 创建表
+ */
+async function createTable(request: CreateTableRequest): CreateTableResponse {
+  var query : map[string]any = {};
+  if (!Util.isUnset(request.dryRun)) {
+    query['dryRun'] = request.dryRun;
+  }
+  return _openApiRequest('POST', `/openapi/ha3/instances/${@instanceId}/tables`, query, null, Util.toJSONString(request), @runtimeOptions);
+}
+
+/**
+ * 修改表
+ */
+async function modifyTable(tableName: string, request: ModifyTableRequest): ModifyTableResponse {
+  var query : map[string]any = {};
+  if (!Util.isUnset(request.dryRun)) {
+    query['dryRun'] = request.dryRun;
+  }
+  return _openApiRequest('PUT', `/openapi/ha3/instances/${@instanceId}/tables/${tableName}`, query, null, Util.toJSONString(request), @runtimeOptions);
+}
+
+/**
+ * 删除表
+ */
+async function deleteTable(tableName: string): DeleteTableResponse {
+  return _openApiRequest('DELETE', `/openapi/ha3/instances/${@instanceId}/tables/${tableName}`, null, null, null, @runtimeOptions);
+}
+
+/**
+ * 表停止使用
+ */
+async function stopTable(tableName: string): StopTableResponse {
+  return _openApiRequest('POST', `/openapi/ha3/instances/${@instanceId}/indexes/${tableName}/stopIndex`, null, null, null, @runtimeOptions);
+}
+
+/**
+ * 表恢复使用
+ */
+async function startTable(tableName: string): StartTableResponse {
+  return _openApiRequest('POST', `/openapi/ha3/instances/${@instanceId}/indexes/${tableName}/startIndex`, null, null, null, @runtimeOptions);
+}
+
+/**
+ * 索引重建
+ */
+async function reindex(tableName: string, request: ReindexRequest): ReindexResponse {
+  return _openApiRequest('POST', `/openapi/ha3/instances/${@instanceId}/tables/${tableName}/reindex`, null, null, Util.toJSONString(request), @runtimeOptions);
+}
+
+/**
+ * 获取索引版本列表
+ */
+async function listTableGenerations(tableName: string): ListTableGenerationsResponse {
+  return _openApiRequest('GET', `/openapi/ha3/instances/${@instanceId}/tables/${tableName}/index_versions`, null, null, null, @runtimeOptions);
+}
+
+/**
+ * 获取索引版本详情
+ */
+async function getTableGeneration(tableName: string, generationId: string): GetTableGenerationResponse {
+  return _openApiRequest('GET', `/openapi/ha3/instances/${@instanceId}/tables/${tableName}/index_versions/${generationId}`, null, null, null, @runtimeOptions);
+}
+
+/**
+ * 获取任务列表
+ */
+async function listTasks(request: ListTasksRequest): ListTasksResponse {
+  var query : map[string]any = {};
+  var one = Number.parseLong("1000");
+
+  if (!Util.isUnset(request.end)) {
+    query['end'] = Number.mul(request.end, one);
+  }
+
+  if (!Util.isUnset(request.start)) {
+    query['start'] = Number.mul(request.start, one);
+  } else {
+    var now = Number.parseLong(Time.unix());
+    var period = Number.parseLong("86400");
+    query['start'] = Number.mul(Number.sub(now, period), one);
+  }
+
+  return _openApiRequest('GET', `/openapi/ha3/instances/${@instanceId}/tasks`, query, null, null, @runtimeOptions);
+}

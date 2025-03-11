@@ -27,12 +27,19 @@ public class Client {
             ));
         }
 
+        if (com.aliyun.teautil.Common.isUnset(config.endpoint)) {
+            throw new TeaException(TeaConverter.buildMap(
+                new TeaPair("name", "ParameterMissing"),
+                new TeaPair("message", "'config.endpoint' can not be unset")
+            ));
+        }
+
         if (!com.aliyun.teautil.Common.empty(config.accessUserName) && !com.aliyun.teautil.Common.empty(config.accessPassWord)) {
             this._credential = this.getRealmSignStr(config.accessUserName, config.accessPassWord);
         }
 
         this._endpoint = this.getEndpoint(config.endpoint);
-        this._instanceId = config.instanceId;
+        this._instanceId = this.getInstanceId(config);
         this._protocol = config.protocol;
         this._userAgent = config.userAgent;
         this._domainsuffix = "ha.aliyuncs.com";
@@ -115,7 +122,8 @@ public class Client {
                         rawMsg = objStr;
                     }                    
                     java.util.Map<String, Object> rawMap = TeaConverter.buildMap(
-                        new TeaPair("errors", rawMsg)
+                        new TeaPair("errors", rawMsg),
+                        new TeaPair("headers", response_.headers)
                     );
                     throw new TeaException(TeaConverter.buildMap(
                         new TeaPair("message", response_.statusMessage),
@@ -150,6 +158,96 @@ public class Client {
         throw new TeaUnretryableException(_lastRequest, _lastException);
     }
 
+    public java.util.Map<String, ?> _openApiRequest(String method, String pathname, java.util.Map<String, ?> query, java.util.Map<String, String> headers, Object body, com.aliyun.teautil.models.RuntimeOptions runtime) throws Exception {
+        java.util.Map<String, Object> runtime_ = TeaConverter.buildMap(
+            new TeaPair("timeouted", "retry"),
+            new TeaPair("readTimeout", runtime.readTimeout),
+            new TeaPair("connectTimeout", runtime.connectTimeout),
+            new TeaPair("httpsProxy", runtime.httpsProxy),
+            new TeaPair("noProxy", runtime.noProxy),
+            new TeaPair("maxIdleConns", runtime.maxIdleConns),
+            new TeaPair("retry", TeaConverter.buildMap(
+                new TeaPair("retryable", runtime.autoretry),
+                new TeaPair("maxAttempts", runtime.maxAttempts)
+            )),
+            new TeaPair("backoff", TeaConverter.buildMap(
+                new TeaPair("policy", runtime.backoffPolicy),
+                new TeaPair("period", runtime.backoffPeriod)
+            )),
+            new TeaPair("ignoreSSL", runtime.ignoreSSL)
+        );
+
+        TeaRequest _lastRequest = null;
+        Exception _lastException = null;
+        long _now = System.currentTimeMillis();
+        int _retryTimes = 0;
+        while (Tea.allowRetry((java.util.Map<String, Object>) runtime_.get("retry"), _retryTimes, _now)) {
+            if (_retryTimes > 0) {
+                int backoffTime = Tea.getBackoffTime(runtime_.get("backoff"), _retryTimes);
+                if (backoffTime > 0) {
+                    Tea.sleep(backoffTime);
+                }
+            }
+            _retryTimes = _retryTimes + 1;
+            try {
+                TeaRequest request_ = new TeaRequest();
+                request_.protocol = com.aliyun.teautil.Common.defaultString(_protocol, "HTTP");
+                request_.method = method;
+                request_.pathname = pathname;
+                request_.headers = TeaConverter.merge(String.class,
+                    TeaConverter.buildMap(
+                        new TeaPair("host", _endpoint),
+                        new TeaPair("authorization", "Basic " + _credential + ""),
+                        new TeaPair("content-type", "application/json; charset=utf-8")
+                    ),
+                    headers
+                );
+                if (!com.aliyun.teautil.Common.isUnset(query)) {
+                    request_.query = com.aliyun.teautil.Common.stringifyMapValue(query);
+                }
+
+                if (!com.aliyun.teautil.Common.isUnset(body)) {
+                    request_.body = Tea.toReadable(com.aliyun.teautil.Common.toJSONString(body));
+                }
+
+                _lastRequest = request_;
+                TeaResponse response_ = Tea.doAction(request_, runtime_, interceptorChain);
+
+                String objStr = com.aliyun.teautil.Common.readAsString(response_.body);
+                if (com.aliyun.teautil.Common.is4xx(response_.statusCode) || com.aliyun.teautil.Common.is5xx(response_.statusCode)) {
+                    Object rawMsg = null;
+                    try {
+                        rawMsg = com.aliyun.teautil.Common.parseJSON(objStr);
+                    } catch (TeaException err) {
+                        rawMsg = objStr;
+                    } catch (Exception _err) {
+                        TeaException err = new TeaException(_err.getMessage(), _err);
+                        rawMsg = objStr;
+                    }                    
+                    throw new TeaException(TeaConverter.buildMap(
+                        new TeaPair("message", objStr),
+                        new TeaPair("data", rawMsg),
+                        new TeaPair("code", response_.statusCode)
+                    ));
+                }
+
+                Object obj = com.aliyun.teautil.Common.parseJSON(objStr);
+                return TeaConverter.buildMap(
+                    new TeaPair("body", obj),
+                    new TeaPair("headers", response_.headers),
+                    new TeaPair("statusCode", response_.statusCode)
+                );
+            } catch (Exception e) {
+                if (Tea.isRetryable(e)) {
+                    _lastException = e;
+                    continue;
+                }
+                throw e;
+            }
+        }
+        throw new TeaUnretryableException(_lastRequest, _lastException);
+    }
+
     public void addRuntimeOptionsInterceptor(RuntimeOptionsInterceptor interceptor) {
         interceptorChain.addRuntimeOptionsInterceptor(interceptor);
     }
@@ -160,6 +258,20 @@ public class Client {
 
     public void addResponseInterceptor(ResponseInterceptor interceptor) {
         interceptorChain.addResponseInterceptor(interceptor);
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>如果用户传了实例id，则直接使用，否则从endpoint中解析实例id,</p>
+     */
+    public String getInstanceId(Config config) throws Exception {
+        if (!com.aliyun.teautil.Common.isUnset(config.instanceId)) {
+            return config.instanceId;
+        }
+
+        java.util.List<String> values = com.aliyun.darabonbastring.Client.split(_endpoint, ".", 2);
+        String value = values.get(0);
+        return value;
     }
 
     /**
@@ -369,5 +481,117 @@ public class Client {
         }
 
         return headers;
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>获取表列表</p>
+     */
+    public ListTablesResponse listTables() throws Exception {
+        return TeaModel.toModel(this._openApiRequest("GET", "/openapi/ha3/instances/" + _instanceId + "/tables", null, null, null, _runtimeOptions), new ListTablesResponse());
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>获取表详情</p>
+     */
+    public GetTableResponse getTable(String tableName) throws Exception {
+        return TeaModel.toModel(this._openApiRequest("GET", "/openapi/ha3/instances/" + _instanceId + "/tables/" + tableName + "", null, null, null, _runtimeOptions), new GetTableResponse());
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>创建表</p>
+     */
+    public CreateTableResponse createTable(CreateTableRequest request) throws Exception {
+        java.util.Map<String, Object> query = new java.util.HashMap<>();
+        if (!com.aliyun.teautil.Common.isUnset(request.dryRun)) {
+            query.put("dryRun", request.dryRun);
+        }
+
+        return TeaModel.toModel(this._openApiRequest("POST", "/openapi/ha3/instances/" + _instanceId + "/tables", query, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new CreateTableResponse());
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>修改表</p>
+     */
+    public ModifyTableResponse modifyTable(String tableName, ModifyTableRequest request) throws Exception {
+        java.util.Map<String, Object> query = new java.util.HashMap<>();
+        if (!com.aliyun.teautil.Common.isUnset(request.dryRun)) {
+            query.put("dryRun", request.dryRun);
+        }
+
+        return TeaModel.toModel(this._openApiRequest("PUT", "/openapi/ha3/instances/" + _instanceId + "/tables/" + tableName + "", query, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new ModifyTableResponse());
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>删除表</p>
+     */
+    public DeleteTableResponse deleteTable(String tableName) throws Exception {
+        return TeaModel.toModel(this._openApiRequest("DELETE", "/openapi/ha3/instances/" + _instanceId + "/tables/" + tableName + "", null, null, null, _runtimeOptions), new DeleteTableResponse());
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>表停止使用</p>
+     */
+    public StopTableResponse stopTable(String tableName) throws Exception {
+        return TeaModel.toModel(this._openApiRequest("POST", "/openapi/ha3/instances/" + _instanceId + "/indexes/" + tableName + "/stopIndex", null, null, null, _runtimeOptions), new StopTableResponse());
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>表恢复使用</p>
+     */
+    public StartTableResponse startTable(String tableName) throws Exception {
+        return TeaModel.toModel(this._openApiRequest("POST", "/openapi/ha3/instances/" + _instanceId + "/indexes/" + tableName + "/startIndex", null, null, null, _runtimeOptions), new StartTableResponse());
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>索引重建</p>
+     */
+    public ReindexResponse reindex(String tableName, ReindexRequest request) throws Exception {
+        return TeaModel.toModel(this._openApiRequest("POST", "/openapi/ha3/instances/" + _instanceId + "/tables/" + tableName + "/reindex", null, null, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new ReindexResponse());
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>获取索引版本列表</p>
+     */
+    public ListTableGenerationsResponse listTableGenerations(String tableName) throws Exception {
+        return TeaModel.toModel(this._openApiRequest("GET", "/openapi/ha3/instances/" + _instanceId + "/tables/" + tableName + "/index_versions", null, null, null, _runtimeOptions), new ListTableGenerationsResponse());
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>获取索引版本详情</p>
+     */
+    public GetTableGenerationResponse getTableGeneration(String tableName, String generationId) throws Exception {
+        return TeaModel.toModel(this._openApiRequest("GET", "/openapi/ha3/instances/" + _instanceId + "/tables/" + tableName + "/index_versions/" + generationId + "", null, null, null, _runtimeOptions), new GetTableGenerationResponse());
+    }
+
+    /**
+     * <b>description</b> :
+     * <p>获取任务列表</p>
+     */
+    public ListTasksResponse listTasks(ListTasksRequest request) throws Exception {
+        java.util.Map<String, Object> query = new java.util.HashMap<>();
+        Long one = com.aliyun.darabonbanumber.Client.parseLong("1000");
+        if (!com.aliyun.teautil.Common.isUnset(request.end)) {
+            query.put("end", com.aliyun.darabonbanumber.Client.mul(request.end, one));
+        }
+
+        if (!com.aliyun.teautil.Common.isUnset(request.start)) {
+            query.put("start", com.aliyun.darabonbanumber.Client.mul(request.start, one));
+        } else {
+            Long now = com.aliyun.darabonbanumber.Client.parseLong(com.aliyun.darabonbatime.Client.unix());
+            Long period = com.aliyun.darabonbanumber.Client.parseLong("86400");
+            query.put("start", com.aliyun.darabonbanumber.Client.mul(com.aliyun.darabonbanumber.Client.sub(now, period), one));
+        }
+
+        return TeaModel.toModel(this._openApiRequest("GET", "/openapi/ha3/instances/" + _instanceId + "/tasks", query, null, null, _runtimeOptions), new ListTasksResponse());
     }
 }
