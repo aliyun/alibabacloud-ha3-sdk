@@ -3728,6 +3728,7 @@ func (client *Client) Active () (_result *SearchResponse, _err error) {
 func (client *Client) PushDocuments (dataSourceName *string, keyField *string, request *PushDocumentsRequest) (_result *PushDocumentsResponse, _err error) {
   request.Headers = tea.Merge(map[string]*string{
     "X-Opensearch-Swift-PK-Field": keyField,
+    "X-Opensearch-Validate-Data": tea.String("true"),
     },request.Headers)
   _result = &PushDocumentsResponse{}
   _body, _err := client._request(tea.String("POST"), tea.String("/update/" + tea.StringValue(dataSourceName) + "/actions/bulk"), nil, request.Headers, request.Body, client.RuntimeOptions)
