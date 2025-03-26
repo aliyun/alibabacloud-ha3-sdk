@@ -498,6 +498,7 @@ model PushDocumentsResponseModel {
 async function pushDocuments(dataSourceName: string, keyField: string, request: PushDocumentsRequestModel): PushDocumentsResponseModel {
   request.headers = {
     X-Opensearch-Swift-PK-Field = keyField,
+    X-Opensearch-Validate-Data = 'true',
     ...request.headers
   };
   return _request('POST', `/update/${dataSourceName}/actions/bulk`, null, request.headers, request.body, @runtimeOptions);

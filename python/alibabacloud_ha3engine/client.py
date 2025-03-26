@@ -1013,7 +1013,8 @@ class Client:
         支持新增、更新、删除 等操作，以及对应批量操作
         """
         request.headers = TeaCore.merge({
-            'X-Opensearch-Swift-PK-Field': key_field
+            'X-Opensearch-Swift-PK-Field': key_field,
+            'X-Opensearch-Validate-Data': 'true'
         }, request.headers)
         return TeaCore.from_map(
             ha_3engine_models.PushDocumentsResponseModel(),
@@ -1030,7 +1031,8 @@ class Client:
         支持新增、更新、删除 等操作，以及对应批量操作
         """
         request.headers = TeaCore.merge({
-            'X-Opensearch-Swift-PK-Field': key_field
+            'X-Opensearch-Swift-PK-Field': key_field,
+            'X-Opensearch-Validate-Data': 'true'
         }, request.headers)
         return TeaCore.from_map(
             ha_3engine_models.PushDocumentsResponseModel(),

@@ -666,7 +666,8 @@ public class Client {
     public PushDocumentsResponseModel pushDocuments(String dataSourceName, String keyField, PushDocumentsRequestModel request) throws Exception {
         request.headers = TeaConverter.merge(String.class,
             TeaConverter.buildMap(
-                new TeaPair("X-Opensearch-Swift-PK-Field", keyField)
+                new TeaPair("X-Opensearch-Swift-PK-Field", keyField),
+                new TeaPair("X-Opensearch-Validate-Data", "true")
             ),
             request.headers
         );
