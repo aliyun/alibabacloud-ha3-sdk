@@ -542,6 +542,9 @@ public final class DefaultAsyncClient implements AsyncClient {
     @Override
     public CompletableFuture<PushDocumentsResponse> pushDocuments(String dataSourceName, String keyField, PushDocumentsRequest request) {
         try {
+            if (!"false".equals(request.getHeaderParameters().get("X-Opensearch-Validate-Data"))){
+                request.getHeaderParameters().put("X-Opensearch-Validate-Data", "true");
+            }
             request.getHeaderParameters().put("X-Opensearch-Swift-PK-Field", keyField);
             TeaRequest teaRequest = REQUEST.copy()
                     .setStyle(RequestStyle.RESTFUL)
