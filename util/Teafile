@@ -1,7 +1,7 @@
 {
   "scope": "opensearch",
   "name": "Ha3_Util",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./main.tea",
   "maintainers": [
     {
@@ -12,6 +12,7 @@
   "libraries": {
   },
   "releases": {
+    "ts": "@alicloud/ha3-util:^0.0.1",
     "go": "github.com/alibabacloud-go/alibabacloud-ha3-util/client:v0.0.1",
     "java": "com.aliyun:alibabacloud-ha3-util:0.0.1",
     "python": "alibabacloud_ha3_util:0.0.1"
