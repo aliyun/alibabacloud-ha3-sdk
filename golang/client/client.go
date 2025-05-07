@@ -1311,6 +1311,8 @@ func (client *Client) BuildRuntimeOptions (runtimeOptions *util.RuntimeOptions) 
     return _result
   }
 
+  // 默认开启SDK层面的重试，如果想要关闭重试，可以手动设置maxAttempts=0
+  runtimeOptions.Autoretry = tea.Bool(true)
   if tea.BoolValue(util.IsUnset(runtimeOptions.ReadTimeout)) {
     runtimeOptions.ReadTimeout = tea.Int(10000)
   }
@@ -1324,7 +1326,7 @@ func (client *Client) BuildRuntimeOptions (runtimeOptions *util.RuntimeOptions) 
   }
 
   if tea.BoolValue(util.IsUnset(runtimeOptions.MaxAttempts)) {
-    runtimeOptions.MaxAttempts = tea.Int(5)
+    runtimeOptions.MaxAttempts = tea.Int(2)
   }
 
   if tea.BoolValue(util.IsUnset(runtimeOptions.BackoffPolicy)) {

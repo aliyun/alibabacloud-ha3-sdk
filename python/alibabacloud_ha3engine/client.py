@@ -1092,10 +1092,13 @@ class Client:
             return util_models.RuntimeOptions(
                 read_timeout=10000,
                 connect_timeout=5000,
-                autoretry=False,
+                autoretry=True,
+                max_attempts=2,
                 ignore_ssl=False,
                 max_idle_conns=50
             )
+        # 默认开启SDK层面的重试，如果想要关闭重试，可以手动设置maxAttempts=0
+        runtime_options.autoretry = True
         if UtilClient.is_unset(runtime_options.read_timeout):
             runtime_options.read_timeout = 10000
         if UtilClient.is_unset(runtime_options.connect_timeout):
@@ -1103,7 +1106,7 @@ class Client:
         if UtilClient.is_unset(runtime_options.max_idle_conns):
             runtime_options.max_idle_conns = 50
         if UtilClient.is_unset(runtime_options.max_attempts):
-            runtime_options.max_attempts = 5
+            runtime_options.max_attempts = 2
         if UtilClient.is_unset(runtime_options.backoff_policy):
             runtime_options.backoff_policy = 'no'
         if UtilClient.is_unset(runtime_options.backoff_period):
