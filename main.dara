@@ -672,11 +672,15 @@ function buildRuntimeOptions(runtimeOptions: Util.RuntimeOptions): Util.RuntimeO
     return new Util.RuntimeOptions{
       readTimeout = 10000,
       connectTimeout = 5000,
-      autoretry = false,
+      autoretry = true,
+      maxAttempts = 2,
       ignoreSSL = false,
       maxIdleConns = 50
     };
   }
+
+  // 默认开启SDK层面的重试，如果想要关闭重试，可以手动设置maxAttempts=0
+  runtimeOptions.autoretry = true;
 
   if (Util.isUnset(runtimeOptions.readTimeout)) {
     runtimeOptions.readTimeout = 10000;
@@ -688,7 +692,7 @@ function buildRuntimeOptions(runtimeOptions: Util.RuntimeOptions): Util.RuntimeO
     runtimeOptions.maxIdleConns = 50;
   }
   if (Util.isUnset(runtimeOptions.maxAttempts)) {
-    runtimeOptions.maxAttempts = 5;
+    runtimeOptions.maxAttempts = 2;
   }
   if (Util.isUnset(runtimeOptions.backoffPolicy)) {
     runtimeOptions.backoffPolicy = 'no';
