@@ -433,12 +433,15 @@ public class Client {
             return com.aliyun.teautil.models.RuntimeOptions.build(TeaConverter.buildMap(
                 new TeaPair("readTimeout", 10000),
                 new TeaPair("connectTimeout", 5000),
-                new TeaPair("autoretry", false),
+                new TeaPair("autoretry", true),
+                new TeaPair("maxAttempts", 2),
                 new TeaPair("ignoreSSL", false),
                 new TeaPair("maxIdleConns", 50)
             ));
         }
 
+        // 默认开启SDK层面的重试，如果想要关闭重试，可以手动设置maxAttempts=0
+        runtimeOptions.autoretry = true;
         if (com.aliyun.teautil.Common.isUnset(runtimeOptions.readTimeout)) {
             runtimeOptions.readTimeout = 10000;
         }
@@ -452,7 +455,7 @@ public class Client {
         }
 
         if (com.aliyun.teautil.Common.isUnset(runtimeOptions.maxAttempts)) {
-            runtimeOptions.maxAttempts = 5;
+            runtimeOptions.maxAttempts = 2;
         }
 
         if (com.aliyun.teautil.Common.isUnset(runtimeOptions.backoffPolicy)) {
