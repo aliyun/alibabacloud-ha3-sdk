@@ -54,6 +54,12 @@ public class MultiQueryRequest extends TeaModel {
     @NameInMap("sort")
     public String sort;
 
+    /**
+     * <p>用于配置多路结果中相同pk doc如何计算分数。mode可以配置：sum, max, min。默认为sum</p>
+     */
+    @NameInMap("mode")
+    public String mode;
+
     public static MultiQueryRequest build(java.util.Map<String, ?> map) throws Exception {
         MultiQueryRequest self = new MultiQueryRequest();
         return TeaModel.build(map, self);
@@ -121,6 +127,14 @@ public class MultiQueryRequest extends TeaModel {
     }
     public String getSort() {
         return this.sort;
+    }
+
+    public MultiQueryRequest setMode(String mode) {
+        this.mode = mode;
+        return this;
+    }
+    public String getMode() {
+        return this.mode;
     }
 
 }

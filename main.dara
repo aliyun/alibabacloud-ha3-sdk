@@ -130,7 +130,15 @@ model QueryRequest {
   scoreThreshold?: float(name='scoreThreshold', description='分数过滤， 使用欧式距离时，只返回小于scoreThreshold的结果。使用内积时，只返回大于scoreThreshold的结果'),
   vectorCount?: integer(name='vectorCount', description='vector字段中包含的向量个数'),
   sort?: string(name='sort', description='排序表达式'),
-  kvpairs?: map[string]string(name='kvpairs', description='kvpairs')
+  kvpairs?: map[string]string(name='kvpairs', description='kvpairs'),
+  contentType?: string(name='contentType', description='视频预测数据类型：text、image、video_uri、video_base64'),
+  videoFrameTopK?: integer(name='videoFrameTopK', description='召回帧的数量，默认值为100'),
+  sorts?: [ Sort ](name='sorts', description='多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数')
+}
+
+model Sort {
+    order?: string(name='order', description='排序顺序, ASC：升序  DESC: 降序'),
+    expression?: string(name='expression', description='表达式')
 }
 
 model SparseData {
@@ -147,7 +155,8 @@ model MultiQueryRequest {
   outputFields?: [ string ](name='outputFields', description='需要返回值的字段列表'),
   order?: string(name='order', description='排序顺序, ASC：升序  DESC: 降序'),
   filter?: string(name='filter', description='过滤表达式'),
-  sort?: string(name='sort', description='排序表达式')
+  sort?: string(name='sort', description='排序表达式'),
+  mode?: string(name='mode', description='用于配置多路结果中相同pk doc如何计算分数。mode可以配置：sum, max, min。默认为sum')
 }
 
 model FetchRequest {

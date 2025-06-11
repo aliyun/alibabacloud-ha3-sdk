@@ -114,6 +114,24 @@ public class QueryRequest extends TeaModel {
     @NameInMap("kvpairs")
     public java.util.Map<String, String> kvpairs;
 
+    /**
+     * <p>视频预测数据类型：text、image、video_uri、video_base64</p>
+     */
+    @NameInMap("contentType")
+    public String contentType;
+
+    /**
+     * <p>召回帧的数量，默认值为100</p>
+     */
+    @NameInMap("videoFrameTopK")
+    public Integer videoFrameTopK;
+
+    /**
+     * <p>多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数</p>
+     */
+    @NameInMap("sorts")
+    public java.util.List<Sort> sorts;
+
     public static QueryRequest build(java.util.Map<String, ?> map) throws Exception {
         QueryRequest self = new QueryRequest();
         return TeaModel.build(map, self);
@@ -261,6 +279,30 @@ public class QueryRequest extends TeaModel {
     }
     public java.util.Map<String, String> getKvpairs() {
         return this.kvpairs;
+    }
+
+    public QueryRequest setContentType(String contentType) {
+        this.contentType = contentType;
+        return this;
+    }
+    public String getContentType() {
+        return this.contentType;
+    }
+
+    public QueryRequest setVideoFrameTopK(Integer videoFrameTopK) {
+        this.videoFrameTopK = videoFrameTopK;
+        return this;
+    }
+    public Integer getVideoFrameTopK() {
+        return this.videoFrameTopK;
+    }
+
+    public QueryRequest setSorts(java.util.List<Sort> sorts) {
+        this.sorts = sorts;
+        return this;
+    }
+    public java.util.List<Sort> getSorts() {
+        return this.sorts;
     }
 
 }
