@@ -149,6 +149,41 @@ class SparseData(TeaModel):
         return self
 
 
+class Sort(TeaModel):
+    def __init__(
+        self,
+        order: str = None,
+        expression: str = None,
+    ):
+        # 排序顺序, ASC：升序  DESC: 降序
+        self.order = order
+        # 表达式
+        self.expression = expression
+
+    def validate(self):
+        pass
+
+    def to_map(self):
+        _map = super().to_map()
+        if _map is not None:
+            return _map
+
+        result = dict()
+        if self.order is not None:
+            result['order'] = self.order
+        if self.expression is not None:
+            result['expression'] = self.expression
+        return result
+
+    def from_map(self, m: dict = None):
+        m = m or dict()
+        if m.get('order') is not None:
+            self.order = m.get('order')
+        if m.get('expression') is not None:
+            self.expression = m.get('expression')
+        return self
+
+
 class QueryRequest(TeaModel):
     def __init__(
         self,
@@ -170,6 +205,9 @@ class QueryRequest(TeaModel):
         vector_count: int = None,
         sort: str = None,
         kvpairs: Dict[str, str] = None,
+        content_type: str = None,
+        video_frame_top_k: int = None,
+        sorts: List[Sort] = None,
     ):
         # 数据源名
         self.table_name = table_name
@@ -207,12 +245,22 @@ class QueryRequest(TeaModel):
         self.sort = sort
         # kvpairs
         self.kvpairs = kvpairs
+        # 视频预测数据类型：text、image、video_uri、video_base64
+        self.content_type = content_type
+        # 召回帧的数量，默认值为100
+        self.video_frame_top_k = video_frame_top_k
+        # 多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数
+        self.sorts = sorts
 
     def validate(self):
         self.validate_required(self.table_name, 'table_name')
         self.validate_required(self.vector, 'vector')
         if self.sparse_data:
             self.sparse_data.validate()
+        if self.sorts:
+            for k in self.sorts:
+                if k:
+                    k.validate()
 
     def to_map(self):
         _map = super().to_map()
@@ -256,6 +304,14 @@ class QueryRequest(TeaModel):
             result['sort'] = self.sort
         if self.kvpairs is not None:
             result['kvpairs'] = self.kvpairs
+        if self.content_type is not None:
+            result['contentType'] = self.content_type
+        if self.video_frame_top_k is not None:
+            result['videoFrameTopK'] = self.video_frame_top_k
+        result['sorts'] = []
+        if self.sorts is not None:
+            for k in self.sorts:
+                result['sorts'].append(k.to_map() if k else None)
         return result
 
     def from_map(self, m: dict = None):
@@ -297,6 +353,15 @@ class QueryRequest(TeaModel):
             self.sort = m.get('sort')
         if m.get('kvpairs') is not None:
             self.kvpairs = m.get('kvpairs')
+        if m.get('contentType') is not None:
+            self.content_type = m.get('contentType')
+        if m.get('videoFrameTopK') is not None:
+            self.video_frame_top_k = m.get('videoFrameTopK')
+        self.sorts = []
+        if m.get('sorts') is not None:
+            for k in m.get('sorts'):
+                temp_model = Sort()
+                self.sorts.append(temp_model.from_map(k))
         return self
 
 
@@ -311,6 +376,7 @@ class MultiQueryRequest(TeaModel):
         order: str = None,
         filter: str = None,
         sort: str = None,
+        mode: str = None,
     ):
         # 数据源名
         self.table_name = table_name
@@ -328,6 +394,8 @@ class MultiQueryRequest(TeaModel):
         self.filter = filter
         # 排序表达式
         self.sort = sort
+        # 用于配置多路结果中相同pk doc如何计算分数。mode可以配置：sum, max, min。默认为sum
+        self.mode = mode
 
     def validate(self):
         self.validate_required(self.table_name, 'table_name')
@@ -361,6 +429,8 @@ class MultiQueryRequest(TeaModel):
             result['filter'] = self.filter
         if self.sort is not None:
             result['sort'] = self.sort
+        if self.mode is not None:
+            result['mode'] = self.mode
         return result
 
     def from_map(self, m: dict = None):
@@ -384,6 +454,8 @@ class MultiQueryRequest(TeaModel):
             self.filter = m.get('filter')
         if m.get('sort') is not None:
             self.sort = m.get('sort')
+        if m.get('mode') is not None:
+            self.mode = m.get('mode')
         return self
 
 

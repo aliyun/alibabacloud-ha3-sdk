@@ -24,7 +24,7 @@ from setuptools import setup, find_packages
 """
 setup module for alibabacloud_ha3engine_vector.
 
-Created on 07/05/2025
+Created on 11/06/2025
 
 @author: Alibaba Cloud SDK
 """

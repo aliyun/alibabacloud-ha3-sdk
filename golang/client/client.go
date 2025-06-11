@@ -126,6 +126,12 @@ type QueryRequest struct {
   Sort *string `json:"sort,omitempty" xml:"sort,omitempty"`
   // kvpairs
   Kvpairs map[string]*string `json:"kvpairs,omitempty" xml:"kvpairs,omitempty"`
+  // 视频预测数据类型：text、image、video_uri、video_base64
+  ContentType *string `json:"contentType,omitempty" xml:"contentType,omitempty"`
+  // 召回帧的数量，默认值为100
+  VideoFrameTopK *int `json:"videoFrameTopK,omitempty" xml:"videoFrameTopK,omitempty"`
+  // 多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数
+  Sorts []*Sort `json:"sorts,omitempty" xml:"sorts,omitempty" type:"Repeated"`
 }
 
 func (s QueryRequest) String() string {
@@ -226,6 +232,46 @@ func (s *QueryRequest) SetKvpairs(v map[string]*string) *QueryRequest {
   return s
 }
 
+func (s *QueryRequest) SetContentType(v string) *QueryRequest {
+  s.ContentType = &v
+  return s
+}
+
+func (s *QueryRequest) SetVideoFrameTopK(v int) *QueryRequest {
+  s.VideoFrameTopK = &v
+  return s
+}
+
+func (s *QueryRequest) SetSorts(v []*Sort) *QueryRequest {
+  s.Sorts = v
+  return s
+}
+
+type Sort struct {
+  // 排序顺序, ASC：升序  DESC: 降序
+  Order *string `json:"order,omitempty" xml:"order,omitempty"`
+  // 表达式
+  Expression *string `json:"expression,omitempty" xml:"expression,omitempty"`
+}
+
+func (s Sort) String() string {
+  return tea.Prettify(s)
+}
+
+func (s Sort) GoString() string {
+  return s.String()
+}
+
+func (s *Sort) SetOrder(v string) *Sort {
+  s.Order = &v
+  return s
+}
+
+func (s *Sort) SetExpression(v string) *Sort {
+  s.Expression = &v
+  return s
+}
+
 type SparseData struct {
   // 每个稀疏向量中包含的元素个数
   Count []*int `json:"count,omitempty" xml:"count,omitempty" type:"Repeated"`
@@ -275,6 +321,8 @@ type MultiQueryRequest struct {
   Filter *string `json:"filter,omitempty" xml:"filter,omitempty"`
   // 排序表达式
   Sort *string `json:"sort,omitempty" xml:"sort,omitempty"`
+  // 用于配置多路结果中相同pk doc如何计算分数。mode可以配置：sum, max, min。默认为sum
+  Mode *string `json:"mode,omitempty" xml:"mode,omitempty"`
 }
 
 func (s MultiQueryRequest) String() string {
@@ -322,6 +370,11 @@ func (s *MultiQueryRequest) SetFilter(v string) *MultiQueryRequest {
 
 func (s *MultiQueryRequest) SetSort(v string) *MultiQueryRequest {
   s.Sort = &v
+  return s
+}
+
+func (s *MultiQueryRequest) SetMode(v string) *MultiQueryRequest {
+  s.Mode = &v
   return s
 }
 
