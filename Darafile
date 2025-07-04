@@ -4,13 +4,7 @@
   "version": "1.1.17",
   "main": "./main.dara",
   "libraries": {
-    "Util": "darabonba:Util:*",
-    "Time": "darabonba:Time:*",
-    "Number": "darabonba:Number:*",
-    "String": "darabonba:String:*",
-    "EncodeUtil": "darabonba:EncodeUtil:*",
-    "Map": "darabonba:Map:*",
-    "Ha3Util": "opensearch:Ha3_Util:*"
+    "OpenApi": "alibabacloud:OpenApiV2:*"
   },
   "maintainers": [
     {
@@ -21,6 +15,7 @@
   "releases": {
     "java": "com.aliyun:ha3engine-vector:1.1.17",
     "go": "github.com/alibabacloud-go/ha3engine/client:v1.1.17",
+    "cpp": "alibabacloud_ha3engine:1.0.0",
     "python": "alibabacloud_ha3engine-vector:1.1.17"
   },
   "java": {
@@ -39,6 +34,10 @@
       "artifactId": "aliyun-sdk-ha3engine-vector",
       "version": "1.1.17"
     }
+  },
+  "cpp": {
+    "header": "alibabacloud/HA3.hpp",
+    "namespace": "AlibabaCloud::HA3"
   },
   "python": {
     "package": "alibabacloud_ha3engine_vector",

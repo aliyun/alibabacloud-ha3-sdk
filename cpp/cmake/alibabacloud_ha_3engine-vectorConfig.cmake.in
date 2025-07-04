@@ -1,0 +1,4 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/alibabacloud_ha_3engine-vectorTargets.cmake")
+check_required_components("alibabacloud_ha_3engine-vector")
