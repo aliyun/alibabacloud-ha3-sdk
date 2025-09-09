@@ -978,6 +978,788 @@ public final class VectorRequest {
 
   }
 
+  public interface SortDescOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.aliyun.ha3engine.async.models.protobuf.SortDesc)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional string expression = 1 [default = ""];</code>
+     * @return Whether the expression field is set.
+     */
+    boolean hasExpression();
+    /**
+     * <code>optional string expression = 1 [default = ""];</code>
+     * @return The expression.
+     */
+    java.lang.String getExpression();
+    /**
+     * <code>optional string expression = 1 [default = ""];</code>
+     * @return The bytes for expression.
+     */
+    com.google.protobuf.ByteString
+        getExpressionBytes();
+
+    /**
+     * <code>optional string order = 2 [default = "DESC"];</code>
+     * @return Whether the order field is set.
+     */
+    boolean hasOrder();
+    /**
+     * <code>optional string order = 2 [default = "DESC"];</code>
+     * @return The order.
+     */
+    java.lang.String getOrder();
+    /**
+     * <code>optional string order = 2 [default = "DESC"];</code>
+     * @return The bytes for order.
+     */
+    com.google.protobuf.ByteString
+        getOrderBytes();
+  }
+  /**
+   * Protobuf type {@code com.aliyun.ha3engine.async.models.protobuf.SortDesc}
+   */
+  public  static final class SortDesc extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.aliyun.ha3engine.async.models.protobuf.SortDesc)
+      SortDescOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use SortDesc.newBuilder() to construct.
+    private SortDesc(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private SortDesc() {
+      expression_ = "";
+      order_ = "DESC";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new SortDesc();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SortDesc(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              expression_ = bs;
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              order_ = bs;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_SortDesc_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_SortDesc_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.class, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int EXPRESSION_FIELD_NUMBER = 1;
+    private volatile java.lang.Object expression_;
+    /**
+     * <code>optional string expression = 1 [default = ""];</code>
+     * @return Whether the expression field is set.
+     */
+    public boolean hasExpression() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>optional string expression = 1 [default = ""];</code>
+     * @return The expression.
+     */
+    public java.lang.String getExpression() {
+      java.lang.Object ref = expression_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          expression_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string expression = 1 [default = ""];</code>
+     * @return The bytes for expression.
+     */
+    public com.google.protobuf.ByteString
+        getExpressionBytes() {
+      java.lang.Object ref = expression_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        expression_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int ORDER_FIELD_NUMBER = 2;
+    private volatile java.lang.Object order_;
+    /**
+     * <code>optional string order = 2 [default = "DESC"];</code>
+     * @return Whether the order field is set.
+     */
+    public boolean hasOrder() {
+      return ((bitField0_ & 0x00000002) != 0);
+    }
+    /**
+     * <code>optional string order = 2 [default = "DESC"];</code>
+     * @return The order.
+     */
+    public java.lang.String getOrder() {
+      java.lang.Object ref = order_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          order_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string order = 2 [default = "DESC"];</code>
+     * @return The bytes for order.
+     */
+    public com.google.protobuf.ByteString
+        getOrderBytes() {
+      java.lang.Object ref = order_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        order_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, expression_);
+      }
+      if (((bitField0_ & 0x00000002) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, order_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, expression_);
+      }
+      if (((bitField0_ & 0x00000002) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, order_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc)) {
+        return super.equals(obj);
+      }
+      com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc other = (com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc) obj;
+
+      if (hasExpression() != other.hasExpression()) return false;
+      if (hasExpression()) {
+        if (!getExpression()
+            .equals(other.getExpression())) return false;
+      }
+      if (hasOrder() != other.hasOrder()) return false;
+      if (hasOrder()) {
+        if (!getOrder()
+            .equals(other.getOrder())) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasExpression()) {
+        hash = (37 * hash) + EXPRESSION_FIELD_NUMBER;
+        hash = (53 * hash) + getExpression().hashCode();
+      }
+      if (hasOrder()) {
+        hash = (37 * hash) + ORDER_FIELD_NUMBER;
+        hash = (53 * hash) + getOrder().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.aliyun.ha3engine.async.models.protobuf.SortDesc}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.aliyun.ha3engine.async.models.protobuf.SortDesc)
+        com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_SortDesc_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_SortDesc_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.class, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder.class);
+      }
+
+      // Construct using com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        expression_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        order_ = "DESC";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.internal_static_com_aliyun_ha3engine_async_models_protobuf_SortDesc_descriptor;
+      }
+
+      @java.lang.Override
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc getDefaultInstanceForType() {
+        return com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc build() {
+        com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc buildPartial() {
+        com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc result = new com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.expression_ = expression_;
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.order_ = order_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc) {
+          return mergeFrom((com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc other) {
+        if (other == com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.getDefaultInstance()) return this;
+        if (other.hasExpression()) {
+          bitField0_ |= 0x00000001;
+          expression_ = other.expression_;
+          onChanged();
+        }
+        if (other.hasOrder()) {
+          bitField0_ |= 0x00000002;
+          order_ = other.order_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object expression_ = "";
+      /**
+       * <code>optional string expression = 1 [default = ""];</code>
+       * @return Whether the expression field is set.
+       */
+      public boolean hasExpression() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <code>optional string expression = 1 [default = ""];</code>
+       * @return The expression.
+       */
+      public java.lang.String getExpression() {
+        java.lang.Object ref = expression_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            expression_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string expression = 1 [default = ""];</code>
+       * @return The bytes for expression.
+       */
+      public com.google.protobuf.ByteString
+          getExpressionBytes() {
+        java.lang.Object ref = expression_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          expression_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string expression = 1 [default = ""];</code>
+       * @param value The expression to set.
+       * @return This builder for chaining.
+       */
+      public Builder setExpression(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        expression_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string expression = 1 [default = ""];</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearExpression() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        expression_ = getDefaultInstance().getExpression();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string expression = 1 [default = ""];</code>
+       * @param value The bytes for expression to set.
+       * @return This builder for chaining.
+       */
+      public Builder setExpressionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        expression_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object order_ = "DESC";
+      /**
+       * <code>optional string order = 2 [default = "DESC"];</code>
+       * @return Whether the order field is set.
+       */
+      public boolean hasOrder() {
+        return ((bitField0_ & 0x00000002) != 0);
+      }
+      /**
+       * <code>optional string order = 2 [default = "DESC"];</code>
+       * @return The order.
+       */
+      public java.lang.String getOrder() {
+        java.lang.Object ref = order_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            order_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string order = 2 [default = "DESC"];</code>
+       * @return The bytes for order.
+       */
+      public com.google.protobuf.ByteString
+          getOrderBytes() {
+        java.lang.Object ref = order_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          order_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string order = 2 [default = "DESC"];</code>
+       * @param value The order to set.
+       * @return This builder for chaining.
+       */
+      public Builder setOrder(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        order_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string order = 2 [default = "DESC"];</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearOrder() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        order_ = getDefaultInstance().getOrder();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string order = 2 [default = "DESC"];</code>
+       * @param value The bytes for order to set.
+       * @return This builder for chaining.
+       */
+      public Builder setOrderBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        order_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.aliyun.ha3engine.async.models.protobuf.SortDesc)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.aliyun.ha3engine.async.models.protobuf.SortDesc)
+    private static final com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc();
+    }
+
+    public static com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<SortDesc>
+        PARSER = new com.google.protobuf.AbstractParser<SortDesc>() {
+      @java.lang.Override
+      public SortDesc parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SortDesc(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<SortDesc> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SortDesc> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface VectorSearchQueryOrBuilder extends
       // @@protoc_insertion_point(interface_extends:com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery)
       com.google.protobuf.MessageOrBuilder {
@@ -1233,6 +2015,30 @@ public final class VectorRequest {
         getSortBytes();
 
     /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+     */
+    java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc> 
+        getSortsList();
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+     */
+    com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc getSorts(int index);
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+     */
+    int getSortsCount();
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+     */
+    java.util.List<? extends com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder> 
+        getSortsOrBuilderList();
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+     */
+    com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder getSortsOrBuilder(
+        int index);
+
+    /**
      * <code>optional .com.aliyun.ha3engine.async.models.protobuf.SparseData sparseData = 20;</code>
      * @return Whether the sparseData field is set.
      */
@@ -1291,6 +2097,34 @@ public final class VectorRequest {
 
     java.lang.String getKvpairsOrThrow(
         java.lang.String key);
+
+    /**
+     * <code>optional string contentType = 101 [default = ""];</code>
+     * @return Whether the contentType field is set.
+     */
+    boolean hasContentType();
+    /**
+     * <code>optional string contentType = 101 [default = ""];</code>
+     * @return The contentType.
+     */
+    java.lang.String getContentType();
+    /**
+     * <code>optional string contentType = 101 [default = ""];</code>
+     * @return The bytes for contentType.
+     */
+    com.google.protobuf.ByteString
+        getContentTypeBytes();
+
+    /**
+     * <code>optional uint32 videoFrameTopK = 102 [default = 100];</code>
+     * @return Whether the videoFrameTopK field is set.
+     */
+    boolean hasVideoFrameTopK();
+    /**
+     * <code>optional uint32 videoFrameTopK = 102 [default = 100];</code>
+     * @return The videoFrameTopK.
+     */
+    int getVideoFrameTopK();
   }
   /**
    * Protobuf type {@code com.aliyun.ha3engine.async.models.protobuf.VectorSearchQuery}
@@ -1319,7 +2153,10 @@ public final class VectorRequest {
       order_ = "ASC";
       weight_ = 1F;
       sort_ = "";
+      sorts_ = java.util.Collections.emptyList();
       timeout_ = -1L;
+      contentType_ = "";
+      videoFrameTopK_ = 100;
     }
 
     @java.lang.Override
@@ -1462,6 +2299,15 @@ public final class VectorRequest {
               sort_ = bs;
               break;
             }
+            case 146: {
+              if (!((mutable_bitField0_ & 0x00010000) != 0)) {
+                sorts_ = new java.util.ArrayList<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc>();
+                mutable_bitField0_ |= 0x00010000;
+              }
+              sorts_.add(
+                  input.readMessage(com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.PARSER, extensionRegistry));
+              break;
+            }
             case 162: {
               com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData.Builder subBuilder = null;
               if (((bitField0_ & 0x00004000) != 0)) {
@@ -1481,16 +2327,27 @@ public final class VectorRequest {
               break;
             }
             case 178: {
-              if (!((mutable_bitField0_ & 0x00040000) != 0)) {
+              if (!((mutable_bitField0_ & 0x00080000) != 0)) {
                 kvpairs_ = com.google.protobuf.MapField.newMapField(
                     KvpairsDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00040000;
+                mutable_bitField0_ |= 0x00080000;
               }
               com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
               kvpairs__ = input.readMessage(
                   KvpairsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
               kvpairs_.getMutableMap().put(
                   kvpairs__.getKey(), kvpairs__.getValue());
+              break;
+            }
+            case 810: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00010000;
+              contentType_ = bs;
+              break;
+            }
+            case 816: {
+              bitField0_ |= 0x00020000;
+              videoFrameTopK_ = input.readUInt32();
               break;
             }
             default: {
@@ -1513,6 +2370,9 @@ public final class VectorRequest {
         }
         if (((mutable_bitField0_ & 0x00001000) != 0)) {
           outputFields_ = outputFields_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00010000) != 0)) {
+          sorts_ = java.util.Collections.unmodifiableList(sorts_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -2099,6 +2959,41 @@ public final class VectorRequest {
       }
     }
 
+    public static final int SORTS_FIELD_NUMBER = 18;
+    private java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc> sorts_;
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+     */
+    public java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc> getSortsList() {
+      return sorts_;
+    }
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+     */
+    public java.util.List<? extends com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder> 
+        getSortsOrBuilderList() {
+      return sorts_;
+    }
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+     */
+    public int getSortsCount() {
+      return sorts_.size();
+    }
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+     */
+    public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc getSorts(int index) {
+      return sorts_.get(index);
+    }
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+     */
+    public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder getSortsOrBuilder(
+        int index) {
+      return sorts_.get(index);
+    }
+
     public static final int SPARSEDATA_FIELD_NUMBER = 20;
     private com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData sparseData_;
     /**
@@ -2215,6 +3110,68 @@ public final class VectorRequest {
       return map.get(key);
     }
 
+    public static final int CONTENTTYPE_FIELD_NUMBER = 101;
+    private volatile java.lang.Object contentType_;
+    /**
+     * <code>optional string contentType = 101 [default = ""];</code>
+     * @return Whether the contentType field is set.
+     */
+    public boolean hasContentType() {
+      return ((bitField0_ & 0x00010000) != 0);
+    }
+    /**
+     * <code>optional string contentType = 101 [default = ""];</code>
+     * @return The contentType.
+     */
+    public java.lang.String getContentType() {
+      java.lang.Object ref = contentType_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          contentType_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string contentType = 101 [default = ""];</code>
+     * @return The bytes for contentType.
+     */
+    public com.google.protobuf.ByteString
+        getContentTypeBytes() {
+      java.lang.Object ref = contentType_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        contentType_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int VIDEOFRAMETOPK_FIELD_NUMBER = 102;
+    private int videoFrameTopK_;
+    /**
+     * <code>optional uint32 videoFrameTopK = 102 [default = 100];</code>
+     * @return Whether the videoFrameTopK field is set.
+     */
+    public boolean hasVideoFrameTopK() {
+      return ((bitField0_ & 0x00020000) != 0);
+    }
+    /**
+     * <code>optional uint32 videoFrameTopK = 102 [default = 100];</code>
+     * @return The videoFrameTopK.
+     */
+    public int getVideoFrameTopK() {
+      return videoFrameTopK_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -2277,6 +3234,9 @@ public final class VectorRequest {
       if (((bitField0_ & 0x00002000) != 0)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 17, sort_);
       }
+      for (int i = 0; i < sorts_.size(); i++) {
+        output.writeMessage(18, sorts_.get(i));
+      }
       if (((bitField0_ & 0x00004000) != 0)) {
         output.writeMessage(20, getSparseData());
       }
@@ -2289,6 +3249,12 @@ public final class VectorRequest {
           internalGetKvpairs(),
           KvpairsDefaultEntryHolder.defaultEntry,
           22);
+      if (((bitField0_ & 0x00010000) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 101, contentType_);
+      }
+      if (((bitField0_ & 0x00020000) != 0)) {
+        output.writeUInt32(102, videoFrameTopK_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -2359,6 +3325,10 @@ public final class VectorRequest {
       if (((bitField0_ & 0x00002000) != 0)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(17, sort_);
       }
+      for (int i = 0; i < sorts_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(18, sorts_.get(i));
+      }
       if (((bitField0_ & 0x00004000) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(20, getSparseData());
@@ -2376,6 +3346,13 @@ public final class VectorRequest {
             .build();
         size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(22, kvpairs__);
+      }
+      if (((bitField0_ & 0x00010000) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(101, contentType_);
+      }
+      if (((bitField0_ & 0x00020000) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(102, videoFrameTopK_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2468,6 +3445,8 @@ public final class VectorRequest {
         if (!getSort()
             .equals(other.getSort())) return false;
       }
+      if (!getSortsList()
+          .equals(other.getSortsList())) return false;
       if (hasSparseData() != other.hasSparseData()) return false;
       if (hasSparseData()) {
         if (!getSparseData()
@@ -2480,6 +3459,16 @@ public final class VectorRequest {
       }
       if (!internalGetKvpairs().equals(
           other.internalGetKvpairs())) return false;
+      if (hasContentType() != other.hasContentType()) return false;
+      if (hasContentType()) {
+        if (!getContentType()
+            .equals(other.getContentType())) return false;
+      }
+      if (hasVideoFrameTopK() != other.hasVideoFrameTopK()) return false;
+      if (hasVideoFrameTopK()) {
+        if (getVideoFrameTopK()
+            != other.getVideoFrameTopK()) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -2558,6 +3547,10 @@ public final class VectorRequest {
         hash = (37 * hash) + SORT_FIELD_NUMBER;
         hash = (53 * hash) + getSort().hashCode();
       }
+      if (getSortsCount() > 0) {
+        hash = (37 * hash) + SORTS_FIELD_NUMBER;
+        hash = (53 * hash) + getSortsList().hashCode();
+      }
       if (hasSparseData()) {
         hash = (37 * hash) + SPARSEDATA_FIELD_NUMBER;
         hash = (53 * hash) + getSparseData().hashCode();
@@ -2570,6 +3563,14 @@ public final class VectorRequest {
       if (!internalGetKvpairs().getMap().isEmpty()) {
         hash = (37 * hash) + KVPAIRS_FIELD_NUMBER;
         hash = (53 * hash) + internalGetKvpairs().hashCode();
+      }
+      if (hasContentType()) {
+        hash = (37 * hash) + CONTENTTYPE_FIELD_NUMBER;
+        hash = (53 * hash) + getContentType().hashCode();
+      }
+      if (hasVideoFrameTopK()) {
+        hash = (37 * hash) + VIDEOFRAMETOPK_FIELD_NUMBER;
+        hash = (53 * hash) + getVideoFrameTopK();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -2721,6 +3722,7 @@ public final class VectorRequest {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getSortsFieldBuilder();
           getSparseDataFieldBuilder();
         }
       }
@@ -2759,15 +3761,25 @@ public final class VectorRequest {
         bitField0_ = (bitField0_ & ~0x00004000);
         sort_ = "";
         bitField0_ = (bitField0_ & ~0x00008000);
+        if (sortsBuilder_ == null) {
+          sorts_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00010000);
+        } else {
+          sortsBuilder_.clear();
+        }
         if (sparseDataBuilder_ == null) {
           sparseData_ = null;
         } else {
           sparseDataBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00010000);
-        timeout_ = -1L;
         bitField0_ = (bitField0_ & ~0x00020000);
+        timeout_ = -1L;
+        bitField0_ = (bitField0_ & ~0x00040000);
         internalGetMutableKvpairs().clear();
+        contentType_ = "";
+        bitField0_ = (bitField0_ & ~0x00100000);
+        videoFrameTopK_ = 100;
+        bitField0_ = (bitField0_ & ~0x00200000);
         return this;
       }
 
@@ -2862,7 +3874,16 @@ public final class VectorRequest {
           to_bitField0_ |= 0x00002000;
         }
         result.sort_ = sort_;
-        if (((from_bitField0_ & 0x00010000) != 0)) {
+        if (sortsBuilder_ == null) {
+          if (((bitField0_ & 0x00010000) != 0)) {
+            sorts_ = java.util.Collections.unmodifiableList(sorts_);
+            bitField0_ = (bitField0_ & ~0x00010000);
+          }
+          result.sorts_ = sorts_;
+        } else {
+          result.sorts_ = sortsBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00020000) != 0)) {
           if (sparseDataBuilder_ == null) {
             result.sparseData_ = sparseData_;
           } else {
@@ -2870,12 +3891,20 @@ public final class VectorRequest {
           }
           to_bitField0_ |= 0x00004000;
         }
-        if (((from_bitField0_ & 0x00020000) != 0)) {
+        if (((from_bitField0_ & 0x00040000) != 0)) {
           to_bitField0_ |= 0x00008000;
         }
         result.timeout_ = timeout_;
         result.kvpairs_ = internalGetKvpairs();
         result.kvpairs_.makeImmutable();
+        if (((from_bitField0_ & 0x00100000) != 0)) {
+          to_bitField0_ |= 0x00010000;
+        }
+        result.contentType_ = contentType_;
+        if (((from_bitField0_ & 0x00200000) != 0)) {
+          to_bitField0_ |= 0x00020000;
+        }
+        result.videoFrameTopK_ = videoFrameTopK_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3005,6 +4034,32 @@ public final class VectorRequest {
           sort_ = other.sort_;
           onChanged();
         }
+        if (sortsBuilder_ == null) {
+          if (!other.sorts_.isEmpty()) {
+            if (sorts_.isEmpty()) {
+              sorts_ = other.sorts_;
+              bitField0_ = (bitField0_ & ~0x00010000);
+            } else {
+              ensureSortsIsMutable();
+              sorts_.addAll(other.sorts_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.sorts_.isEmpty()) {
+            if (sortsBuilder_.isEmpty()) {
+              sortsBuilder_.dispose();
+              sortsBuilder_ = null;
+              sorts_ = other.sorts_;
+              bitField0_ = (bitField0_ & ~0x00010000);
+              sortsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getSortsFieldBuilder() : null;
+            } else {
+              sortsBuilder_.addAllMessages(other.sorts_);
+            }
+          }
+        }
         if (other.hasSparseData()) {
           mergeSparseData(other.getSparseData());
         }
@@ -3013,6 +4068,14 @@ public final class VectorRequest {
         }
         internalGetMutableKvpairs().mergeFrom(
             other.internalGetKvpairs());
+        if (other.hasContentType()) {
+          bitField0_ |= 0x00100000;
+          contentType_ = other.contentType_;
+          onChanged();
+        }
+        if (other.hasVideoFrameTopK()) {
+          setVideoFrameTopK(other.getVideoFrameTopK());
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -4172,6 +5235,246 @@ public final class VectorRequest {
         return this;
       }
 
+      private java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc> sorts_ =
+        java.util.Collections.emptyList();
+      private void ensureSortsIsMutable() {
+        if (!((bitField0_ & 0x00010000) != 0)) {
+          sorts_ = new java.util.ArrayList<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc>(sorts_);
+          bitField0_ |= 0x00010000;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder> sortsBuilder_;
+
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc> getSortsList() {
+        if (sortsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(sorts_);
+        } else {
+          return sortsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public int getSortsCount() {
+        if (sortsBuilder_ == null) {
+          return sorts_.size();
+        } else {
+          return sortsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc getSorts(int index) {
+        if (sortsBuilder_ == null) {
+          return sorts_.get(index);
+        } else {
+          return sortsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public Builder setSorts(
+          int index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc value) {
+        if (sortsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSortsIsMutable();
+          sorts_.set(index, value);
+          onChanged();
+        } else {
+          sortsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public Builder setSorts(
+          int index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder builderForValue) {
+        if (sortsBuilder_ == null) {
+          ensureSortsIsMutable();
+          sorts_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          sortsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public Builder addSorts(com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc value) {
+        if (sortsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSortsIsMutable();
+          sorts_.add(value);
+          onChanged();
+        } else {
+          sortsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public Builder addSorts(
+          int index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc value) {
+        if (sortsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSortsIsMutable();
+          sorts_.add(index, value);
+          onChanged();
+        } else {
+          sortsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public Builder addSorts(
+          com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder builderForValue) {
+        if (sortsBuilder_ == null) {
+          ensureSortsIsMutable();
+          sorts_.add(builderForValue.build());
+          onChanged();
+        } else {
+          sortsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public Builder addSorts(
+          int index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder builderForValue) {
+        if (sortsBuilder_ == null) {
+          ensureSortsIsMutable();
+          sorts_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          sortsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public Builder addAllSorts(
+          java.lang.Iterable<? extends com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc> values) {
+        if (sortsBuilder_ == null) {
+          ensureSortsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, sorts_);
+          onChanged();
+        } else {
+          sortsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public Builder clearSorts() {
+        if (sortsBuilder_ == null) {
+          sorts_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00010000);
+          onChanged();
+        } else {
+          sortsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public Builder removeSorts(int index) {
+        if (sortsBuilder_ == null) {
+          ensureSortsIsMutable();
+          sorts_.remove(index);
+          onChanged();
+        } else {
+          sortsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder getSortsBuilder(
+          int index) {
+        return getSortsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder getSortsOrBuilder(
+          int index) {
+        if (sortsBuilder_ == null) {
+          return sorts_.get(index);  } else {
+          return sortsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public java.util.List<? extends com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder> 
+           getSortsOrBuilderList() {
+        if (sortsBuilder_ != null) {
+          return sortsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(sorts_);
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder addSortsBuilder() {
+        return getSortsFieldBuilder().addBuilder(
+            com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder addSortsBuilder(
+          int index) {
+        return getSortsFieldBuilder().addBuilder(
+            index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 18;</code>
+       */
+      public java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder> 
+           getSortsBuilderList() {
+        return getSortsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder> 
+          getSortsFieldBuilder() {
+        if (sortsBuilder_ == null) {
+          sortsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder>(
+                  sorts_,
+                  ((bitField0_ & 0x00010000) != 0),
+                  getParentForChildren(),
+                  isClean());
+          sorts_ = null;
+        }
+        return sortsBuilder_;
+      }
+
       private com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData sparseData_;
       private com.google.protobuf.SingleFieldBuilderV3<
           com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData.Builder, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseDataOrBuilder> sparseDataBuilder_;
@@ -4180,7 +5483,7 @@ public final class VectorRequest {
        * @return Whether the sparseData field is set.
        */
       public boolean hasSparseData() {
-        return ((bitField0_ & 0x00010000) != 0);
+        return ((bitField0_ & 0x00020000) != 0);
       }
       /**
        * <code>optional .com.aliyun.ha3engine.async.models.protobuf.SparseData sparseData = 20;</code>
@@ -4206,7 +5509,7 @@ public final class VectorRequest {
         } else {
           sparseDataBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00010000;
+        bitField0_ |= 0x00020000;
         return this;
       }
       /**
@@ -4220,7 +5523,7 @@ public final class VectorRequest {
         } else {
           sparseDataBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00010000;
+        bitField0_ |= 0x00020000;
         return this;
       }
       /**
@@ -4228,7 +5531,7 @@ public final class VectorRequest {
        */
       public Builder mergeSparseData(com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData value) {
         if (sparseDataBuilder_ == null) {
-          if (((bitField0_ & 0x00010000) != 0) &&
+          if (((bitField0_ & 0x00020000) != 0) &&
               sparseData_ != null &&
               sparseData_ != com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData.getDefaultInstance()) {
             sparseData_ =
@@ -4240,7 +5543,7 @@ public final class VectorRequest {
         } else {
           sparseDataBuilder_.mergeFrom(value);
         }
-        bitField0_ |= 0x00010000;
+        bitField0_ |= 0x00020000;
         return this;
       }
       /**
@@ -4253,14 +5556,14 @@ public final class VectorRequest {
         } else {
           sparseDataBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00010000);
+        bitField0_ = (bitField0_ & ~0x00020000);
         return this;
       }
       /**
        * <code>optional .com.aliyun.ha3engine.async.models.protobuf.SparseData sparseData = 20;</code>
        */
       public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SparseData.Builder getSparseDataBuilder() {
-        bitField0_ |= 0x00010000;
+        bitField0_ |= 0x00020000;
         onChanged();
         return getSparseDataFieldBuilder().getBuilder();
       }
@@ -4298,7 +5601,7 @@ public final class VectorRequest {
        * @return Whether the timeout field is set.
        */
       public boolean hasTimeout() {
-        return ((bitField0_ & 0x00020000) != 0);
+        return ((bitField0_ & 0x00040000) != 0);
       }
       /**
        * <code>optional int64 timeout = 21 [default = -1];</code>
@@ -4313,7 +5616,7 @@ public final class VectorRequest {
        * @return This builder for chaining.
        */
       public Builder setTimeout(long value) {
-        bitField0_ |= 0x00020000;
+        bitField0_ |= 0x00040000;
         timeout_ = value;
         onChanged();
         return this;
@@ -4323,7 +5626,7 @@ public final class VectorRequest {
        * @return This builder for chaining.
        */
       public Builder clearTimeout() {
-        bitField0_ = (bitField0_ & ~0x00020000);
+        bitField0_ = (bitField0_ & ~0x00040000);
         timeout_ = -1L;
         onChanged();
         return this;
@@ -4449,6 +5752,127 @@ public final class VectorRequest {
           java.util.Map<java.lang.String, java.lang.String> values) {
         internalGetMutableKvpairs().getMutableMap()
             .putAll(values);
+        return this;
+      }
+
+      private java.lang.Object contentType_ = "";
+      /**
+       * <code>optional string contentType = 101 [default = ""];</code>
+       * @return Whether the contentType field is set.
+       */
+      public boolean hasContentType() {
+        return ((bitField0_ & 0x00100000) != 0);
+      }
+      /**
+       * <code>optional string contentType = 101 [default = ""];</code>
+       * @return The contentType.
+       */
+      public java.lang.String getContentType() {
+        java.lang.Object ref = contentType_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            contentType_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string contentType = 101 [default = ""];</code>
+       * @return The bytes for contentType.
+       */
+      public com.google.protobuf.ByteString
+          getContentTypeBytes() {
+        java.lang.Object ref = contentType_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          contentType_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string contentType = 101 [default = ""];</code>
+       * @param value The contentType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setContentType(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00100000;
+        contentType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string contentType = 101 [default = ""];</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearContentType() {
+        bitField0_ = (bitField0_ & ~0x00100000);
+        contentType_ = getDefaultInstance().getContentType();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string contentType = 101 [default = ""];</code>
+       * @param value The bytes for contentType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setContentTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00100000;
+        contentType_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int videoFrameTopK_ = 100;
+      /**
+       * <code>optional uint32 videoFrameTopK = 102 [default = 100];</code>
+       * @return Whether the videoFrameTopK field is set.
+       */
+      public boolean hasVideoFrameTopK() {
+        return ((bitField0_ & 0x00200000) != 0);
+      }
+      /**
+       * <code>optional uint32 videoFrameTopK = 102 [default = 100];</code>
+       * @return The videoFrameTopK.
+       */
+      public int getVideoFrameTopK() {
+        return videoFrameTopK_;
+      }
+      /**
+       * <code>optional uint32 videoFrameTopK = 102 [default = 100];</code>
+       * @param value The videoFrameTopK to set.
+       * @return This builder for chaining.
+       */
+      public Builder setVideoFrameTopK(int value) {
+        bitField0_ |= 0x00200000;
+        videoFrameTopK_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 videoFrameTopK = 102 [default = 100];</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearVideoFrameTopK() {
+        bitField0_ = (bitField0_ & ~0x00200000);
+        videoFrameTopK_ = 100;
+        onChanged();
         return this;
       }
       @java.lang.Override
@@ -4657,6 +6081,47 @@ public final class VectorRequest {
      * @return The timeout.
      */
     long getTimeout();
+
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+     */
+    java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc> 
+        getSortsList();
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+     */
+    com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc getSorts(int index);
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+     */
+    int getSortsCount();
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+     */
+    java.util.List<? extends com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder> 
+        getSortsOrBuilderList();
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+     */
+    com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder getSortsOrBuilder(
+        int index);
+
+    /**
+     * <code>optional string mode = 20 [default = ""];</code>
+     * @return Whether the mode field is set.
+     */
+    boolean hasMode();
+    /**
+     * <code>optional string mode = 20 [default = ""];</code>
+     * @return The mode.
+     */
+    java.lang.String getMode();
+    /**
+     * <code>optional string mode = 20 [default = ""];</code>
+     * @return The bytes for mode.
+     */
+    com.google.protobuf.ByteString
+        getModeBytes();
   }
   /**
    * Protobuf type {@code com.aliyun.ha3engine.async.models.protobuf.VectorSearchQueries}
@@ -4679,6 +6144,8 @@ public final class VectorRequest {
       topK_ = 100;
       sort_ = "";
       timeout_ = -1L;
+      sorts_ = java.util.Collections.emptyList();
+      mode_ = "";
     }
 
     @java.lang.Override
@@ -4769,6 +6236,21 @@ public final class VectorRequest {
               timeout_ = input.readInt64();
               break;
             }
+            case 154: {
+              if (!((mutable_bitField0_ & 0x00000200) != 0)) {
+                sorts_ = new java.util.ArrayList<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc>();
+                mutable_bitField0_ |= 0x00000200;
+              }
+              sorts_.add(
+                  input.readMessage(com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.PARSER, extensionRegistry));
+              break;
+            }
+            case 162: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000080;
+              mode_ = bs;
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -4789,6 +6271,9 @@ public final class VectorRequest {
         }
         if (((mutable_bitField0_ & 0x00000010) != 0)) {
           outputFields_ = outputFields_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00000200) != 0)) {
+          sorts_ = java.util.Collections.unmodifiableList(sorts_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -5109,6 +6594,86 @@ public final class VectorRequest {
       return timeout_;
     }
 
+    public static final int SORTS_FIELD_NUMBER = 19;
+    private java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc> sorts_;
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+     */
+    public java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc> getSortsList() {
+      return sorts_;
+    }
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+     */
+    public java.util.List<? extends com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder> 
+        getSortsOrBuilderList() {
+      return sorts_;
+    }
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+     */
+    public int getSortsCount() {
+      return sorts_.size();
+    }
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+     */
+    public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc getSorts(int index) {
+      return sorts_.get(index);
+    }
+    /**
+     * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+     */
+    public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder getSortsOrBuilder(
+        int index) {
+      return sorts_.get(index);
+    }
+
+    public static final int MODE_FIELD_NUMBER = 20;
+    private volatile java.lang.Object mode_;
+    /**
+     * <code>optional string mode = 20 [default = ""];</code>
+     * @return Whether the mode field is set.
+     */
+    public boolean hasMode() {
+      return ((bitField0_ & 0x00000080) != 0);
+    }
+    /**
+     * <code>optional string mode = 20 [default = ""];</code>
+     * @return The mode.
+     */
+    public java.lang.String getMode() {
+      java.lang.Object ref = mode_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          mode_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string mode = 20 [default = ""];</code>
+     * @return The bytes for mode.
+     */
+    public com.google.protobuf.ByteString
+        getModeBytes() {
+      java.lang.Object ref = mode_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        mode_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -5149,6 +6714,12 @@ public final class VectorRequest {
       }
       if (((bitField0_ & 0x00000040) != 0)) {
         output.writeInt64(18, timeout_);
+      }
+      for (int i = 0; i < sorts_.size(); i++) {
+        output.writeMessage(19, sorts_.get(i));
+      }
+      if (((bitField0_ & 0x00000080) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 20, mode_);
       }
       unknownFields.writeTo(output);
     }
@@ -5194,6 +6765,13 @@ public final class VectorRequest {
       if (((bitField0_ & 0x00000040) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(18, timeout_);
+      }
+      for (int i = 0; i < sorts_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(19, sorts_.get(i));
+      }
+      if (((bitField0_ & 0x00000080) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(20, mode_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -5249,6 +6827,13 @@ public final class VectorRequest {
         if (getTimeout()
             != other.getTimeout()) return false;
       }
+      if (!getSortsList()
+          .equals(other.getSortsList())) return false;
+      if (hasMode() != other.hasMode()) return false;
+      if (hasMode()) {
+        if (!getMode()
+            .equals(other.getMode())) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -5297,6 +6882,14 @@ public final class VectorRequest {
         hash = (37 * hash) + TIMEOUT_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
             getTimeout());
+      }
+      if (getSortsCount() > 0) {
+        hash = (37 * hash) + SORTS_FIELD_NUMBER;
+        hash = (53 * hash) + getSortsList().hashCode();
+      }
+      if (hasMode()) {
+        hash = (37 * hash) + MODE_FIELD_NUMBER;
+        hash = (53 * hash) + getMode().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -5427,6 +7020,7 @@ public final class VectorRequest {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getQueriesFieldBuilder();
+          getSortsFieldBuilder();
         }
       }
       @java.lang.Override
@@ -5454,6 +7048,14 @@ public final class VectorRequest {
         bitField0_ = (bitField0_ & ~0x00000080);
         timeout_ = -1L;
         bitField0_ = (bitField0_ & ~0x00000100);
+        if (sortsBuilder_ == null) {
+          sorts_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000200);
+        } else {
+          sortsBuilder_.clear();
+        }
+        mode_ = "";
+        bitField0_ = (bitField0_ & ~0x00000400);
         return this;
       }
 
@@ -5524,6 +7126,19 @@ public final class VectorRequest {
           to_bitField0_ |= 0x00000040;
         }
         result.timeout_ = timeout_;
+        if (sortsBuilder_ == null) {
+          if (((bitField0_ & 0x00000200) != 0)) {
+            sorts_ = java.util.Collections.unmodifiableList(sorts_);
+            bitField0_ = (bitField0_ & ~0x00000200);
+          }
+          result.sorts_ = sorts_;
+        } else {
+          result.sorts_ = sortsBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000400) != 0)) {
+          to_bitField0_ |= 0x00000080;
+        }
+        result.mode_ = mode_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -5637,6 +7252,37 @@ public final class VectorRequest {
         }
         if (other.hasTimeout()) {
           setTimeout(other.getTimeout());
+        }
+        if (sortsBuilder_ == null) {
+          if (!other.sorts_.isEmpty()) {
+            if (sorts_.isEmpty()) {
+              sorts_ = other.sorts_;
+              bitField0_ = (bitField0_ & ~0x00000200);
+            } else {
+              ensureSortsIsMutable();
+              sorts_.addAll(other.sorts_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.sorts_.isEmpty()) {
+            if (sortsBuilder_.isEmpty()) {
+              sortsBuilder_.dispose();
+              sortsBuilder_ = null;
+              sorts_ = other.sorts_;
+              bitField0_ = (bitField0_ & ~0x00000200);
+              sortsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getSortsFieldBuilder() : null;
+            } else {
+              sortsBuilder_.addAllMessages(other.sorts_);
+            }
+          }
+        }
+        if (other.hasMode()) {
+          bitField0_ |= 0x00000400;
+          mode_ = other.mode_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -6460,6 +8106,330 @@ public final class VectorRequest {
       public Builder clearTimeout() {
         bitField0_ = (bitField0_ & ~0x00000100);
         timeout_ = -1L;
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc> sorts_ =
+        java.util.Collections.emptyList();
+      private void ensureSortsIsMutable() {
+        if (!((bitField0_ & 0x00000200) != 0)) {
+          sorts_ = new java.util.ArrayList<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc>(sorts_);
+          bitField0_ |= 0x00000200;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder> sortsBuilder_;
+
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc> getSortsList() {
+        if (sortsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(sorts_);
+        } else {
+          return sortsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public int getSortsCount() {
+        if (sortsBuilder_ == null) {
+          return sorts_.size();
+        } else {
+          return sortsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc getSorts(int index) {
+        if (sortsBuilder_ == null) {
+          return sorts_.get(index);
+        } else {
+          return sortsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public Builder setSorts(
+          int index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc value) {
+        if (sortsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSortsIsMutable();
+          sorts_.set(index, value);
+          onChanged();
+        } else {
+          sortsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public Builder setSorts(
+          int index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder builderForValue) {
+        if (sortsBuilder_ == null) {
+          ensureSortsIsMutable();
+          sorts_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          sortsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public Builder addSorts(com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc value) {
+        if (sortsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSortsIsMutable();
+          sorts_.add(value);
+          onChanged();
+        } else {
+          sortsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public Builder addSorts(
+          int index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc value) {
+        if (sortsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSortsIsMutable();
+          sorts_.add(index, value);
+          onChanged();
+        } else {
+          sortsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public Builder addSorts(
+          com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder builderForValue) {
+        if (sortsBuilder_ == null) {
+          ensureSortsIsMutable();
+          sorts_.add(builderForValue.build());
+          onChanged();
+        } else {
+          sortsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public Builder addSorts(
+          int index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder builderForValue) {
+        if (sortsBuilder_ == null) {
+          ensureSortsIsMutable();
+          sorts_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          sortsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public Builder addAllSorts(
+          java.lang.Iterable<? extends com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc> values) {
+        if (sortsBuilder_ == null) {
+          ensureSortsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, sorts_);
+          onChanged();
+        } else {
+          sortsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public Builder clearSorts() {
+        if (sortsBuilder_ == null) {
+          sorts_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000200);
+          onChanged();
+        } else {
+          sortsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public Builder removeSorts(int index) {
+        if (sortsBuilder_ == null) {
+          ensureSortsIsMutable();
+          sorts_.remove(index);
+          onChanged();
+        } else {
+          sortsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder getSortsBuilder(
+          int index) {
+        return getSortsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder getSortsOrBuilder(
+          int index) {
+        if (sortsBuilder_ == null) {
+          return sorts_.get(index);  } else {
+          return sortsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public java.util.List<? extends com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder> 
+           getSortsOrBuilderList() {
+        if (sortsBuilder_ != null) {
+          return sortsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(sorts_);
+        }
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder addSortsBuilder() {
+        return getSortsFieldBuilder().addBuilder(
+            com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder addSortsBuilder(
+          int index) {
+        return getSortsFieldBuilder().addBuilder(
+            index, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.aliyun.ha3engine.async.models.protobuf.SortDesc sorts = 19;</code>
+       */
+      public java.util.List<com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder> 
+           getSortsBuilderList() {
+        return getSortsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder> 
+          getSortsFieldBuilder() {
+        if (sortsBuilder_ == null) {
+          sortsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDesc.Builder, com.aliyun.ha3engine.async.models.protobuf.VectorRequest.SortDescOrBuilder>(
+                  sorts_,
+                  ((bitField0_ & 0x00000200) != 0),
+                  getParentForChildren(),
+                  isClean());
+          sorts_ = null;
+        }
+        return sortsBuilder_;
+      }
+
+      private java.lang.Object mode_ = "";
+      /**
+       * <code>optional string mode = 20 [default = ""];</code>
+       * @return Whether the mode field is set.
+       */
+      public boolean hasMode() {
+        return ((bitField0_ & 0x00000400) != 0);
+      }
+      /**
+       * <code>optional string mode = 20 [default = ""];</code>
+       * @return The mode.
+       */
+      public java.lang.String getMode() {
+        java.lang.Object ref = mode_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            mode_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string mode = 20 [default = ""];</code>
+       * @return The bytes for mode.
+       */
+      public com.google.protobuf.ByteString
+          getModeBytes() {
+        java.lang.Object ref = mode_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          mode_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string mode = 20 [default = ""];</code>
+       * @param value The mode to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMode(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000400;
+        mode_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string mode = 20 [default = ""];</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMode() {
+        bitField0_ = (bitField0_ & ~0x00000400);
+        mode_ = getDefaultInstance().getMode();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string mode = 20 [default = ""];</code>
+       * @param value The bytes for mode to set.
+       * @return This builder for chaining.
+       */
+      public Builder setModeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000400;
+        mode_ = value;
         onChanged();
         return this;
       }
@@ -19507,6 +21477,11 @@ public final class VectorRequest {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_aliyun_ha3engine_async_models_protobuf_SparseData_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_aliyun_ha3engine_async_models_protobuf_SortDesc_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_aliyun_ha3engine_async_models_protobuf_SortDesc_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorSearchQuery_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -19598,71 +21573,77 @@ public final class VectorRequest {
       "\n\023VectorRequest.proto\022*com.aliyun.ha3eng" +
       "ine.async.models.protobuf\"<\n\nSparseData\022" +
       "\r\n\005count\030\001 \003(\r\022\017\n\007indices\030\002 \003(\r\022\016\n\006value" +
-      "s\030\003 \003(\002\"\312\004\n\021VectorSearchQuery\022\016\n\006vector\030" +
-      "\001 \003(\002\022\026\n\013vectorCount\030\002 \001(\r:\0011\022\021\n\004topK\030\003 " +
-      "\001(\r:\003100\022\023\n\tnamespace\030\004 \001(\t:\000\022\026\n\014searchP" +
-      "arams\030\005 \001(\t:\000\022\026\n\016scoreThreshold\030\006 \001(\002\022\021\n" +
-      "\007content\030\007 \001(\t:\000\022\017\n\005modal\030\010 \001(\t:\000\022\023\n\tind" +
-      "exName\030\t \001(\t:\000\022\021\n\ttableName\030\n \001(\t\022\020\n\006fil" +
-      "ter\030\013 \001(\t:\000\022\034\n\rincludeVector\030\014 \001(\010:\005fals" +
-      "e\022\024\n\014outputFields\030\r \003(\t\022\022\n\005order\030\016 \001(\t:\003" +
-      "ASC\022\021\n\006weight\030\020 \001(\002:\0011\022\016\n\004sort\030\021 \001(\t:\000\022J" +
-      "\n\nsparseData\030\024 \001(\01326.com.aliyun.ha3engin" +
-      "e.async.models.protobuf.SparseData\022\023\n\007ti" +
-      "meout\030\025 \001(\003:\002-1\022[\n\007kvpairs\030\026 \003(\0132J.com.a" +
+      "s\030\003 \003(\002\"5\n\010SortDesc\022\024\n\nexpression\030\001 \001(\t:" +
+      "\000\022\023\n\005order\030\002 \001(\t:\004DESC\"\303\005\n\021VectorSearchQ" +
+      "uery\022\016\n\006vector\030\001 \003(\002\022\026\n\013vectorCount\030\002 \001(" +
+      "\r:\0011\022\021\n\004topK\030\003 \001(\r:\003100\022\023\n\tnamespace\030\004 \001" +
+      "(\t:\000\022\026\n\014searchParams\030\005 \001(\t:\000\022\026\n\016scoreThr" +
+      "eshold\030\006 \001(\002\022\021\n\007content\030\007 \001(\t:\000\022\017\n\005modal" +
+      "\030\010 \001(\t:\000\022\023\n\tindexName\030\t \001(\t:\000\022\021\n\ttableNa" +
+      "me\030\n \001(\t\022\020\n\006filter\030\013 \001(\t:\000\022\034\n\rincludeVec" +
+      "tor\030\014 \001(\010:\005false\022\024\n\014outputFields\030\r \003(\t\022\022" +
+      "\n\005order\030\016 \001(\t:\003ASC\022\021\n\006weight\030\020 \001(\002:\0011\022\016\n" +
+      "\004sort\030\021 \001(\t:\000\022C\n\005sorts\030\022 \003(\01324.com.aliyu" +
+      "n.ha3engine.async.models.protobuf.SortDe" +
+      "sc\022J\n\nsparseData\030\024 \001(\01326.com.aliyun.ha3e" +
+      "ngine.async.models.protobuf.SparseData\022\023" +
+      "\n\007timeout\030\025 \001(\003:\002-1\022[\n\007kvpairs\030\026 \003(\0132J.c" +
+      "om.aliyun.ha3engine.async.models.protobu" +
+      "f.VectorSearchQuery.KvpairsEntry\022\025\n\013cont" +
+      "entType\030e \001(\t:\000\022\033\n\016videoFrameTopK\030f \001(\r:" +
+      "\003100\032.\n\014KvpairsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005val" +
+      "ue\030\002 \001(\t:\0028\001\"\337\002\n\023VectorSearchQueries\022\021\n\t" +
+      "tableName\030\001 \001(\t\022N\n\007queries\030\n \003(\0132=.com.a" +
       "liyun.ha3engine.async.models.protobuf.Ve" +
-      "ctorSearchQuery.KvpairsEntry\032.\n\014KvpairsE" +
-      "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\212\002\n" +
-      "\023VectorSearchQueries\022\021\n\ttableName\030\001 \001(\t\022" +
-      "N\n\007queries\030\n \003(\0132=.com.aliyun.ha3engine." +
-      "async.models.protobuf.VectorSearchQuery\022" +
-      "\020\n\006filter\030\013 \001(\t:\000\022\034\n\rincludeVector\030\014 \001(\010" +
-      ":\005false\022\024\n\014outputFields\030\r \003(\t\022\022\n\005order\030\016" +
-      " \001(\t:\003ASC\022\021\n\004topK\030\017 \001(\r:\003100\022\016\n\004sort\030\020 \001" +
-      "(\t:\000\022\023\n\007timeout\030\022 \001(\003:\002-1\"\377\001\n\017TextSearch" +
-      "Query\022\025\n\013queryString\030\001 \001(\t:\000\022a\n\013queryPar" +
-      "ams\030\002 \003(\0132L.com.aliyun.ha3engine.async.m" +
-      "odels.protobuf.TextSearchQuery.QueryPara" +
-      "msEntry\022\020\n\006filter\030\003 \001(\t:\000\022\021\n\006weight\030\004 \001(" +
-      "\002:\0011\022\031\n\016terminateAfter\030\005 \001(\r:\0010\0322\n\020Query" +
-      "ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:" +
-      "\0028\001\"#\n\007RRFRank\022\030\n\014rankConstant\030\001 \001(\r:\00260" +
-      "\"N\n\nHybridRank\022@\n\003rrf\030\001 \001(\01323.com.aliyun" +
-      ".ha3engine.async.models.protobuf.RRFRank" +
-      "\"\352\002\n\021HybridSearchQuery\022\021\n\ttableName\030\001 \001(" +
-      "\t\022J\n\003knn\030\002 \001(\0132=.com.aliyun.ha3engine.as" +
-      "ync.models.protobuf.VectorSearchQuery\022I\n" +
-      "\004text\030\003 \001(\0132;.com.aliyun.ha3engine.async" +
-      ".models.protobuf.TextSearchQuery\022\021\n\004size" +
-      "\030\004 \001(\r:\003100\022\017\n\004from\030\005 \001(\r:\0010\022\024\n\014outputFi" +
-      "elds\030\006 \003(\t\022\023\n\005order\030\007 \001(\t:\004DESC\022D\n\004rank\030" +
-      "\010 \001(\01326.com.aliyun.ha3engine.async.model" +
-      "s.protobuf.HybridRank\022\026\n\007timeout\030\t \001(\003:\005" +
-      "10000\"`\n\022PartitionStatsInfo\022\030\n\rtotalDocC" +
-      "ount\030\001 \001(\004:\0010\022\034\n\021totalSegmentCount\030\002 \001(\004" +
-      ":\0010\022\022\n\006partId\030\003 \001(\005:\002-1\"`\n\017VectorStatsIn" +
-      "fo\022M\n\005stats\030\001 \003(\0132>.com.aliyun.ha3engine" +
-      ".async.models.protobuf.PartitionStatsInf" +
-      "o\"\037\n\nStatsQuery\022\021\n\ttableName\030\001 \001(\t\"\321\001\n\nF" +
-      "etchQuery\022\021\n\ttableName\030\001 \001(\t\022\013\n\003ids\030\002 \003(" +
-      "\t\022\020\n\006filter\030\004 \001(\t:\000\022\016\n\004sort\030\005 \001(\t:\000\022\022\n\005o" +
-      "rder\030\006 \001(\t:\003ASC\022\021\n\006offset\030\007 \001(\r:\0010\022\022\n\005li" +
-      "mit\030\010 \001(\r:\003100\022\024\n\014outputFields\030\n \003(\t\022\033\n\r" +
-      "includeVector\030\013 \001(\010:\004true\022\023\n\007timeout\030\014 \001" +
-      "(\003:\002-1\"9\n\013AggFuncDesc\022\016\n\004name\030\001 \001(\t:\000\022\014\n" +
-      "\004func\030\002 \001(\t\022\014\n\004args\030\003 \003(\t\"4\n\014AggOrderDes" +
-      "c\022\017\n\005field\030\001 \001(\t:\000\022\023\n\tdirection\030\002 \001(\t:\000\"" +
-      "\221\002\n\016AggregateQuery\022\021\n\ttableName\030\001 \001(\t\022\020\n" +
-      "\006filter\030\002 \001(\t:\000\022\031\n\005limit\030\003 \001(\r:\n42949672" +
-      "95\022\021\n\tgroupKeys\030\004 \003(\t\022I\n\010aggFuncs\030\005 \003(\0132" +
-      "7.com.aliyun.ha3engine.async.models.prot" +
-      "obuf.AggFuncDesc\022I\n\007orderBy\030\006 \003(\01328.com." +
-      "aliyun.ha3engine.async.models.protobuf.A" +
-      "ggOrderDesc\022\026\n\007timeout\030\007 \001(\003:\00510000\"w\n\020V" +
-      "ectorBatchQuery\022N\n\007queries\030\001 \003(\0132=.com.a" +
-      "liyun.ha3engine.async.models.protobuf.Ve" +
-      "ctorSearchQuery\022\023\n\007timeout\030\002 \001(\003:\002-1B\t\200\001" +
-      "\001\220\001\001\370\001\001"
+      "ctorSearchQuery\022\020\n\006filter\030\013 \001(\t:\000\022\034\n\rinc" +
+      "ludeVector\030\014 \001(\010:\005false\022\024\n\014outputFields\030" +
+      "\r \003(\t\022\022\n\005order\030\016 \001(\t:\003ASC\022\021\n\004topK\030\017 \001(\r:" +
+      "\003100\022\016\n\004sort\030\020 \001(\t:\000\022\023\n\007timeout\030\022 \001(\003:\002-" +
+      "1\022C\n\005sorts\030\023 \003(\01324.com.aliyun.ha3engine." +
+      "async.models.protobuf.SortDesc\022\016\n\004mode\030\024" +
+      " \001(\t:\000\"\377\001\n\017TextSearchQuery\022\025\n\013queryStrin" +
+      "g\030\001 \001(\t:\000\022a\n\013queryParams\030\002 \003(\0132L.com.ali" +
+      "yun.ha3engine.async.models.protobuf.Text" +
+      "SearchQuery.QueryParamsEntry\022\020\n\006filter\030\003" +
+      " \001(\t:\000\022\021\n\006weight\030\004 \001(\002:\0011\022\031\n\016terminateAf" +
+      "ter\030\005 \001(\r:\0010\0322\n\020QueryParamsEntry\022\013\n\003key\030" +
+      "\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"#\n\007RRFRank\022\030\n\014r" +
+      "ankConstant\030\001 \001(\r:\00260\"N\n\nHybridRank\022@\n\003r" +
+      "rf\030\001 \001(\01323.com.aliyun.ha3engine.async.mo" +
+      "dels.protobuf.RRFRank\"\352\002\n\021HybridSearchQu" +
+      "ery\022\021\n\ttableName\030\001 \001(\t\022J\n\003knn\030\002 \001(\0132=.co" +
+      "m.aliyun.ha3engine.async.models.protobuf" +
+      ".VectorSearchQuery\022I\n\004text\030\003 \001(\0132;.com.a" +
+      "liyun.ha3engine.async.models.protobuf.Te" +
+      "xtSearchQuery\022\021\n\004size\030\004 \001(\r:\003100\022\017\n\004from" +
+      "\030\005 \001(\r:\0010\022\024\n\014outputFields\030\006 \003(\t\022\023\n\005order" +
+      "\030\007 \001(\t:\004DESC\022D\n\004rank\030\010 \001(\01326.com.aliyun." +
+      "ha3engine.async.models.protobuf.HybridRa" +
+      "nk\022\026\n\007timeout\030\t \001(\003:\00510000\"`\n\022PartitionS" +
+      "tatsInfo\022\030\n\rtotalDocCount\030\001 \001(\004:\0010\022\034\n\021to" +
+      "talSegmentCount\030\002 \001(\004:\0010\022\022\n\006partId\030\003 \001(\005" +
+      ":\002-1\"`\n\017VectorStatsInfo\022M\n\005stats\030\001 \003(\0132>" +
+      ".com.aliyun.ha3engine.async.models.proto" +
+      "buf.PartitionStatsInfo\"\037\n\nStatsQuery\022\021\n\t" +
+      "tableName\030\001 \001(\t\"\321\001\n\nFetchQuery\022\021\n\ttableN" +
+      "ame\030\001 \001(\t\022\013\n\003ids\030\002 \003(\t\022\020\n\006filter\030\004 \001(\t:\000" +
+      "\022\016\n\004sort\030\005 \001(\t:\000\022\022\n\005order\030\006 \001(\t:\003ASC\022\021\n\006" +
+      "offset\030\007 \001(\r:\0010\022\022\n\005limit\030\010 \001(\r:\003100\022\024\n\014o" +
+      "utputFields\030\n \003(\t\022\033\n\rincludeVector\030\013 \001(\010" +
+      ":\004true\022\023\n\007timeout\030\014 \001(\003:\002-1\"9\n\013AggFuncDe" +
+      "sc\022\016\n\004name\030\001 \001(\t:\000\022\014\n\004func\030\002 \001(\t\022\014\n\004args" +
+      "\030\003 \003(\t\"4\n\014AggOrderDesc\022\017\n\005field\030\001 \001(\t:\000\022" +
+      "\023\n\tdirection\030\002 \001(\t:\000\"\221\002\n\016AggregateQuery\022" +
+      "\021\n\ttableName\030\001 \001(\t\022\020\n\006filter\030\002 \001(\t:\000\022\031\n\005" +
+      "limit\030\003 \001(\r:\n4294967295\022\021\n\tgroupKeys\030\004 \003" +
+      "(\t\022I\n\010aggFuncs\030\005 \003(\01327.com.aliyun.ha3eng" +
+      "ine.async.models.protobuf.AggFuncDesc\022I\n" +
+      "\007orderBy\030\006 \003(\01328.com.aliyun.ha3engine.as" +
+      "ync.models.protobuf.AggOrderDesc\022\026\n\007time" +
+      "out\030\007 \001(\003:\00510000\"w\n\020VectorBatchQuery\022N\n\007" +
+      "queries\030\001 \003(\0132=.com.aliyun.ha3engine.asy" +
+      "nc.models.protobuf.VectorSearchQuery\022\023\n\007" +
+      "timeout\030\002 \001(\003:\002-1B\t\200\001\001\220\001\001\370\001\001"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -19674,12 +21655,18 @@ public final class VectorRequest {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_SparseData_descriptor,
         new java.lang.String[] { "Count", "Indices", "Values", });
-    internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorSearchQuery_descriptor =
+    internal_static_com_aliyun_ha3engine_async_models_protobuf_SortDesc_descriptor =
       getDescriptor().getMessageTypes().get(1);
+    internal_static_com_aliyun_ha3engine_async_models_protobuf_SortDesc_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_aliyun_ha3engine_async_models_protobuf_SortDesc_descriptor,
+        new java.lang.String[] { "Expression", "Order", });
+    internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorSearchQuery_descriptor =
+      getDescriptor().getMessageTypes().get(2);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorSearchQuery_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorSearchQuery_descriptor,
-        new java.lang.String[] { "Vector1", "VectorCount2", "TopK", "Namespace", "SearchParams", "ScoreThreshold", "Content", "Modal", "IndexName", "TableName", "Filter", "IncludeVector", "OutputFields", "Order", "Weight", "Sort", "SparseData", "Timeout", "Kvpairs", });
+        new java.lang.String[] { "Vector1", "VectorCount2", "TopK", "Namespace", "SearchParams", "ScoreThreshold", "Content", "Modal", "IndexName", "TableName", "Filter", "IncludeVector", "OutputFields", "Order", "Weight", "Sort", "Sorts", "SparseData", "Timeout", "Kvpairs", "ContentType", "VideoFrameTopK", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorSearchQuery_KvpairsEntry_descriptor =
       internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorSearchQuery_descriptor.getNestedTypes().get(0);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorSearchQuery_KvpairsEntry_fieldAccessorTable = new
@@ -19687,13 +21674,13 @@ public final class VectorRequest {
         internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorSearchQuery_KvpairsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorSearchQueries_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorSearchQueries_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorSearchQueries_descriptor,
-        new java.lang.String[] { "TableName", "Queries", "Filter", "IncludeVector", "OutputFields", "Order", "TopK", "Sort", "Timeout", });
+        new java.lang.String[] { "TableName", "Queries", "Filter", "IncludeVector", "OutputFields", "Order", "TopK", "Sort", "Timeout", "Sorts", "Mode", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_TextSearchQuery_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_TextSearchQuery_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_TextSearchQuery_descriptor,
@@ -19705,67 +21692,67 @@ public final class VectorRequest {
         internal_static_com_aliyun_ha3engine_async_models_protobuf_TextSearchQuery_QueryParamsEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_RRFRank_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_RRFRank_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_RRFRank_descriptor,
         new java.lang.String[] { "RankConstant", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_HybridRank_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_HybridRank_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_HybridRank_descriptor,
         new java.lang.String[] { "Rrf", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_HybridSearchQuery_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_HybridSearchQuery_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_HybridSearchQuery_descriptor,
         new java.lang.String[] { "TableName", "Knn", "Text", "Size", "From", "OutputFields", "Order", "Rank", "Timeout", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_PartitionStatsInfo_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_PartitionStatsInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_PartitionStatsInfo_descriptor,
         new java.lang.String[] { "TotalDocCount", "TotalSegmentCount", "PartId", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorStatsInfo_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorStatsInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorStatsInfo_descriptor,
         new java.lang.String[] { "Stats", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_StatsQuery_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_StatsQuery_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_StatsQuery_descriptor,
         new java.lang.String[] { "TableName", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_FetchQuery_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_FetchQuery_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_FetchQuery_descriptor,
         new java.lang.String[] { "TableName", "Ids", "Filter", "Sort", "Order", "Offset", "Limit", "OutputFields", "IncludeVector", "Timeout", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_AggFuncDesc_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_AggFuncDesc_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_AggFuncDesc_descriptor,
         new java.lang.String[] { "Name", "Func", "Args", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_AggOrderDesc_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_AggOrderDesc_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_AggOrderDesc_descriptor,
         new java.lang.String[] { "Field", "Direction", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_AggregateQuery_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_AggregateQuery_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_AggregateQuery_descriptor,
         new java.lang.String[] { "TableName", "Filter", "Limit", "GroupKeys", "AggFuncs", "OrderBy", "Timeout", });
     internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_aliyun_ha3engine_async_models_protobuf_VectorBatchQuery_descriptor,
