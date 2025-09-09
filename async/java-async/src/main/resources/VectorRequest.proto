@@ -12,6 +12,11 @@ message SparseData {
     repeated float values = 3;
 }
 
+message SortDesc {
+    optional string expression = 1 [ default = "" ];
+    optional string order = 2 [ default = "DESC" ];
+}
+
 message VectorSearchQuery {
     repeated float vector = 1;
     optional uint32 vectorCount  = 2 [ default = 1 ];
@@ -31,10 +36,14 @@ message VectorSearchQuery {
     optional string order = 14 [ default = "ASC" ];
     optional float weight = 16 [ default = 1.0 ];
     optional string sort = 17 [ default = "" ];
+    repeated SortDesc sorts = 18;
 
     optional SparseData sparseData = 20;
     optional int64 timeout = 21 [ default = -1 ];
     map<string, string> kvpairs = 22;
+
+    optional string contentType = 101 [ default = "" ];
+    optional uint32 videoFrameTopK = 102 [ default = 100 ];
 }
 
 message VectorSearchQueries {
@@ -48,6 +57,8 @@ message VectorSearchQueries {
     optional uint32 topK = 15 [ default = 100 ];
     optional string sort = 16 [ default = "" ];
     optional int64 timeout = 18 [ default = -1 ];
+    repeated SortDesc sorts = 19;
+    optional string mode = 20 [ default = "" ];
 }
 
 message TextSearchQuery {
