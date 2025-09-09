@@ -1,11 +1,15 @@
 // This file is auto-generated, don't edit it. Thanks.
 package com.aliyun.ha3engine.async.models;
 
+import java.util.List;
 import java.util.Map;
 
-import com.aliyun.core.annotation.*;
-import darabonba.core.RequestModel;
+import com.aliyun.core.annotation.Body;
+import com.aliyun.core.annotation.NameInMap;
+import com.aliyun.core.annotation.Validation;
 import com.aliyun.sdk.ha3engine.async.core.models.Request;
+
+import darabonba.core.RequestModel;
 
 /**
  * {@link QueryRequest} extends {@link RequestModel}
@@ -22,7 +26,7 @@ public class QueryRequest extends Request {
     @Body
     @NameInMap("vector")
     @Validation(required = true)
-    private java.util.List < Float > vector;
+    private List < Float > vector;
 
     @Body
     @NameInMap("namespace")
@@ -58,7 +62,7 @@ public class QueryRequest extends Request {
 
     @Body
     @NameInMap("outputFields")
-    private java.util.List < String > outputFields;
+    private List < String > outputFields;
 
     @Body
     @NameInMap("order")
@@ -86,7 +90,28 @@ public class QueryRequest extends Request {
 
     @Body
     @NameInMap("kvpairs")
-    public java.util.Map<String, String> kvpairs;
+    private Map<String, String> kvpairs;
+
+    /**
+     * <p>视频预测数据类型：text、image、video_uri、video_base64</p>
+     */
+    @Body
+    @NameInMap("contentType")
+    private String contentType;
+
+    /**
+     * <p>召回帧的数量，默认值为100</p>
+     */
+    @Body
+    @NameInMap("videoFrameTopK")
+    private Integer videoFrameTopK;
+
+    /**
+     * <p>多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数</p>
+     */
+    @Body
+    @NameInMap("sorts")
+    private List<Sort> sorts;
 
     private QueryRequest(Builder builder) {
         super(builder);
@@ -108,6 +133,9 @@ public class QueryRequest extends Request {
         this.vectorCount = builder.vectorCount;
         this.sort = builder.sort;
         this.kvpairs = builder.kvpairs;
+        this.contentType = builder.contentType;
+        this.videoFrameTopK = builder.videoFrameTopK;
+        this.sorts = builder.sorts;
     }
 
     public static Builder builder() {
@@ -133,7 +161,7 @@ public class QueryRequest extends Request {
     /**
      * @return vector
      */
-    public java.util.List < Float > getVector() {
+    public List < Float > getVector() {
         return this.vector;
     }
 
@@ -196,7 +224,7 @@ public class QueryRequest extends Request {
     /**
      * @return outputFields
      */
-    public java.util.List < String > getOutputFields() {
+    public List < String > getOutputFields() {
         return this.outputFields;
     }
 
@@ -246,12 +274,33 @@ public class QueryRequest extends Request {
      * @return kvpairs
      */
     public Map<String, String> getKvpairs() {
-        return kvpairs;
+        return this.kvpairs;
+    }
+
+    /**
+     * @return contentType
+     */
+    public String getContentType() {
+        return this.contentType;
+    }
+
+    /**
+     * @return videoFrameTopK
+     */
+    public Integer getVideoFrameTopK() {
+        return this.videoFrameTopK;
+    }
+
+    /**
+     * @return sorts
+     */
+    public List<Sort> getSorts() {
+        return this.sorts;
     }
 
     public static final class Builder extends Request.Builder<QueryRequest, Builder> {
         private String tableName; 
-        private java.util.List < Float > vector; 
+        private List < Float > vector;
         private String namespace; 
         private Integer topK; 
         private String indexName; 
@@ -260,7 +309,7 @@ public class QueryRequest extends Request {
         private String content; 
         private String modal; 
         private Boolean includeVector; 
-        private java.util.List < String > outputFields; 
+        private List < String > outputFields;
         private String order; 
         private String searchParams; 
         private String filter; 
@@ -268,6 +317,9 @@ public class QueryRequest extends Request {
         private Integer vectorCount; 
         private String sort;
         private Map<String, String> kvpairs;
+        private String contentType;
+        private Integer videoFrameTopK;
+        private List<Sort> sorts;
 
         private Builder() {
             super();
@@ -293,6 +345,9 @@ public class QueryRequest extends Request {
             this.vectorCount = request.vectorCount;
             this.sort = request.sort;
             this.kvpairs = request.kvpairs;
+            this.contentType = request.contentType;
+            this.videoFrameTopK = request.videoFrameTopK;
+            this.sorts = request.sorts;
         } 
 
         /**
@@ -307,7 +362,7 @@ public class QueryRequest extends Request {
         /**
          * 向量数据
          */
-        public Builder vector(java.util.List < Float > vector) {
+        public Builder vector(List < Float > vector) {
             this.putBodyParameter("vector", vector);
             this.vector = vector;
             return this;
@@ -388,7 +443,7 @@ public class QueryRequest extends Request {
         /**
          * 需要返回值的字段列表
          */
-        public Builder outputFields(java.util.List < String > outputFields) {
+        public Builder outputFields(List < String > outputFields) {
             this.putBodyParameter("outputFields", outputFields);
             this.outputFields = outputFields;
             return this;
@@ -451,9 +506,36 @@ public class QueryRequest extends Request {
         /**
          * kvpairs
          */
-        public Builder kvpairs(java.util.Map<String, String> kvpairs) {
+        public Builder kvpairs(Map<String, String> kvpairs) {
             this.putBodyParameter("kvpairs", kvpairs);
             this.kvpairs = kvpairs;
+            return this;
+        }
+
+        /**
+         * 视频预测数据类型：text、image、video_uri、video_base64
+         */
+        public Builder contentType(String contentType) {
+            this.putBodyParameter("contentType", contentType);
+            this.contentType = contentType;
+            return this;
+        }
+
+        /**
+         * 召回帧的数量，默认值为100
+         */
+        public Builder videoFrameTopK(Integer videoFrameTopK) {
+            this.putBodyParameter("videoFrameTopK", videoFrameTopK);
+            this.videoFrameTopK = videoFrameTopK;
+            return this;
+        }
+
+        /**
+         * 多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数
+         */
+        public Builder sorts(List<Sort> sorts) {
+            this.putBodyParameter("sorts", sorts);
+            this.sorts = sorts;
             return this;
         }
 

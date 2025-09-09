@@ -49,6 +49,13 @@ public class MultiQueryRequest extends Request {
     @NameInMap("sort")
     private String sort;
 
+    /**
+     * <p>用于配置多路结果中相同pk doc如何计算分数。mode可以配置：sum, max, min。默认为sum</p>
+     */
+    @Body
+    @NameInMap("mode")
+    private String mode;
+
     private MultiQueryRequest(Builder builder) {
         super(builder);
         this.tableName = builder.tableName;
@@ -59,6 +66,7 @@ public class MultiQueryRequest extends Request {
         this.order = builder.order;
         this.filter = builder.filter;
         this.sort = builder.sort;
+        this.mode = builder.mode;
     }
 
     public static Builder builder() {
@@ -127,7 +135,14 @@ public class MultiQueryRequest extends Request {
      * @return sort
      */
     public String getSort() {
-        return sort;
+        return this.sort;
+    }
+
+    /**
+     * @return mode
+     */
+    public String getMode() {
+        return this.mode;
     }
 
     public static final class Builder extends Request.Builder<MultiQueryRequest, Builder> {
@@ -137,8 +152,9 @@ public class MultiQueryRequest extends Request {
         private Boolean includeVector; 
         private java.util.List < String > outputFields; 
         private String order; 
-        private String filter;
+        private String filter; 
         private String sort;
+        private String mode;
 
         private Builder() {
             super();
@@ -154,7 +170,8 @@ public class MultiQueryRequest extends Request {
             this.order = request.order;
             this.filter = request.filter;
             this.sort = request.sort;
-        } 
+            this.mode = request.mode;
+        }
 
         /**
          * 数据源名
@@ -225,6 +242,15 @@ public class MultiQueryRequest extends Request {
         public Builder sort(String sort) {
             this.putBodyParameter("sort", sort);
             this.sort = sort;
+            return this;
+        }
+
+        /**
+         * 用于配置多路结果中相同pk doc如何计算分数。mode可以配置：sum, max, min。默认为sum
+         */
+        public Builder mode(String mode) {
+            this.putBodyParameter("mode", mode);
+            this.mode = mode;
             return this;
         }
 
