@@ -32,11 +32,11 @@
       <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
-  <scm>
-    <connection></connection>
-    <developerConnection></developerConnection>
-    <url></url>
-  </scm>
+    <scm>
+        <connection>scm:git:git://github.com/aliyun/alibabacloud-ha3-sdk.git</connection>
+        <developerConnection>scm:git:git@github.com:aliyun/alibabacloud-ha3-sdk.git</developerConnection>
+        <url>https://github.com/aliyun/alibabacloud-ha3-sdk</url>
+    </scm>
   <properties>
     <java.version>1.8</java.version>
     <maven.compiler.source>8</maven.compiler.source>
