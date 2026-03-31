@@ -212,11 +212,11 @@ public class QueryRequest extends Request {
         return this.content;
     }
 
+    /**
+     * @return contents
+     */
     public List<String> getContents() {
         return contents;
-    }
-    public void setContents(List<String> contents) {
-        this.contents = contents;
     }
 
     /**
