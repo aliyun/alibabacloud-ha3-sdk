@@ -53,6 +53,10 @@ public class QueryRequest extends Request {
     private String content;
 
     @Body
+    @NameInMap("contents")
+    public List<String> contents;
+
+    @Body
     @NameInMap("modal")
     private String modal;
 
@@ -123,6 +127,7 @@ public class QueryRequest extends Request {
         this.sparseData = builder.sparseData;
         this.weight = builder.weight;
         this.content = builder.content;
+        this.contents = builder.contents;
         this.modal = builder.modal;
         this.includeVector = builder.includeVector;
         this.outputFields = builder.outputFields;
@@ -205,6 +210,13 @@ public class QueryRequest extends Request {
      */
     public String getContent() {
         return this.content;
+    }
+
+    public List<String> getContents() {
+        return contents;
+    }
+    public void setContents(List<String> contents) {
+        this.contents = contents;
     }
 
     /**
@@ -306,7 +318,8 @@ public class QueryRequest extends Request {
         private String indexName; 
         private SparseData sparseData; 
         private Float weight; 
-        private String content; 
+        private String content;
+        private List<String> contents;
         private String modal; 
         private Boolean includeVector; 
         private List < String > outputFields;
@@ -335,6 +348,7 @@ public class QueryRequest extends Request {
             this.sparseData = request.sparseData;
             this.weight = request.weight;
             this.content = request.content;
+            this.contents = request.contents;
             this.modal = request.modal;
             this.includeVector = request.includeVector;
             this.outputFields = request.outputFields;
@@ -419,6 +433,15 @@ public class QueryRequest extends Request {
         public Builder content(String content) {
             this.putBodyParameter("content", content);
             this.content = content;
+            return this;
+        }
+
+        /**
+         * 需要向量化的内容
+         */
+        public Builder contents(List<String> contents) {
+            this.putBodyParameter("contents", contents);
+            this.contents = contents;
             return this;
         }
 
