@@ -195,6 +195,7 @@ class QueryRequest(TeaModel):
         sparse_data: SparseData = None,
         weight: float = None,
         content: str = None,
+        contents: List[str] = None,
         modal: str = None,
         include_vector: bool = None,
         output_fields: List[str] = None,
@@ -225,6 +226,8 @@ class QueryRequest(TeaModel):
         self.weight = weight
         # 需要向量化的内容
         self.content = content
+        # 需要预测的数据（向量融合场景)
+        self.contents = contents
         # 使用的模型
         self.modal = modal
         # 是否返回文档中的向量信息
@@ -284,6 +287,8 @@ class QueryRequest(TeaModel):
             result['weight'] = self.weight
         if self.content is not None:
             result['content'] = self.content
+        if self.contents is not None:
+            result['contents'] = self.contents
         if self.modal is not None:
             result['modal'] = self.modal
         if self.include_vector is not None:
@@ -333,6 +338,8 @@ class QueryRequest(TeaModel):
             self.weight = m.get('weight')
         if m.get('content') is not None:
             self.content = m.get('content')
+        if m.get('contents') is not None:
+            self.contents = m.get('contents')
         if m.get('modal') is not None:
             self.modal = m.get('modal')
         if m.get('includeVector') is not None:
