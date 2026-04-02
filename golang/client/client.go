@@ -106,6 +106,8 @@ type QueryRequest struct {
   Weight *float32 `json:"weight,omitempty" xml:"weight,omitempty"`
   // 需要向量化的内容
   Content *string `json:"content,omitempty" xml:"content,omitempty"`
+  // 需要预测的数据（向量融合场景)
+  Contents []*string `json:"contents,omitempty" xml:"contents,omitempty" type:"Repeated"`
   // 使用的模型
   Modal *string `json:"modal,omitempty" xml:"modal,omitempty"`
   // 是否返回文档中的向量信息
@@ -179,6 +181,11 @@ func (s *QueryRequest) SetWeight(v float32) *QueryRequest {
 
 func (s *QueryRequest) SetContent(v string) *QueryRequest {
   s.Content = &v
+  return s
+}
+
+func (s *QueryRequest) SetContents(v []*string) *QueryRequest {
+  s.Contents = v
   return s
 }
 
