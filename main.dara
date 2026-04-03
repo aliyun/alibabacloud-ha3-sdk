@@ -121,6 +121,7 @@ model QueryRequest {
   sparseData?: SparseData(name='sparseData', description='查询的稀疏向量'),
   weight?: float(name='weight', description='Query的权重'),
   content?: string(name='content', description='需要向量化的内容'),
+  contents?: [ string ](name='contents', description='需要预测的数据（向量融合场景)'),
   modal?: string(name='modal', description='使用的模型'),
   includeVector?: boolean(name='includeVector', description='是否返回文档中的向量信息'),
   outputFields?: [ string ](name='outputFields', description='需要返回值的字段列表'),
