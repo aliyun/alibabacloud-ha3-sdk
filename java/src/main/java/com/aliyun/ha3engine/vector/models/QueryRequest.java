@@ -55,6 +55,12 @@ public class QueryRequest extends TeaModel {
     public String content;
 
     /**
+     * <p>需要预测的数据（向量融合场景)</p>
+     */
+    @NameInMap("contents")
+    public java.util.List<String> contents;
+
+    /**
      * <p>使用的模型</p>
      */
     @NameInMap("modal")
@@ -199,6 +205,14 @@ public class QueryRequest extends TeaModel {
     }
     public String getContent() {
         return this.content;
+    }
+
+    public QueryRequest setContents(java.util.List<String> contents) {
+        this.contents = contents;
+        return this;
+    }
+    public java.util.List<String> getContents() {
+        return this.contents;
     }
 
     public QueryRequest setModal(String modal) {
