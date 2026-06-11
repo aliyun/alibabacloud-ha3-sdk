@@ -118,6 +118,8 @@ type QueryRequest struct {
   Order *string `json:"order,omitempty" xml:"order,omitempty"`
   // 查询参数
   SearchParams *string `json:"searchParams,omitempty" xml:"searchParams,omitempty"`
+  // 召回语句，不会切词
+  TextQueryString *string `json:"textQueryString,omitempty" xml:"textQueryString,omitempty"`
   // 过滤表达式
   Filter *string `json:"filter,omitempty" xml:"filter,omitempty"`
   // 分数过滤， 使用欧式距离时，只返回小于scoreThreshold的结果。使用内积时，只返回大于scoreThreshold的结果
@@ -211,6 +213,11 @@ func (s *QueryRequest) SetOrder(v string) *QueryRequest {
 
 func (s *QueryRequest) SetSearchParams(v string) *QueryRequest {
   s.SearchParams = &v
+  return s
+}
+
+func (s *QueryRequest) SetTextQueryString(v string) *QueryRequest {
+  s.TextQueryString = &v
   return s
 }
 

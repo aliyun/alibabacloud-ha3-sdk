@@ -91,6 +91,12 @@ public class QueryRequest extends TeaModel {
     public String searchParams;
 
     /**
+     * <p>召回语句，不会切词</p>
+     */
+    @NameInMap("textQueryString")
+    public String textQueryString;
+
+    /**
      * <p>过滤表达式</p>
      */
     @NameInMap("filter")
@@ -253,6 +259,14 @@ public class QueryRequest extends TeaModel {
     }
     public String getSearchParams() {
         return this.searchParams;
+    }
+
+    public QueryRequest setTextQueryString(String textQueryString) {
+        this.textQueryString = textQueryString;
+        return this;
+    }
+    public String getTextQueryString() {
+        return this.textQueryString;
     }
 
     public QueryRequest setFilter(String filter) {
