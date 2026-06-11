@@ -201,6 +201,7 @@ class QueryRequest(TeaModel):
         output_fields: List[str] = None,
         order: str = None,
         search_params: str = None,
+        text_query_string: str = None,
         filter: str = None,
         score_threshold: float = None,
         vector_count: int = None,
@@ -238,6 +239,8 @@ class QueryRequest(TeaModel):
         self.order = order
         # 查询参数
         self.search_params = search_params
+        # 召回语句，不会切词
+        self.text_query_string = text_query_string
         # 过滤表达式
         self.filter = filter
         # 分数过滤， 使用欧式距离时，只返回小于scoreThreshold的结果。使用内积时，只返回大于scoreThreshold的结果
@@ -299,6 +302,8 @@ class QueryRequest(TeaModel):
             result['order'] = self.order
         if self.search_params is not None:
             result['searchParams'] = self.search_params
+        if self.text_query_string is not None:
+            result['textQueryString'] = self.text_query_string
         if self.filter is not None:
             result['filter'] = self.filter
         if self.score_threshold is not None:
@@ -350,6 +355,8 @@ class QueryRequest(TeaModel):
             self.order = m.get('order')
         if m.get('searchParams') is not None:
             self.search_params = m.get('searchParams')
+        if m.get('textQueryString') is not None:
+            self.text_query_string = m.get('textQueryString')
         if m.get('filter') is not None:
             self.filter = m.get('filter')
         if m.get('scoreThreshold') is not None:
