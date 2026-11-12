@@ -42,8 +42,7 @@ REQUIRES = [
     "alibabacloud_darabonba_encode_util>=0.0.2, <1.0.0",
     "alibabacloud_ha3_util>=0.0.1, <1.0.0",
     "alibabacloud_darabonba_time>=0.0.1, <1.0.0",
-    "alibabacloud_darabonba_number>=0.0.4, <1.0.0",
-    "alibabacloud_darabonba_map>=0.0.1, <1.0.0"
+    "alibabacloud_darabonba_number>=0.0.4, <1.0.0"
 ]
 
 LONG_DESCRIPTION = ''

@@ -8,7 +8,6 @@ import (
   ha3util  "github.com/alibabacloud-go/alibabacloud-ha3-util/client"
   time  "github.com/alibabacloud-go/darabonba-time/client"
   number  "github.com/alibabacloud-go/darabonba-number/client"
-  map_  "github.com/alibabacloud-go/darabonba-map/client"
   "github.com/alibabacloud-go/tea/tea"
 )
 
@@ -3687,17 +3686,18 @@ func (client *Client) GetRealmSignStr (accessUserName *string, accessPassWord *s
 // 向量查询
 func (client *Client) Query (request *QueryRequest) (_result *SearchResponse, _err error) {
   headers := client.GetHeadersFromRunTimeOption()
-  body := util.ToJSONString(request)
+  body := request
   if !tea.BoolValue(util.IsUnset(request.Headers)) {
-    body, _err = client.SerializeQueryBody(body, tea.Bool(true))
+    body, _err = client.CopyQueryRequest(request)
     if _err != nil {
       return _result, _err
     }
 
+    body.Headers = nil
   }
 
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/query"), nil, headers, body, client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/query"), nil, headers, util.ToJSONString(body), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -3711,17 +3711,18 @@ func (client *Client) Query (request *QueryRequest) (_result *SearchResponse, _e
 func (client *Client) InferenceQuery (request *QueryRequest) (_result *SearchResponse, _err error) {
   headers := tea.Merge(client.GetHeadersFromRunTimeOption(),
     request.Headers)
-  body := util.ToJSONString(request)
+  body := request
   if tea.BoolValue(client.HasQueryOptions(request)) {
-    body, _err = client.SerializeQueryBody(body, tea.Bool(false))
+    body, _err = client.CopyQueryRequest(request)
     if _err != nil {
       return _result, _err
     }
 
+    client.ClearQueryOptions(body)
   }
 
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/inference-query"), nil, headers, body, client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/inference-query"), nil, headers, util.ToJSONString(body), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -3734,15 +3735,18 @@ func (client *Client) InferenceQuery (request *QueryRequest) (_result *SearchRes
 // 多namespace查询
 func (client *Client) MultiQuery (request *MultiQueryRequest) (_result *SearchResponse, _err error) {
   headers := client.GetHeadersFromRunTimeOption()
-  body := util.ToJSONString(request)
+  body := request
   if !tea.BoolValue(util.IsUnset(request.Queries)) {
     for _, query := range request.Queries {
       if tea.BoolValue(client.HasQueryOptions(query)) {
-        body, _err = client.SerializeQueryBody(body, tea.Bool(false))
+        body, _err = client.CopyMultiQueryRequest(request)
         if _err != nil {
           return _result, _err
         }
 
+        for _, item := range body.Queries {
+          client.ClearQueryOptions(item)
+        }
         break
       }
 
@@ -3750,7 +3754,7 @@ func (client *Client) MultiQuery (request *MultiQueryRequest) (_result *SearchRe
   }
 
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/multi-query"), nil, headers, body, client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/multi-query"), nil, headers, util.ToJSONString(body), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -3778,17 +3782,19 @@ func (client *Client) Fetch (request *FetchRequest) (_result *SearchResponse, _e
 func (client *Client) Search (request *SearchRequest) (_result *SearchResponse, _err error) {
   headers := tea.Merge(client.GetHeadersFromRunTimeOption(),
     request.Headers)
-  body := util.ToJSONString(request)
+  body := request
   if !tea.BoolValue(util.IsUnset(request.Headers)) || tea.BoolValue(client.HasQueryOptions(request.Knn)) {
-    body, _err = client.SerializeQueryBody(body, tea.Bool(false))
+    body, _err = client.CopySearchRequest(request)
     if _err != nil {
       return _result, _err
     }
 
+    body.Headers = nil
+    client.ClearQueryOptions(body.Knn)
   }
 
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/search"), nil, headers, body, client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/search"), nil, headers, util.ToJSONString(body), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -3815,15 +3821,18 @@ func (client *Client) Aggregate (request *AggregateRequest) (_result *SearchResp
 // 批量查询
 func (client *Client) BatchQuery (request *BatchRequest) (_result *SearchResponse, _err error) {
   headers := client.GetHeadersFromRunTimeOption()
-  body := util.ToJSONString(request)
+  body := request
   if !tea.BoolValue(util.IsUnset(request.Queries)) {
     for _, query := range request.Queries {
       if tea.BoolValue(client.HasQueryOptions(query)) {
-        body, _err = client.SerializeQueryBody(body, tea.Bool(false))
+        body, _err = client.CopyBatchRequest(request)
         if _err != nil {
           return _result, _err
         }
 
+        for _, item := range body.Queries {
+          client.ClearQueryOptions(item)
+        }
         break
       }
 
@@ -3831,7 +3840,7 @@ func (client *Client) BatchQuery (request *BatchRequest) (_result *SearchRespons
   }
 
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/batch-query"), nil, headers, body, client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/batch-query"), nil, headers, util.ToJSONString(body), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -3854,75 +3863,57 @@ func (client *Client) HasQueryOptions (request *QueryRequest) (_result *bool) {
   return _result
 }
 
-// QueryRequest is also used inside search, multi-query and batch-query.
-// Keep request options out of those JSON body objects without changing the input models.
-func (client *Client) SerializeQueryBody (json *string, includeOnlyIds *bool) (_result *string, _err error) {
-  parsed := util.ParseJSON(json)
-  fields, _err := util.AssertAsMap(parsed)
+func (client *Client) ClearQueryOptions (request *QueryRequest) {
+  if !tea.BoolValue(util.IsUnset(request)) {
+    request.Headers = nil
+    request.OnlyIds = nil
+  }
+
+}
+
+// Copy the model before clearing fields so it can be reused by the caller.
+func (client *Client) CopyQueryRequest (request *QueryRequest) (_result *QueryRequest, _err error) {
+  fields := util.ParseJSON(util.ToJSONString(request))
+  _result = &QueryRequest{}
+  _body, _err := util.AssertAsMap(fields)
   if _err != nil {
     return _result, _err
   }
-
-  if !tea.BoolValue(util.IsUnset(fields["knn"])) {
-    knn, _err := util.AssertAsMap(fields["knn"])
-    if _err != nil {
-      return _result, _err
-    }
-
-    fields["knn"] = client.QueryBodyFields(knn, tea.Bool(false))
-  }
-
-  if !tea.BoolValue(util.IsUnset(fields["queries"])) {
-    queries, _err := util.AssertAsArray(fields["queries"])
-    if _err != nil {
-      return _result, _err
-    }
-
-    queryJson := tea.String("")
-    separator := tea.String("")
-    for _, query := range queries {
-      item := tea.String("null")
-      if !tea.BoolValue(util.IsUnset(query)) {
-        queryFields, _err := util.AssertAsMap(query)
-        if _err != nil {
-          return _result, _err
-        }
-
-        item = util.ToJSONString(client.QueryBodyFields(queryFields, tea.Bool(false)))
-      }
-
-      queryJson = tea.String(tea.StringValue(queryJson) + tea.StringValue(separator) + tea.StringValue(item))
-      separator = tea.String(",")
-    }
-    prefix := tea.String("{\"queries\":[")
-    suffix := tea.String("]}")
-    parsedQueries := util.ParseJSON(tea.String(tea.StringValue(prefix) + tea.StringValue(queryJson) + tea.StringValue(suffix)))
-    queryList, _err := util.AssertAsMap(parsedQueries)
-    if _err != nil {
-      return _result, _err
-    }
-
-    fields["queries"] = queryList["queries"]
-  }
-
-  _body := util.ToJSONString(client.QueryBodyFields(fields, includeOnlyIds))
-  _result = _body
+  _err = tea.Convert(_body, &_result)
   return _result, _err
 }
 
-func (client *Client) QueryBodyFields (fields map[string]interface{}, includeOnlyIds *bool) (_result map[string]interface{}) {
-  body := map[string]interface{}{}
-  for _, key := range map_.KeySet(fields) {
-    if !tea.BoolValue(string_.Equals(key, tea.String("headers"))) {
-      if tea.BoolValue(includeOnlyIds) || !tea.BoolValue(string_.Equals(key, tea.String("onlyIds"))) {
-        body[tea.StringValue(key)] = fields[tea.StringValue(key)]
-      }
-
-    }
-
+func (client *Client) CopySearchRequest (request *SearchRequest) (_result *SearchRequest, _err error) {
+  fields := util.ParseJSON(util.ToJSONString(request))
+  _result = &SearchRequest{}
+  _body, _err := util.AssertAsMap(fields)
+  if _err != nil {
+    return _result, _err
   }
-  _result = body
-  return _result
+  _err = tea.Convert(_body, &_result)
+  return _result, _err
+}
+
+func (client *Client) CopyMultiQueryRequest (request *MultiQueryRequest) (_result *MultiQueryRequest, _err error) {
+  fields := util.ParseJSON(util.ToJSONString(request))
+  _result = &MultiQueryRequest{}
+  _body, _err := util.AssertAsMap(fields)
+  if _err != nil {
+    return _result, _err
+  }
+  _err = tea.Convert(_body, &_result)
+  return _result, _err
+}
+
+func (client *Client) CopyBatchRequest (request *BatchRequest) (_result *BatchRequest, _err error) {
+  fields := util.ParseJSON(util.ToJSONString(request))
+  _result = &BatchRequest{}
+  _body, _err := util.AssertAsMap(fields)
+  if _err != nil {
+    return _result, _err
+  }
+  _err = tea.Convert(_body, &_result)
+  return _result, _err
 }
 
 // Description:

@@ -4,7 +4,6 @@ import EncodeUtil;
 import Ha3Util;
 import Time;
 import Number;
-import Map;
 
 type @endpoint = string
 type @instanceId = string
@@ -236,11 +235,12 @@ model BatchRequest {
  */
 async function query(request: QueryRequest): SearchResponse {
   var headers = getHeadersFromRunTimeOption();
-  var body = Util.toJSONString(request);
+  var body = request;
   if (!Util.isUnset(request.headers)) {
-    body = serializeQueryBody(body, true);
+    body = copyQueryRequest(request);
+    body.headers = null;
   }
-  return _request('POST', `/vector-service/query`, null, headers, body, @runtimeOptions);
+  return _request('POST', `/vector-service/query`, null, headers, Util.toJSONString(body), @runtimeOptions);
 }
 
 /**
@@ -251,11 +251,12 @@ async function inferenceQuery(request: QueryRequest): SearchResponse {
     ...getHeadersFromRunTimeOption(),
     ...request.headers
   };
-  var body = Util.toJSONString(request);
+  var body = request;
   if (hasQueryOptions(request)) {
-    body = serializeQueryBody(body, false);
+    body = copyQueryRequest(request);
+    clearQueryOptions(body);
   }
-  return _request('POST', `/vector-service/inference-query`, null, headers, body, @runtimeOptions);
+  return _request('POST', `/vector-service/inference-query`, null, headers, Util.toJSONString(body), @runtimeOptions);
 }
 
 /**
@@ -264,16 +265,19 @@ async function inferenceQuery(request: QueryRequest): SearchResponse {
 async function multiQuery(request: MultiQueryRequest): SearchResponse {
   var headers = getHeadersFromRunTimeOption();
 
-  var body = Util.toJSONString(request);
+  var body = request;
   if (!Util.isUnset(request.queries)) {
     for (var query : request.queries) {
       if (hasQueryOptions(query)) {
-        body = serializeQueryBody(body, false);
+        body = copyMultiQueryRequest(request);
+        for (var item : body.queries) {
+          clearQueryOptions(item);
+        }
         break;
       }
     }
   }
-  return _request('POST', `/vector-service/multi-query`, null, headers, body, @runtimeOptions);
+  return _request('POST', `/vector-service/multi-query`, null, headers, Util.toJSONString(body), @runtimeOptions);
 }
 
 /**
@@ -293,11 +297,13 @@ async function search(request: SearchRequest): SearchResponse {
     ...getHeadersFromRunTimeOption(),
     ...request.headers
   };
-  var body = Util.toJSONString(request);
+  var body = request;
   if (!Util.isUnset(request.headers) || hasQueryOptions(request.knn)) {
-    body = serializeQueryBody(body, false);
+    body = copySearchRequest(request);
+    body.headers = null;
+    clearQueryOptions(body.knn);
   }
-  return _request('POST', `/vector-service/search`, null, headers, body, @runtimeOptions);
+  return _request('POST', `/vector-service/search`, null, headers, Util.toJSONString(body), @runtimeOptions);
 }
 
 /**
@@ -315,16 +321,19 @@ async function aggregate(request: AggregateRequest): SearchResponse {
 async function batchQuery(request: BatchRequest): SearchResponse {
   var headers = getHeadersFromRunTimeOption();
 
-  var body = Util.toJSONString(request);
+  var body = request;
   if (!Util.isUnset(request.queries)) {
     for (var query : request.queries) {
       if (hasQueryOptions(query)) {
-        body = serializeQueryBody(body, false);
+        body = copyBatchRequest(request);
+        for (var item : body.queries) {
+          clearQueryOptions(item);
+        }
         break;
       }
     }
   }
-  return _request('POST', `/vector-service/batch-query`, null, headers, body, @runtimeOptions);
+  return _request('POST', `/vector-service/batch-query`, null, headers, Util.toJSONString(body), @runtimeOptions);
 }
 
 function hasQueryOptions(request: QueryRequest): boolean {
@@ -337,47 +346,32 @@ function hasQueryOptions(request: QueryRequest): boolean {
   return true;
 }
 
-// QueryRequest is also used inside search, multi-query and batch-query.
-// Keep request options out of those JSON body objects without changing the input models.
-function serializeQueryBody(json: string, includeOnlyIds: boolean) throws: string {
-  var parsed = Util.parseJSON(json);
-  var fields = Util.assertAsMap(parsed);
-  if (!Util.isUnset(fields.knn)) {
-    var knn = Util.assertAsMap(fields.knn);
-    fields.knn = queryBodyFields(knn, false);
+function clearQueryOptions(request: QueryRequest): void {
+  if (!Util.isUnset(request)) {
+    request.headers = null;
+    request.onlyIds = null;
   }
-  if (!Util.isUnset(fields.queries)) {
-    var queries = Util.assertAsArray(fields.queries);
-    var queryJson = '';
-    var separator = '';
-    for (var query : queries) {
-      var item = 'null';
-      if (!Util.isUnset(query)) {
-        var queryFields = Util.assertAsMap(query);
-        item = Util.toJSONString(queryBodyFields(queryFields, false));
-      }
-      queryJson = `${queryJson}${separator}${item}`;
-      separator = ',';
-    }
-    var prefix = '{"queries":[';
-    var suffix = ']}';
-    var parsedQueries = Util.parseJSON(`${prefix}${queryJson}${suffix}`);
-    var queryList = Util.assertAsMap(parsedQueries);
-    fields.queries = queryList.queries;
-  }
-  return Util.toJSONString(queryBodyFields(fields, includeOnlyIds));
 }
 
-function queryBodyFields(fields: map[string]any, includeOnlyIds: boolean): map[string]any {
-  var body: map[string]any = {};
-  for (var key : Map.keySet(fields)) {
-    if (!String.equals(key, 'headers')) {
-      if (includeOnlyIds || !String.equals(key, 'onlyIds')) {
-        body[key] = fields[key];
-      }
-    }
-  }
-  return body;
+// Copy the model before clearing fields so it can be reused by the caller.
+function copyQueryRequest(request: QueryRequest) throws: QueryRequest {
+  var fields = Util.parseJSON(Util.toJSONString(request));
+  return Util.assertAsMap(fields);
+}
+
+function copySearchRequest(request: SearchRequest) throws: SearchRequest {
+  var fields = Util.parseJSON(Util.toJSONString(request));
+  return Util.assertAsMap(fields);
+}
+
+function copyMultiQueryRequest(request: MultiQueryRequest) throws: MultiQueryRequest {
+  var fields = Util.parseJSON(Util.toJSONString(request));
+  return Util.assertAsMap(fields);
+}
+
+function copyBatchRequest(request: BatchRequest) throws: BatchRequest {
+  var fields = Util.parseJSON(Util.toJSONString(request));
+  return Util.assertAsMap(fields);
 }
 
 
