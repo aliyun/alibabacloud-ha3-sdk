@@ -4,6 +4,7 @@ import EncodeUtil;
 import Ha3Util;
 import Time;
 import Number;
+import Map;
 
 type @endpoint = string
 type @instanceId = string
@@ -135,7 +136,9 @@ model QueryRequest {
   kvpairs?: map[string]string(name='kvpairs', description='kvpairs'),
   contentType?: string(name='contentType', description='视频预测数据类型：text、image、video_uri、video_base64'),
   videoFrameTopK?: integer(name='videoFrameTopK', description='召回帧的数量，默认值为100'),
-  sorts?: [ Sort ](name='sorts', description='多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数')
+  sorts?: [ Sort ](name='sorts', description='多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数'),
+  onlyIds?: boolean(name='onlyIds', description='向量查询是否只返回文档 ID，服务端默认 false'),
+  headers?: map[string]string(name='headers', description='预测查询的自定义 HTTP 请求头')
 }
 
 model Sort {
@@ -198,7 +201,8 @@ model SearchRequest{
  outputFields?: [ string ](name='outputFields', description='指定需要在结果中返回的字段，默认为空'),
  knn?: QueryRequest(name='knn', description='KNN查询参数'),
  text?: TextQuery(name='text', description='text查询参数'),
- rank?: RankQuery(name='rank', description='指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果')
+ rank?: RankQuery(name='rank', description='指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果'),
+ headers?: map[string]string(name='headers', description='检索的自定义 HTTP 请求头')
 }
 
 model AggFuncDesc {
@@ -232,16 +236,26 @@ model BatchRequest {
  */
 async function query(request: QueryRequest): SearchResponse {
   var headers = getHeadersFromRunTimeOption();
-  return _request('POST', `/vector-service/query`, null, headers, Util.toJSONString(request), @runtimeOptions);
+  var body = Util.toJSONString(request);
+  if (!Util.isUnset(request.headers)) {
+    body = serializeQueryBody(body, true);
+  }
+  return _request('POST', `/vector-service/query`, null, headers, body, @runtimeOptions);
 }
 
 /**
  * 向量预测查询
  */
 async function inferenceQuery(request: QueryRequest): SearchResponse {
-  var headers = getHeadersFromRunTimeOption();
-
-  return _request('POST', `/vector-service/inference-query`, null, headers, Util.toJSONString(request), @runtimeOptions);
+  var headers = {
+    ...getHeadersFromRunTimeOption(),
+    ...request.headers
+  };
+  var body = Util.toJSONString(request);
+  if (hasQueryOptions(request)) {
+    body = serializeQueryBody(body, false);
+  }
+  return _request('POST', `/vector-service/inference-query`, null, headers, body, @runtimeOptions);
 }
 
 /**
@@ -250,7 +264,16 @@ async function inferenceQuery(request: QueryRequest): SearchResponse {
 async function multiQuery(request: MultiQueryRequest): SearchResponse {
   var headers = getHeadersFromRunTimeOption();
 
-  return _request('POST', `/vector-service/multi-query`, null, headers, Util.toJSONString(request), @runtimeOptions);
+  var body = Util.toJSONString(request);
+  if (!Util.isUnset(request.queries)) {
+    for (var query : request.queries) {
+      if (hasQueryOptions(query)) {
+        body = serializeQueryBody(body, false);
+        break;
+      }
+    }
+  }
+  return _request('POST', `/vector-service/multi-query`, null, headers, body, @runtimeOptions);
 }
 
 /**
@@ -266,9 +289,15 @@ async function fetch(request: FetchRequest): SearchResponse {
  * 文本向量混合检索
  */
 async function search(request: SearchRequest): SearchResponse {
-  var headers = getHeadersFromRunTimeOption();
-
-  return _request('POST', `/vector-service/search`, null, headers, Util.toJSONString(request), @runtimeOptions);
+  var headers = {
+    ...getHeadersFromRunTimeOption(),
+    ...request.headers
+  };
+  var body = Util.toJSONString(request);
+  if (!Util.isUnset(request.headers) || hasQueryOptions(request.knn)) {
+    body = serializeQueryBody(body, false);
+  }
+  return _request('POST', `/vector-service/search`, null, headers, body, @runtimeOptions);
 }
 
 /**
@@ -286,7 +315,69 @@ async function aggregate(request: AggregateRequest): SearchResponse {
 async function batchQuery(request: BatchRequest): SearchResponse {
   var headers = getHeadersFromRunTimeOption();
 
-  return _request('POST', `/vector-service/batch-query`, null, headers, Util.toJSONString(request), @runtimeOptions);
+  var body = Util.toJSONString(request);
+  if (!Util.isUnset(request.queries)) {
+    for (var query : request.queries) {
+      if (hasQueryOptions(query)) {
+        body = serializeQueryBody(body, false);
+        break;
+      }
+    }
+  }
+  return _request('POST', `/vector-service/batch-query`, null, headers, body, @runtimeOptions);
+}
+
+function hasQueryOptions(request: QueryRequest): boolean {
+  if (Util.isUnset(request)) {
+    return false;
+  }
+  if (Util.isUnset(request.headers) && Util.isUnset(request.onlyIds)) {
+    return false;
+  }
+  return true;
+}
+
+// QueryRequest is also used inside search, multi-query and batch-query.
+// Keep request options out of those JSON body objects without changing the input models.
+function serializeQueryBody(json: string, includeOnlyIds: boolean) throws: string {
+  var parsed = Util.parseJSON(json);
+  var fields = Util.assertAsMap(parsed);
+  if (!Util.isUnset(fields.knn)) {
+    var knn = Util.assertAsMap(fields.knn);
+    fields.knn = queryBodyFields(knn, false);
+  }
+  if (!Util.isUnset(fields.queries)) {
+    var queries = Util.assertAsArray(fields.queries);
+    var queryJson = '';
+    var separator = '';
+    for (var query : queries) {
+      var item = 'null';
+      if (!Util.isUnset(query)) {
+        var queryFields = Util.assertAsMap(query);
+        item = Util.toJSONString(queryBodyFields(queryFields, false));
+      }
+      queryJson = `${queryJson}${separator}${item}`;
+      separator = ',';
+    }
+    var prefix = '{"queries":[';
+    var suffix = ']}';
+    var parsedQueries = Util.parseJSON(`${prefix}${queryJson}${suffix}`);
+    var queryList = Util.assertAsMap(parsedQueries);
+    fields.queries = queryList.queries;
+  }
+  return Util.toJSONString(queryBodyFields(fields, includeOnlyIds));
+}
+
+function queryBodyFields(fields: map[string]any, includeOnlyIds: boolean): map[string]any {
+  var body: map[string]any = {};
+  for (var key : Map.keySet(fields)) {
+    if (!String.equals(key, 'headers')) {
+      if (includeOnlyIds || !String.equals(key, 'onlyIds')) {
+        body[key] = fields[key];
+      }
+    }
+  }
+  return body;
 }
 
 
