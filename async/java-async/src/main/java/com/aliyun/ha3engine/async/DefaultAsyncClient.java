@@ -129,6 +129,12 @@ public final class DefaultAsyncClient implements AsyncClient {
      */
     @Override
     public CompletableFuture<SearchResponse> inferenceQuery(QueryRequest request) {
+        return inferenceQueryWithHeaders(request, null);
+    }
+
+    @Override
+    public CompletableFuture<SearchResponse> inferenceQueryWithHeaders(
+            QueryRequest request, Map<String, String> headers) {
         try {
             compressRequest(request);
 
@@ -141,6 +147,9 @@ public final class DefaultAsyncClient implements AsyncClient {
                     .setBodyIsForm(false)
                     .setReqBodyType(BodyType.JSON)
                     .formModel(request);
+            if (headers != null) {
+                headers.forEach(teaRequest.headers()::set);
+            }
             ClientExecutionParams params = new ClientExecutionParams().withInput(request).withRequest(teaRequest).withOutput(SearchResponse.create());
             return this.handler.execute(params);
         } catch (Exception e) {
@@ -273,6 +282,12 @@ public final class DefaultAsyncClient implements AsyncClient {
      */
     @Override
     public CompletableFuture<SearchResponse> search(SearchRequest request) {
+        return searchWithHeaders(request, null);
+    }
+
+    @Override
+    public CompletableFuture<SearchResponse> searchWithHeaders(
+            SearchRequest request, Map<String, String> headers) {
         try {
             compressRequest(request);
 
@@ -285,6 +300,9 @@ public final class DefaultAsyncClient implements AsyncClient {
                 .setBodyIsForm(false)
                 .setReqBodyType(BodyType.JSON)
                 .formModel(request);
+            if (headers != null) {
+                headers.forEach(teaRequest.headers()::set);
+            }
             ClientExecutionParams params = new ClientExecutionParams().withInput(request).withRequest(teaRequest).withOutput(SearchResponse.create());
             return this.handler.execute(params);
         } catch (Exception e) {

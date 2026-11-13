@@ -1,6 +1,7 @@
 // This file is auto-generated, don't edit it. Thanks.
 package com.aliyun.ha3engine.async;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import com.aliyun.ha3engine.async.models.*;
@@ -30,6 +31,12 @@ public interface AsyncClient {
      * 向量预测查询
      */
     CompletableFuture<SearchResponse> inferenceQuery(QueryRequest request);
+
+    /**
+     * 向量预测查询，支持自定义 HTTP 请求头。
+     */
+    CompletableFuture<SearchResponse> inferenceQueryWithHeaders(
+            QueryRequest request, Map<String, String> headers);
 
     /**
      * 向量预测查询（pb协议）
@@ -62,6 +69,12 @@ public interface AsyncClient {
      * @return
      */
     CompletableFuture<SearchResponse> search(SearchRequest request);
+
+    /**
+     * 文本向量混合检索，支持自定义 HTTP 请求头。
+     */
+    CompletableFuture<SearchResponse> searchWithHeaders(
+            SearchRequest request, Map<String, String> headers);
 
     /**
      * 文本向量混合检索（pb协议）
