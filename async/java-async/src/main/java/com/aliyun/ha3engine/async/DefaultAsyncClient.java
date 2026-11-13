@@ -3,6 +3,7 @@ package com.aliyun.ha3engine.async;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -129,8 +130,13 @@ public final class DefaultAsyncClient implements AsyncClient {
      */
     @Override
     public CompletableFuture<SearchResponse> inferenceQuery(QueryRequest request) {
+        return inferenceQueryWithHeaders(request, null);
+    }
+
+    @Override
+    public CompletableFuture<SearchResponse> inferenceQueryWithHeaders(
+            QueryRequest request, Map<String, String> headers) {
         try {
-            compressRequest(request);
 
             TeaRequest teaRequest = REQUEST.copy()
                     .setStyle(RequestStyle.RESTFUL)
@@ -141,6 +147,7 @@ public final class DefaultAsyncClient implements AsyncClient {
                     .setBodyIsForm(false)
                     .setReqBodyType(BodyType.JSON)
                     .formModel(request);
+            applyQueryHeaders(teaRequest, headers);
             ClientExecutionParams params = new ClientExecutionParams().withInput(request).withRequest(teaRequest).withOutput(SearchResponse.create());
             return this.handler.execute(params);
         } catch (Exception e) {
@@ -273,8 +280,13 @@ public final class DefaultAsyncClient implements AsyncClient {
      */
     @Override
     public CompletableFuture<SearchResponse> search(SearchRequest request) {
+        return searchWithHeaders(request, null);
+    }
+
+    @Override
+    public CompletableFuture<SearchResponse> searchWithHeaders(
+            SearchRequest request, Map<String, String> headers) {
         try {
-            compressRequest(request);
 
             TeaRequest teaRequest = REQUEST.copy()
                 .setStyle(RequestStyle.RESTFUL)
@@ -285,6 +297,7 @@ public final class DefaultAsyncClient implements AsyncClient {
                 .setBodyIsForm(false)
                 .setReqBodyType(BodyType.JSON)
                 .formModel(request);
+            applyQueryHeaders(teaRequest, headers);
             ClientExecutionParams params = new ClientExecutionParams().withInput(request).withRequest(teaRequest).withOutput(SearchResponse.create());
             return this.handler.execute(params);
         } catch (Exception e) {
@@ -561,6 +574,19 @@ public final class DefaultAsyncClient implements AsyncClient {
             CompletableFuture<PushDocumentsResponse> future = new CompletableFuture<>();
             future.completeExceptionally(e);
             return future;
+        }
+    }
+
+    private void applyQueryHeaders(TeaRequest request, Map<String, String> headers) throws IOException {
+        if (headers != null) {
+            headers.forEach(request.headers()::set);
+        }
+        if ("deflate".equals(request.headers().getValue("Content-Encoding"))) {
+            request.headers().set("Content-Encoding", "deflate");
+            if (!(request.body() instanceof byte[])) {
+                String body = com.aliyun.teautil.Common.toJSONString(request.body());
+                request.setBody(deflateCompress(body.getBytes(StandardCharsets.UTF_8)));
+            }
         }
     }
 

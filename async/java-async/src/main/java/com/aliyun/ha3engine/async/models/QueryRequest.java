@@ -117,6 +117,10 @@ public class QueryRequest extends Request {
     @NameInMap("sorts")
     private List<Sort> sorts;
 
+    @Body
+    @NameInMap("onlyIds")
+    private Boolean onlyIds;
+
     private QueryRequest(Builder builder) {
         super(builder);
         this.tableName = builder.tableName;
@@ -141,6 +145,7 @@ public class QueryRequest extends Request {
         this.contentType = builder.contentType;
         this.videoFrameTopK = builder.videoFrameTopK;
         this.sorts = builder.sorts;
+        this.onlyIds = builder.onlyIds;
     }
 
     public static Builder builder() {
@@ -310,6 +315,10 @@ public class QueryRequest extends Request {
         return this.sorts;
     }
 
+    public Boolean getOnlyIds() {
+        return this.onlyIds;
+    }
+
     public static final class Builder extends Request.Builder<QueryRequest, Builder> {
         private String tableName; 
         private List < Float > vector;
@@ -333,6 +342,7 @@ public class QueryRequest extends Request {
         private String contentType;
         private Integer videoFrameTopK;
         private List<Sort> sorts;
+        private Boolean onlyIds;
 
         private Builder() {
             super();
@@ -362,6 +372,7 @@ public class QueryRequest extends Request {
             this.contentType = request.contentType;
             this.videoFrameTopK = request.videoFrameTopK;
             this.sorts = request.sorts;
+            this.onlyIds = request.onlyIds;
         } 
 
         /**
@@ -559,6 +570,15 @@ public class QueryRequest extends Request {
         public Builder sorts(List<Sort> sorts) {
             this.putBodyParameter("sorts", sorts);
             this.sorts = sorts;
+            return this;
+        }
+
+        /**
+         * 仅 query 接口支持，是否只返回文档 ID，服务端默认 false。
+         */
+        public Builder onlyIds(Boolean onlyIds) {
+            this.putBodyParameter("onlyIds", onlyIds);
+            this.onlyIds = onlyIds;
             return this;
         }
 
