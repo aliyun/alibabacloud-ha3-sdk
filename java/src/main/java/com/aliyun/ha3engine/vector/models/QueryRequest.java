@@ -144,6 +144,12 @@ public class QueryRequest extends TeaModel {
     @NameInMap("sorts")
     public java.util.List<Sort> sorts;
 
+    /**
+     * <p>仅 query 接口支持，是否只返回文档 ID，服务端默认 false</p>
+     */
+    @NameInMap("onlyIds")
+    public Boolean onlyIds;
+
     public static QueryRequest build(java.util.Map<String, ?> map) throws Exception {
         QueryRequest self = new QueryRequest();
         return TeaModel.build(map, self);
@@ -331,6 +337,14 @@ public class QueryRequest extends TeaModel {
     }
     public java.util.List<Sort> getSorts() {
         return this.sorts;
+    }
+
+    public QueryRequest setOnlyIds(Boolean onlyIds) {
+        this.onlyIds = onlyIds;
+        return this;
+    }
+    public Boolean getOnlyIds() {
+        return this.onlyIds;
     }
 
 }

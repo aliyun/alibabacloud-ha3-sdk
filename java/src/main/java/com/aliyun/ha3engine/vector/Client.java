@@ -340,8 +340,15 @@ public class Client {
      * <p>向量预测查询</p>
      */
     public SearchResponse inferenceQuery(QueryRequest request) throws Exception {
-        java.util.Map<String, String> headers = this.getHeadersFromRunTimeOption();
-        return TeaModel.toModel(this._request("POST", "/vector-service/inference-query", null, headers, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
+        return this.inferenceQueryWithHeaders(request, null);
+    }
+
+    public SearchResponse inferenceQueryWithHeaders(QueryRequest request, java.util.Map<String, String> headers) throws Exception {
+        java.util.Map<String, String> requestHeaders = TeaConverter.merge(String.class,
+            this.getHeadersFromRunTimeOption(),
+            headers
+        );
+        return TeaModel.toModel(this._request("POST", "/vector-service/inference-query", null, requestHeaders, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
@@ -367,8 +374,15 @@ public class Client {
      * <p>文本向量混合检索</p>
      */
     public SearchResponse search(SearchRequest request) throws Exception {
-        java.util.Map<String, String> headers = this.getHeadersFromRunTimeOption();
-        return TeaModel.toModel(this._request("POST", "/vector-service/search", null, headers, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
+        return this.searchWithHeaders(request, null);
+    }
+
+    public SearchResponse searchWithHeaders(SearchRequest request, java.util.Map<String, String> headers) throws Exception {
+        java.util.Map<String, String> requestHeaders = TeaConverter.merge(String.class,
+            this.getHeadersFromRunTimeOption(),
+            headers
+        );
+        return TeaModel.toModel(this._request("POST", "/vector-service/search", null, requestHeaders, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**

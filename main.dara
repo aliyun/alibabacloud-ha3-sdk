@@ -135,7 +135,8 @@ model QueryRequest {
   kvpairs?: map[string]string(name='kvpairs', description='kvpairs'),
   contentType?: string(name='contentType', description='视频预测数据类型：text、image、video_uri、video_base64'),
   videoFrameTopK?: integer(name='videoFrameTopK', description='召回帧的数量，默认值为100'),
-  sorts?: [ Sort ](name='sorts', description='多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数')
+  sorts?: [ Sort ](name='sorts', description='多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数'),
+  onlyIds?: boolean(name='onlyIds', description='仅 query 接口支持，是否只返回文档 ID，服务端默认 false')
 }
 
 model Sort {
@@ -239,9 +240,15 @@ async function query(request: QueryRequest): SearchResponse {
  * 向量预测查询
  */
 async function inferenceQuery(request: QueryRequest): SearchResponse {
-  var headers = getHeadersFromRunTimeOption();
+  return inferenceQueryWithHeaders(request, null);
+}
 
-  return _request('POST', `/vector-service/inference-query`, null, headers, Util.toJSONString(request), @runtimeOptions);
+async function inferenceQueryWithHeaders(request: QueryRequest, headers: map[string]string): SearchResponse {
+  var requestHeaders = {
+    ...getHeadersFromRunTimeOption(),
+    ...headers
+  };
+  return _request('POST', `/vector-service/inference-query`, null, requestHeaders, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
@@ -266,9 +273,15 @@ async function fetch(request: FetchRequest): SearchResponse {
  * 文本向量混合检索
  */
 async function search(request: SearchRequest): SearchResponse {
-  var headers = getHeadersFromRunTimeOption();
+  return searchWithHeaders(request, null);
+}
 
-  return _request('POST', `/vector-service/search`, null, headers, Util.toJSONString(request), @runtimeOptions);
+async function searchWithHeaders(request: SearchRequest, headers: map[string]string): SearchResponse {
+  var requestHeaders = {
+    ...getHeadersFromRunTimeOption(),
+    ...headers
+  };
+  return _request('POST', `/vector-service/search`, null, requestHeaders, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**

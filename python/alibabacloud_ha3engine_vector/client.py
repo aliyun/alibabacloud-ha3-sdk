@@ -494,11 +494,7 @@ class Client:
         """
         向量预测查询
         """
-        headers = self.get_headers_from_run_time_option()
-        return TeaCore.from_map(
-            ha_3engine_vector_models.SearchResponse(),
-            self._request('POST', f'/vector-service/inference-query', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
-        )
+        return self.inference_query_with_headers(request, None)
 
     async def inference_query_async(
         self,
@@ -507,10 +503,30 @@ class Client:
         """
         向量预测查询
         """
-        headers = self.get_headers_from_run_time_option()
+        return await self.inference_query_with_headers_async(request, None)
+
+    def inference_query_with_headers(
+        self,
+        request: ha_3engine_vector_models.QueryRequest,
+        headers: Dict[str, str],
+    ) -> ha_3engine_vector_models.SearchResponse:
+        request_headers = TeaCore.merge(self.get_headers_from_run_time_option(),
+            headers)
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            await self._request_async('POST', f'/vector-service/inference-query', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
+            self._request('POST', f'/vector-service/inference-query', None, request_headers, UtilClient.to_jsonstring(request), self._runtime_options)
+        )
+
+    async def inference_query_with_headers_async(
+        self,
+        request: ha_3engine_vector_models.QueryRequest,
+        headers: Dict[str, str],
+    ) -> ha_3engine_vector_models.SearchResponse:
+        request_headers = TeaCore.merge(self.get_headers_from_run_time_option(),
+            headers)
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            await self._request_async('POST', f'/vector-service/inference-query', None, request_headers, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     def multi_query(
@@ -572,11 +588,7 @@ class Client:
         """
         文本向量混合检索
         """
-        headers = self.get_headers_from_run_time_option()
-        return TeaCore.from_map(
-            ha_3engine_vector_models.SearchResponse(),
-            self._request('POST', f'/vector-service/search', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
-        )
+        return self.search_with_headers(request, None)
 
     async def search_async(
         self,
@@ -585,10 +597,30 @@ class Client:
         """
         文本向量混合检索
         """
-        headers = self.get_headers_from_run_time_option()
+        return await self.search_with_headers_async(request, None)
+
+    def search_with_headers(
+        self,
+        request: ha_3engine_vector_models.SearchRequest,
+        headers: Dict[str, str],
+    ) -> ha_3engine_vector_models.SearchResponse:
+        request_headers = TeaCore.merge(self.get_headers_from_run_time_option(),
+            headers)
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            await self._request_async('POST', f'/vector-service/search', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
+            self._request('POST', f'/vector-service/search', None, request_headers, UtilClient.to_jsonstring(request), self._runtime_options)
+        )
+
+    async def search_with_headers_async(
+        self,
+        request: ha_3engine_vector_models.SearchRequest,
+        headers: Dict[str, str],
+    ) -> ha_3engine_vector_models.SearchResponse:
+        request_headers = TeaCore.merge(self.get_headers_from_run_time_option(),
+            headers)
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            await self._request_async('POST', f'/vector-service/search', None, request_headers, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     def aggregate(

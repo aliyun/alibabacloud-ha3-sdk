@@ -210,6 +210,7 @@ class QueryRequest(TeaModel):
         content_type: str = None,
         video_frame_top_k: int = None,
         sorts: List[Sort] = None,
+        only_ids: bool = None,
     ):
         # 数据源名
         self.table_name = table_name
@@ -257,6 +258,8 @@ class QueryRequest(TeaModel):
         self.video_frame_top_k = video_frame_top_k
         # 多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数
         self.sorts = sorts
+        # 仅 query 接口支持，是否只返回文档 ID，服务端默认 false
+        self.only_ids = only_ids
 
     def validate(self):
         self.validate_required(self.table_name, 'table_name')
@@ -322,6 +325,8 @@ class QueryRequest(TeaModel):
         if self.sorts is not None:
             for k in self.sorts:
                 result['sorts'].append(k.to_map() if k else None)
+        if self.only_ids is not None:
+            result['onlyIds'] = self.only_ids
         return result
 
     def from_map(self, m: dict = None):
@@ -376,6 +381,8 @@ class QueryRequest(TeaModel):
             for k in m.get('sorts'):
                 temp_model = Sort()
                 self.sorts.append(temp_model.from_map(k))
+        if m.get('onlyIds') is not None:
+            self.only_ids = m.get('onlyIds')
         return self
 
 
