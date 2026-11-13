@@ -53,12 +53,6 @@ public class SearchRequest extends TeaModel {
     @NameInMap("rank")
     public RankQuery rank;
 
-    /**
-     * <p>检索的自定义 HTTP 请求头</p>
-     */
-    @NameInMap("headers")
-    public java.util.Map<String, String> headers;
-
     public static SearchRequest build(java.util.Map<String, ?> map) throws Exception {
         SearchRequest self = new SearchRequest();
         return TeaModel.build(map, self);
@@ -126,14 +120,6 @@ public class SearchRequest extends TeaModel {
     }
     public RankQuery getRank() {
         return this.rank;
-    }
-
-    public SearchRequest setHeaders(java.util.Map<String, String> headers) {
-        this.headers = headers;
-        return this;
-    }
-    public java.util.Map<String, String> getHeaders() {
-        return this.headers;
     }
 
 }

@@ -136,10 +136,8 @@ type QueryRequest struct {
   VideoFrameTopK *int `json:"videoFrameTopK,omitempty" xml:"videoFrameTopK,omitempty"`
   // 多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数
   Sorts []*Sort `json:"sorts,omitempty" xml:"sorts,omitempty" type:"Repeated"`
-  // 向量查询是否只返回文档 ID，服务端默认 false
+  // 仅 query 接口支持，是否只返回文档 ID，服务端默认 false
   OnlyIds *bool `json:"onlyIds,omitempty" xml:"onlyIds,omitempty"`
-  // 预测查询的自定义 HTTP 请求头
-  Headers map[string]*string `json:"headers,omitempty" xml:"headers,omitempty"`
 }
 
 func (s QueryRequest) String() string {
@@ -267,11 +265,6 @@ func (s *QueryRequest) SetSorts(v []*Sort) *QueryRequest {
 
 func (s *QueryRequest) SetOnlyIds(v bool) *QueryRequest {
   s.OnlyIds = &v
-  return s
-}
-
-func (s *QueryRequest) SetHeaders(v map[string]*string) *QueryRequest {
-  s.Headers = v
   return s
 }
 
@@ -571,8 +564,6 @@ type SearchRequest struct {
   Text *TextQuery `json:"text,omitempty" xml:"text,omitempty"`
   // 指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果
   Rank *RankQuery `json:"rank,omitempty" xml:"rank,omitempty"`
-  // 检索的自定义 HTTP 请求头
-  Headers map[string]*string `json:"headers,omitempty" xml:"headers,omitempty"`
 }
 
 func (s SearchRequest) String() string {
@@ -620,11 +611,6 @@ func (s *SearchRequest) SetText(v *TextQuery) *SearchRequest {
 
 func (s *SearchRequest) SetRank(v *RankQuery) *SearchRequest {
   s.Rank = v
-  return s
-}
-
-func (s *SearchRequest) SetHeaders(v map[string]*string) *SearchRequest {
-  s.Headers = v
   return s
 }
 
@@ -3686,18 +3672,8 @@ func (client *Client) GetRealmSignStr (accessUserName *string, accessPassWord *s
 // 向量查询
 func (client *Client) Query (request *QueryRequest) (_result *SearchResponse, _err error) {
   headers := client.GetHeadersFromRunTimeOption()
-  body := request
-  if !tea.BoolValue(util.IsUnset(request.Headers)) {
-    body, _err = client.CopyQueryRequest(request)
-    if _err != nil {
-      return _result, _err
-    }
-
-    body.Headers = nil
-  }
-
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/query"), nil, headers, util.ToJSONString(body), client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/query"), nil, headers, util.ToJSONString(request), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -3709,20 +3685,20 @@ func (client *Client) Query (request *QueryRequest) (_result *SearchResponse, _e
 // 
 // 向量预测查询
 func (client *Client) InferenceQuery (request *QueryRequest) (_result *SearchResponse, _err error) {
-  headers := tea.Merge(client.GetHeadersFromRunTimeOption(),
-    request.Headers)
-  body := request
-  if tea.BoolValue(client.HasQueryOptions(request)) {
-    body, _err = client.CopyQueryRequest(request)
-    if _err != nil {
-      return _result, _err
-    }
-
-    client.ClearQueryOptions(body)
-  }
-
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/inference-query"), nil, headers, util.ToJSONString(body), client.RuntimeOptions)
+  _body, _err := client.InferenceQueryWithHeaders(request, nil)
+  if _err != nil {
+    return _result, _err
+  }
+  _result = _body
+  return _result, _err
+}
+
+func (client *Client) InferenceQueryWithHeaders (request *QueryRequest, headers map[string]*string) (_result *SearchResponse, _err error) {
+  requestHeaders := tea.Merge(client.GetHeadersFromRunTimeOption(),
+    headers)
+  _result = &SearchResponse{}
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/inference-query"), nil, requestHeaders, util.ToJSONString(request), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -3735,26 +3711,8 @@ func (client *Client) InferenceQuery (request *QueryRequest) (_result *SearchRes
 // 多namespace查询
 func (client *Client) MultiQuery (request *MultiQueryRequest) (_result *SearchResponse, _err error) {
   headers := client.GetHeadersFromRunTimeOption()
-  body := request
-  if !tea.BoolValue(util.IsUnset(request.Queries)) {
-    for _, query := range request.Queries {
-      if tea.BoolValue(client.HasQueryOptions(query)) {
-        body, _err = client.CopyMultiQueryRequest(request)
-        if _err != nil {
-          return _result, _err
-        }
-
-        for _, item := range body.Queries {
-          client.ClearQueryOptions(item)
-        }
-        break
-      }
-
-    }
-  }
-
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/multi-query"), nil, headers, util.ToJSONString(body), client.RuntimeOptions)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/multi-query"), nil, headers, util.ToJSONString(request), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -3780,21 +3738,20 @@ func (client *Client) Fetch (request *FetchRequest) (_result *SearchResponse, _e
 // 
 // 文本向量混合检索
 func (client *Client) Search (request *SearchRequest) (_result *SearchResponse, _err error) {
-  headers := tea.Merge(client.GetHeadersFromRunTimeOption(),
-    request.Headers)
-  body := request
-  if !tea.BoolValue(util.IsUnset(request.Headers)) || tea.BoolValue(client.HasQueryOptions(request.Knn)) {
-    body, _err = client.CopySearchRequest(request)
-    if _err != nil {
-      return _result, _err
-    }
-
-    body.Headers = nil
-    client.ClearQueryOptions(body.Knn)
-  }
-
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/search"), nil, headers, util.ToJSONString(body), client.RuntimeOptions)
+  _body, _err := client.SearchWithHeaders(request, nil)
+  if _err != nil {
+    return _result, _err
+  }
+  _result = _body
+  return _result, _err
+}
+
+func (client *Client) SearchWithHeaders (request *SearchRequest, headers map[string]*string) (_result *SearchResponse, _err error) {
+  requestHeaders := tea.Merge(client.GetHeadersFromRunTimeOption(),
+    headers)
+  _result = &SearchResponse{}
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/search"), nil, requestHeaders, util.ToJSONString(request), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }
@@ -3821,94 +3778,8 @@ func (client *Client) Aggregate (request *AggregateRequest) (_result *SearchResp
 // 批量查询
 func (client *Client) BatchQuery (request *BatchRequest) (_result *SearchResponse, _err error) {
   headers := client.GetHeadersFromRunTimeOption()
-  body := request
-  if !tea.BoolValue(util.IsUnset(request.Queries)) {
-    for _, query := range request.Queries {
-      if tea.BoolValue(client.HasQueryOptions(query)) {
-        body, _err = client.CopyBatchRequest(request)
-        if _err != nil {
-          return _result, _err
-        }
-
-        for _, item := range body.Queries {
-          client.ClearQueryOptions(item)
-        }
-        break
-      }
-
-    }
-  }
-
   _result = &SearchResponse{}
-  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/batch-query"), nil, headers, util.ToJSONString(body), client.RuntimeOptions)
-  if _err != nil {
-    return _result, _err
-  }
-  _err = tea.Convert(_body, &_result)
-  return _result, _err
-}
-
-func (client *Client) HasQueryOptions (request *QueryRequest) (_result *bool) {
-  if tea.BoolValue(util.IsUnset(request)) {
-    _result = tea.Bool(false)
-    return _result
-  }
-
-  if tea.BoolValue(util.IsUnset(request.Headers)) && tea.BoolValue(util.IsUnset(request.OnlyIds)) {
-    _result = tea.Bool(false)
-    return _result
-  }
-
-  _result = tea.Bool(true)
-  return _result
-}
-
-func (client *Client) ClearQueryOptions (request *QueryRequest) {
-  if !tea.BoolValue(util.IsUnset(request)) {
-    request.Headers = nil
-    request.OnlyIds = nil
-  }
-
-}
-
-// Copy the model before clearing fields so it can be reused by the caller.
-func (client *Client) CopyQueryRequest (request *QueryRequest) (_result *QueryRequest, _err error) {
-  fields := util.ParseJSON(util.ToJSONString(request))
-  _result = &QueryRequest{}
-  _body, _err := util.AssertAsMap(fields)
-  if _err != nil {
-    return _result, _err
-  }
-  _err = tea.Convert(_body, &_result)
-  return _result, _err
-}
-
-func (client *Client) CopySearchRequest (request *SearchRequest) (_result *SearchRequest, _err error) {
-  fields := util.ParseJSON(util.ToJSONString(request))
-  _result = &SearchRequest{}
-  _body, _err := util.AssertAsMap(fields)
-  if _err != nil {
-    return _result, _err
-  }
-  _err = tea.Convert(_body, &_result)
-  return _result, _err
-}
-
-func (client *Client) CopyMultiQueryRequest (request *MultiQueryRequest) (_result *MultiQueryRequest, _err error) {
-  fields := util.ParseJSON(util.ToJSONString(request))
-  _result = &MultiQueryRequest{}
-  _body, _err := util.AssertAsMap(fields)
-  if _err != nil {
-    return _result, _err
-  }
-  _err = tea.Convert(_body, &_result)
-  return _result, _err
-}
-
-func (client *Client) CopyBatchRequest (request *BatchRequest) (_result *BatchRequest, _err error) {
-  fields := util.ParseJSON(util.ToJSONString(request))
-  _result = &BatchRequest{}
-  _body, _err := util.AssertAsMap(fields)
+  _body, _err := client._request(tea.String("POST"), tea.String("/vector-service/batch-query"), nil, headers, util.ToJSONString(request), client.RuntimeOptions)
   if _err != nil {
     return _result, _err
   }

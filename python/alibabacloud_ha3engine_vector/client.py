@@ -469,13 +469,9 @@ class Client:
         向量查询
         """
         headers = self.get_headers_from_run_time_option()
-        body = request
-        if not UtilClient.is_unset(request.headers):
-            body = self.copy_query_request(request)
-            body.headers = None
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            self._request('POST', f'/vector-service/query', None, headers, UtilClient.to_jsonstring(body), self._runtime_options)
+            self._request('POST', f'/vector-service/query', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     async def query_async(
@@ -486,13 +482,9 @@ class Client:
         向量查询
         """
         headers = self.get_headers_from_run_time_option()
-        body = request
-        if not UtilClient.is_unset(request.headers):
-            body = self.copy_query_request(request)
-            body.headers = None
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            await self._request_async('POST', f'/vector-service/query', None, headers, UtilClient.to_jsonstring(body), self._runtime_options)
+            await self._request_async('POST', f'/vector-service/query', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     def inference_query(
@@ -502,16 +494,7 @@ class Client:
         """
         向量预测查询
         """
-        headers = TeaCore.merge(self.get_headers_from_run_time_option(),
-            request.headers)
-        body = request
-        if self.has_query_options(request):
-            body = self.copy_query_request(request)
-            self.clear_query_options(body)
-        return TeaCore.from_map(
-            ha_3engine_vector_models.SearchResponse(),
-            self._request('POST', f'/vector-service/inference-query', None, headers, UtilClient.to_jsonstring(body), self._runtime_options)
-        )
+        return self.inference_query_with_headers(request, None)
 
     async def inference_query_async(
         self,
@@ -520,15 +503,30 @@ class Client:
         """
         向量预测查询
         """
-        headers = TeaCore.merge(self.get_headers_from_run_time_option(),
-            request.headers)
-        body = request
-        if self.has_query_options(request):
-            body = self.copy_query_request(request)
-            self.clear_query_options(body)
+        return await self.inference_query_with_headers_async(request, None)
+
+    def inference_query_with_headers(
+        self,
+        request: ha_3engine_vector_models.QueryRequest,
+        headers: Dict[str, str],
+    ) -> ha_3engine_vector_models.SearchResponse:
+        request_headers = TeaCore.merge(self.get_headers_from_run_time_option(),
+            headers)
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            await self._request_async('POST', f'/vector-service/inference-query', None, headers, UtilClient.to_jsonstring(body), self._runtime_options)
+            self._request('POST', f'/vector-service/inference-query', None, request_headers, UtilClient.to_jsonstring(request), self._runtime_options)
+        )
+
+    async def inference_query_with_headers_async(
+        self,
+        request: ha_3engine_vector_models.QueryRequest,
+        headers: Dict[str, str],
+    ) -> ha_3engine_vector_models.SearchResponse:
+        request_headers = TeaCore.merge(self.get_headers_from_run_time_option(),
+            headers)
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            await self._request_async('POST', f'/vector-service/inference-query', None, request_headers, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     def multi_query(
@@ -539,17 +537,9 @@ class Client:
         多namespace查询
         """
         headers = self.get_headers_from_run_time_option()
-        body = request
-        if not UtilClient.is_unset(request.queries):
-            for query in request.queries:
-                if self.has_query_options(query):
-                    body = self.copy_multi_query_request(request)
-                    for item in body.queries:
-                        self.clear_query_options(item)
-                    break
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            self._request('POST', f'/vector-service/multi-query', None, headers, UtilClient.to_jsonstring(body), self._runtime_options)
+            self._request('POST', f'/vector-service/multi-query', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     async def multi_query_async(
@@ -560,17 +550,9 @@ class Client:
         多namespace查询
         """
         headers = self.get_headers_from_run_time_option()
-        body = request
-        if not UtilClient.is_unset(request.queries):
-            for query in request.queries:
-                if self.has_query_options(query):
-                    body = self.copy_multi_query_request(request)
-                    for item in body.queries:
-                        self.clear_query_options(item)
-                    break
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            await self._request_async('POST', f'/vector-service/multi-query', None, headers, UtilClient.to_jsonstring(body), self._runtime_options)
+            await self._request_async('POST', f'/vector-service/multi-query', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     def fetch(
@@ -606,17 +588,7 @@ class Client:
         """
         文本向量混合检索
         """
-        headers = TeaCore.merge(self.get_headers_from_run_time_option(),
-            request.headers)
-        body = request
-        if not UtilClient.is_unset(request.headers) or self.has_query_options(request.knn):
-            body = self.copy_search_request(request)
-            body.headers = None
-            self.clear_query_options(body.knn)
-        return TeaCore.from_map(
-            ha_3engine_vector_models.SearchResponse(),
-            self._request('POST', f'/vector-service/search', None, headers, UtilClient.to_jsonstring(body), self._runtime_options)
-        )
+        return self.search_with_headers(request, None)
 
     async def search_async(
         self,
@@ -625,16 +597,30 @@ class Client:
         """
         文本向量混合检索
         """
-        headers = TeaCore.merge(self.get_headers_from_run_time_option(),
-            request.headers)
-        body = request
-        if not UtilClient.is_unset(request.headers) or self.has_query_options(request.knn):
-            body = self.copy_search_request(request)
-            body.headers = None
-            self.clear_query_options(body.knn)
+        return await self.search_with_headers_async(request, None)
+
+    def search_with_headers(
+        self,
+        request: ha_3engine_vector_models.SearchRequest,
+        headers: Dict[str, str],
+    ) -> ha_3engine_vector_models.SearchResponse:
+        request_headers = TeaCore.merge(self.get_headers_from_run_time_option(),
+            headers)
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            await self._request_async('POST', f'/vector-service/search', None, headers, UtilClient.to_jsonstring(body), self._runtime_options)
+            self._request('POST', f'/vector-service/search', None, request_headers, UtilClient.to_jsonstring(request), self._runtime_options)
+        )
+
+    async def search_with_headers_async(
+        self,
+        request: ha_3engine_vector_models.SearchRequest,
+        headers: Dict[str, str],
+    ) -> ha_3engine_vector_models.SearchResponse:
+        request_headers = TeaCore.merge(self.get_headers_from_run_time_option(),
+            headers)
+        return TeaCore.from_map(
+            ha_3engine_vector_models.SearchResponse(),
+            await self._request_async('POST', f'/vector-service/search', None, request_headers, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     def aggregate(
@@ -671,17 +657,9 @@ class Client:
         批量查询
         """
         headers = self.get_headers_from_run_time_option()
-        body = request
-        if not UtilClient.is_unset(request.queries):
-            for query in request.queries:
-                if self.has_query_options(query):
-                    body = self.copy_batch_request(request)
-                    for item in body.queries:
-                        self.clear_query_options(item)
-                    break
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            self._request('POST', f'/vector-service/batch-query', None, headers, UtilClient.to_jsonstring(body), self._runtime_options)
+            self._request('POST', f'/vector-service/batch-query', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     async def batch_query_async(
@@ -692,78 +670,9 @@ class Client:
         批量查询
         """
         headers = self.get_headers_from_run_time_option()
-        body = request
-        if not UtilClient.is_unset(request.queries):
-            for query in request.queries:
-                if self.has_query_options(query):
-                    body = self.copy_batch_request(request)
-                    for item in body.queries:
-                        self.clear_query_options(item)
-                    break
         return TeaCore.from_map(
             ha_3engine_vector_models.SearchResponse(),
-            await self._request_async('POST', f'/vector-service/batch-query', None, headers, UtilClient.to_jsonstring(body), self._runtime_options)
-        )
-
-    def has_query_options(
-        self,
-        request: ha_3engine_vector_models.QueryRequest,
-    ) -> bool:
-        if UtilClient.is_unset(request):
-            return False
-        if UtilClient.is_unset(request.headers) and UtilClient.is_unset(request.only_ids):
-            return False
-        return True
-
-    def clear_query_options(
-        self,
-        request: ha_3engine_vector_models.QueryRequest,
-    ) -> None:
-        if not UtilClient.is_unset(request):
-            request.headers = None
-            request.only_ids = None
-
-    def copy_query_request(
-        self,
-        request: ha_3engine_vector_models.QueryRequest,
-    ) -> ha_3engine_vector_models.QueryRequest:
-        """
-        Copy the model before clearing fields so it can be reused by the caller.
-        """
-        fields = UtilClient.parse_json(UtilClient.to_jsonstring(request))
-        return TeaCore.from_map(
-            ha_3engine_vector_models.QueryRequest(),
-            UtilClient.assert_as_map(fields)
-        )
-
-    def copy_search_request(
-        self,
-        request: ha_3engine_vector_models.SearchRequest,
-    ) -> ha_3engine_vector_models.SearchRequest:
-        fields = UtilClient.parse_json(UtilClient.to_jsonstring(request))
-        return TeaCore.from_map(
-            ha_3engine_vector_models.SearchRequest(),
-            UtilClient.assert_as_map(fields)
-        )
-
-    def copy_multi_query_request(
-        self,
-        request: ha_3engine_vector_models.MultiQueryRequest,
-    ) -> ha_3engine_vector_models.MultiQueryRequest:
-        fields = UtilClient.parse_json(UtilClient.to_jsonstring(request))
-        return TeaCore.from_map(
-            ha_3engine_vector_models.MultiQueryRequest(),
-            UtilClient.assert_as_map(fields)
-        )
-
-    def copy_batch_request(
-        self,
-        request: ha_3engine_vector_models.BatchRequest,
-    ) -> ha_3engine_vector_models.BatchRequest:
-        fields = UtilClient.parse_json(UtilClient.to_jsonstring(request))
-        return TeaCore.from_map(
-            ha_3engine_vector_models.BatchRequest(),
-            UtilClient.assert_as_map(fields)
+            await self._request_async('POST', f'/vector-service/batch-query', None, headers, UtilClient.to_jsonstring(request), self._runtime_options)
         )
 
     def stats(

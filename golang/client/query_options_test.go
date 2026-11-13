@@ -27,10 +27,12 @@ func TestQueryOptionsOnWire(t *testing.T) {
 		{"query omitted", "query", nil, false, "", knn},
 		{"query false", "query", tea.Bool(false), false, "", knn[:len(knn)-1] + `,"onlyIds":false}`},
 		{"query true", "query", tea.Bool(true), false, "", knn[:len(knn)-1] + `,"onlyIds":true}`},
-		{"inference with deflate", "inference-query", tea.Bool(true), true, "inference-route", knn},
-		{"search with nested options", "search", tea.Bool(true), false, "search-route", `{"tableName":"items","knn":` + knn + `}`},
-		{"multi-query with nested options", "multi-query", tea.Bool(true), false, "", `{"tableName":"items","queries":[` + knn + `]}`},
-		{"batch-query with nested options", "batch-query", tea.Bool(true), false, "", `{"queries":[` + knn + `]}`},
+		{"inference without headers", "inference-query", nil, false, "", knn},
+		{"inference with headers and deflate", "inference-query", nil, true, "inference-route", knn},
+		{"search without headers", "search", nil, false, "", `{"tableName":"items","knn":` + knn + `}`},
+		{"search with headers", "search", nil, false, "search-route", `{"tableName":"items","knn":` + knn + `}`},
+		{"multi-query", "multi-query", nil, false, "", `{"tableName":"items","queries":[` + knn + `]}`},
+		{"batch-query", "batch-query", nil, false, "", `{"queries":[` + knn + `]}`},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			query := &QueryRequest{
@@ -43,10 +45,10 @@ func TestQueryOptionsOnWire(t *testing.T) {
 					Values:  []*float32{tea.Float32(2)},
 				},
 				OnlyIds: test.onlyIDs,
-				Headers: map[string]*string{
-					"X-Source-Id":     tea.String("inference-route"),
-					"X-Custom-Header": tea.String("inference-custom"),
-				},
+			}
+			headers := map[string]*string{
+				"X-Source-Id":     tea.String(test.wantHeader),
+				"X-Custom-Header": tea.String("custom-value"),
 			}
 			var request interface{} = query
 			var invoke func(*Client) (*SearchResponse, error)
@@ -54,18 +56,24 @@ func TestQueryOptionsOnWire(t *testing.T) {
 			case "query":
 				invoke = func(sdk *Client) (*SearchResponse, error) { return sdk.Query(query) }
 			case "inference-query":
-				invoke = func(sdk *Client) (*SearchResponse, error) { return sdk.InferenceQuery(query) }
+				invoke = func(sdk *Client) (*SearchResponse, error) {
+					if test.wantHeader == "" {
+						return sdk.InferenceQuery(query)
+					}
+					return sdk.InferenceQueryWithHeaders(query, headers)
+				}
 			case "search":
 				search := &SearchRequest{
 					TableName: tea.String("items"),
 					Knn:       query,
-					Headers: map[string]*string{
-						"X-Source-Id":     tea.String("search-route"),
-						"X-Custom-Header": tea.String("search-custom"),
-					},
 				}
 				request = search
-				invoke = func(sdk *Client) (*SearchResponse, error) { return sdk.Search(search) }
+				invoke = func(sdk *Client) (*SearchResponse, error) {
+					if test.wantHeader == "" {
+						return sdk.Search(search)
+					}
+					return sdk.SearchWithHeaders(search, headers)
+				}
 			case "multi-query":
 				multi := &MultiQueryRequest{TableName: tea.String("items"), Queries: []*QueryRequest{query}}
 				request = multi
@@ -98,12 +106,8 @@ func TestQueryOptionsOnWire(t *testing.T) {
 				if got := wire.header.Get("X-Source-Id"); got != test.wantHeader {
 					t.Errorf("X-Source-Id = %q, want %q", got, test.wantHeader)
 				}
-				wantCustom := "inference-custom"
-				if test.path == "search" {
-					wantCustom = "search-custom"
-				}
-				if got := wire.header.Get("X-Custom-Header"); got != wantCustom {
-					t.Errorf("X-Custom-Header = %q, want %q", got, wantCustom)
+				if got := wire.header.Get("X-Custom-Header"); got != "custom-value" {
+					t.Errorf("X-Custom-Header = %q, want custom-value", got)
 				}
 			}
 			body := wire.body

@@ -136,8 +136,7 @@ model QueryRequest {
   contentType?: string(name='contentType', description='视频预测数据类型：text、image、video_uri、video_base64'),
   videoFrameTopK?: integer(name='videoFrameTopK', description='召回帧的数量，默认值为100'),
   sorts?: [ Sort ](name='sorts', description='多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数'),
-  onlyIds?: boolean(name='onlyIds', description='向量查询是否只返回文档 ID，服务端默认 false'),
-  headers?: map[string]string(name='headers', description='预测查询的自定义 HTTP 请求头')
+  onlyIds?: boolean(name='onlyIds', description='仅 query 接口支持，是否只返回文档 ID，服务端默认 false')
 }
 
 model Sort {
@@ -200,8 +199,7 @@ model SearchRequest{
  outputFields?: [ string ](name='outputFields', description='指定需要在结果中返回的字段，默认为空'),
  knn?: QueryRequest(name='knn', description='KNN查询参数'),
  text?: TextQuery(name='text', description='text查询参数'),
- rank?: RankQuery(name='rank', description='指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果'),
- headers?: map[string]string(name='headers', description='检索的自定义 HTTP 请求头')
+ rank?: RankQuery(name='rank', description='指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果')
 }
 
 model AggFuncDesc {
@@ -235,28 +233,22 @@ model BatchRequest {
  */
 async function query(request: QueryRequest): SearchResponse {
   var headers = getHeadersFromRunTimeOption();
-  var body = request;
-  if (!Util.isUnset(request.headers)) {
-    body = copyQueryRequest(request);
-    body.headers = null;
-  }
-  return _request('POST', `/vector-service/query`, null, headers, Util.toJSONString(body), @runtimeOptions);
+  return _request('POST', `/vector-service/query`, null, headers, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
  * 向量预测查询
  */
 async function inferenceQuery(request: QueryRequest): SearchResponse {
-  var headers = {
+  return inferenceQueryWithHeaders(request, null);
+}
+
+async function inferenceQueryWithHeaders(request: QueryRequest, headers: map[string]string): SearchResponse {
+  var requestHeaders = {
     ...getHeadersFromRunTimeOption(),
-    ...request.headers
+    ...headers
   };
-  var body = request;
-  if (hasQueryOptions(request)) {
-    body = copyQueryRequest(request);
-    clearQueryOptions(body);
-  }
-  return _request('POST', `/vector-service/inference-query`, null, headers, Util.toJSONString(body), @runtimeOptions);
+  return _request('POST', `/vector-service/inference-query`, null, requestHeaders, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
@@ -265,19 +257,7 @@ async function inferenceQuery(request: QueryRequest): SearchResponse {
 async function multiQuery(request: MultiQueryRequest): SearchResponse {
   var headers = getHeadersFromRunTimeOption();
 
-  var body = request;
-  if (!Util.isUnset(request.queries)) {
-    for (var query : request.queries) {
-      if (hasQueryOptions(query)) {
-        body = copyMultiQueryRequest(request);
-        for (var item : body.queries) {
-          clearQueryOptions(item);
-        }
-        break;
-      }
-    }
-  }
-  return _request('POST', `/vector-service/multi-query`, null, headers, Util.toJSONString(body), @runtimeOptions);
+  return _request('POST', `/vector-service/multi-query`, null, headers, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
@@ -293,17 +273,15 @@ async function fetch(request: FetchRequest): SearchResponse {
  * 文本向量混合检索
  */
 async function search(request: SearchRequest): SearchResponse {
-  var headers = {
+  return searchWithHeaders(request, null);
+}
+
+async function searchWithHeaders(request: SearchRequest, headers: map[string]string): SearchResponse {
+  var requestHeaders = {
     ...getHeadersFromRunTimeOption(),
-    ...request.headers
+    ...headers
   };
-  var body = request;
-  if (!Util.isUnset(request.headers) || hasQueryOptions(request.knn)) {
-    body = copySearchRequest(request);
-    body.headers = null;
-    clearQueryOptions(body.knn);
-  }
-  return _request('POST', `/vector-service/search`, null, headers, Util.toJSONString(body), @runtimeOptions);
+  return _request('POST', `/vector-service/search`, null, requestHeaders, Util.toJSONString(request), @runtimeOptions);
 }
 
 /**
@@ -321,57 +299,7 @@ async function aggregate(request: AggregateRequest): SearchResponse {
 async function batchQuery(request: BatchRequest): SearchResponse {
   var headers = getHeadersFromRunTimeOption();
 
-  var body = request;
-  if (!Util.isUnset(request.queries)) {
-    for (var query : request.queries) {
-      if (hasQueryOptions(query)) {
-        body = copyBatchRequest(request);
-        for (var item : body.queries) {
-          clearQueryOptions(item);
-        }
-        break;
-      }
-    }
-  }
-  return _request('POST', `/vector-service/batch-query`, null, headers, Util.toJSONString(body), @runtimeOptions);
-}
-
-function hasQueryOptions(request: QueryRequest): boolean {
-  if (Util.isUnset(request)) {
-    return false;
-  }
-  if (Util.isUnset(request.headers) && Util.isUnset(request.onlyIds)) {
-    return false;
-  }
-  return true;
-}
-
-function clearQueryOptions(request: QueryRequest): void {
-  if (!Util.isUnset(request)) {
-    request.headers = null;
-    request.onlyIds = null;
-  }
-}
-
-// Copy the model before clearing fields so it can be reused by the caller.
-function copyQueryRequest(request: QueryRequest) throws: QueryRequest {
-  var fields = Util.parseJSON(Util.toJSONString(request));
-  return Util.assertAsMap(fields);
-}
-
-function copySearchRequest(request: SearchRequest) throws: SearchRequest {
-  var fields = Util.parseJSON(Util.toJSONString(request));
-  return Util.assertAsMap(fields);
-}
-
-function copyMultiQueryRequest(request: MultiQueryRequest) throws: MultiQueryRequest {
-  var fields = Util.parseJSON(Util.toJSONString(request));
-  return Util.assertAsMap(fields);
-}
-
-function copyBatchRequest(request: BatchRequest) throws: BatchRequest {
-  var fields = Util.parseJSON(Util.toJSONString(request));
-  return Util.assertAsMap(fields);
+  return _request('POST', `/vector-service/batch-query`, null, headers, Util.toJSONString(request), @runtimeOptions);
 }
 
 

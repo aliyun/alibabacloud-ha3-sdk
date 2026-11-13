@@ -332,13 +332,7 @@ public class Client {
      */
     public SearchResponse query(QueryRequest request) throws Exception {
         java.util.Map<String, String> headers = this.getHeadersFromRunTimeOption();
-        QueryRequest body = request;
-        if (!com.aliyun.teautil.Common.isUnset(request.headers)) {
-            body = this.copyQueryRequest(request);
-            body.headers = null;
-        }
-
-        return TeaModel.toModel(this._request("POST", "/vector-service/query", null, headers, com.aliyun.teautil.Common.toJSONString(body), _runtimeOptions), new SearchResponse());
+        return TeaModel.toModel(this._request("POST", "/vector-service/query", null, headers, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
@@ -346,17 +340,15 @@ public class Client {
      * <p>向量预测查询</p>
      */
     public SearchResponse inferenceQuery(QueryRequest request) throws Exception {
-        java.util.Map<String, String> headers = TeaConverter.merge(String.class,
-            this.getHeadersFromRunTimeOption(),
-            request.headers
-        );
-        QueryRequest body = request;
-        if (this.hasQueryOptions(request)) {
-            body = this.copyQueryRequest(request);
-            this.clearQueryOptions(body);
-        }
+        return this.inferenceQueryWithHeaders(request, null);
+    }
 
-        return TeaModel.toModel(this._request("POST", "/vector-service/inference-query", null, headers, com.aliyun.teautil.Common.toJSONString(body), _runtimeOptions), new SearchResponse());
+    public SearchResponse inferenceQueryWithHeaders(QueryRequest request, java.util.Map<String, String> headers) throws Exception {
+        java.util.Map<String, String> requestHeaders = TeaConverter.merge(String.class,
+            this.getHeadersFromRunTimeOption(),
+            headers
+        );
+        return TeaModel.toModel(this._request("POST", "/vector-service/inference-query", null, requestHeaders, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
@@ -365,21 +357,7 @@ public class Client {
      */
     public SearchResponse multiQuery(MultiQueryRequest request) throws Exception {
         java.util.Map<String, String> headers = this.getHeadersFromRunTimeOption();
-        MultiQueryRequest body = request;
-        if (!com.aliyun.teautil.Common.isUnset(request.queries)) {
-            for (QueryRequest query : request.queries) {
-                if (this.hasQueryOptions(query)) {
-                    body = this.copyMultiQueryRequest(request);
-                    for (QueryRequest item : body.queries) {
-                        this.clearQueryOptions(item);
-                    }
-                    break;
-                }
-
-            }
-        }
-
-        return TeaModel.toModel(this._request("POST", "/vector-service/multi-query", null, headers, com.aliyun.teautil.Common.toJSONString(body), _runtimeOptions), new SearchResponse());
+        return TeaModel.toModel(this._request("POST", "/vector-service/multi-query", null, headers, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
@@ -396,18 +374,15 @@ public class Client {
      * <p>文本向量混合检索</p>
      */
     public SearchResponse search(SearchRequest request) throws Exception {
-        java.util.Map<String, String> headers = TeaConverter.merge(String.class,
-            this.getHeadersFromRunTimeOption(),
-            request.headers
-        );
-        SearchRequest body = request;
-        if (!com.aliyun.teautil.Common.isUnset(request.headers) || this.hasQueryOptions(request.knn)) {
-            body = this.copySearchRequest(request);
-            body.headers = null;
-            this.clearQueryOptions(body.knn);
-        }
+        return this.searchWithHeaders(request, null);
+    }
 
-        return TeaModel.toModel(this._request("POST", "/vector-service/search", null, headers, com.aliyun.teautil.Common.toJSONString(body), _runtimeOptions), new SearchResponse());
+    public SearchResponse searchWithHeaders(SearchRequest request, java.util.Map<String, String> headers) throws Exception {
+        java.util.Map<String, String> requestHeaders = TeaConverter.merge(String.class,
+            this.getHeadersFromRunTimeOption(),
+            headers
+        );
+        return TeaModel.toModel(this._request("POST", "/vector-service/search", null, requestHeaders, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**
@@ -425,62 +400,7 @@ public class Client {
      */
     public SearchResponse batchQuery(BatchRequest request) throws Exception {
         java.util.Map<String, String> headers = this.getHeadersFromRunTimeOption();
-        BatchRequest body = request;
-        if (!com.aliyun.teautil.Common.isUnset(request.queries)) {
-            for (QueryRequest query : request.queries) {
-                if (this.hasQueryOptions(query)) {
-                    body = this.copyBatchRequest(request);
-                    for (QueryRequest item : body.queries) {
-                        this.clearQueryOptions(item);
-                    }
-                    break;
-                }
-
-            }
-        }
-
-        return TeaModel.toModel(this._request("POST", "/vector-service/batch-query", null, headers, com.aliyun.teautil.Common.toJSONString(body), _runtimeOptions), new SearchResponse());
-    }
-
-    public Boolean hasQueryOptions(QueryRequest request) throws Exception {
-        if (com.aliyun.teautil.Common.isUnset(request)) {
-            return false;
-        }
-
-        if (com.aliyun.teautil.Common.isUnset(request.headers) && com.aliyun.teautil.Common.isUnset(request.onlyIds)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public void clearQueryOptions(QueryRequest request) throws Exception {
-        if (!com.aliyun.teautil.Common.isUnset(request)) {
-            request.headers = null;
-            request.onlyIds = null;
-        }
-
-    }
-
-    // Copy the model before clearing fields so it can be reused by the caller.
-    public QueryRequest copyQueryRequest(QueryRequest request) throws Exception {
-        Object fields = com.aliyun.teautil.Common.parseJSON(com.aliyun.teautil.Common.toJSONString(request));
-        return TeaModel.toModel(com.aliyun.teautil.Common.assertAsMap(fields), new QueryRequest());
-    }
-
-    public SearchRequest copySearchRequest(SearchRequest request) throws Exception {
-        Object fields = com.aliyun.teautil.Common.parseJSON(com.aliyun.teautil.Common.toJSONString(request));
-        return TeaModel.toModel(com.aliyun.teautil.Common.assertAsMap(fields), new SearchRequest());
-    }
-
-    public MultiQueryRequest copyMultiQueryRequest(MultiQueryRequest request) throws Exception {
-        Object fields = com.aliyun.teautil.Common.parseJSON(com.aliyun.teautil.Common.toJSONString(request));
-        return TeaModel.toModel(com.aliyun.teautil.Common.assertAsMap(fields), new MultiQueryRequest());
-    }
-
-    public BatchRequest copyBatchRequest(BatchRequest request) throws Exception {
-        Object fields = com.aliyun.teautil.Common.parseJSON(com.aliyun.teautil.Common.toJSONString(request));
-        return TeaModel.toModel(com.aliyun.teautil.Common.assertAsMap(fields), new BatchRequest());
+        return TeaModel.toModel(this._request("POST", "/vector-service/batch-query", null, headers, com.aliyun.teautil.Common.toJSONString(request), _runtimeOptions), new SearchResponse());
     }
 
     /**

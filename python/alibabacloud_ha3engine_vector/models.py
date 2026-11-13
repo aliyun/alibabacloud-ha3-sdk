@@ -211,7 +211,6 @@ class QueryRequest(TeaModel):
         video_frame_top_k: int = None,
         sorts: List[Sort] = None,
         only_ids: bool = None,
-        headers: Dict[str, str] = None,
     ):
         # 数据源名
         self.table_name = table_name
@@ -259,10 +258,8 @@ class QueryRequest(TeaModel):
         self.video_frame_top_k = video_frame_top_k
         # 多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数
         self.sorts = sorts
-        # 向量查询是否只返回文档 ID，服务端默认 false
+        # 仅 query 接口支持，是否只返回文档 ID，服务端默认 false
         self.only_ids = only_ids
-        # 预测查询的自定义 HTTP 请求头
-        self.headers = headers
 
     def validate(self):
         self.validate_required(self.table_name, 'table_name')
@@ -330,8 +327,6 @@ class QueryRequest(TeaModel):
                 result['sorts'].append(k.to_map() if k else None)
         if self.only_ids is not None:
             result['onlyIds'] = self.only_ids
-        if self.headers is not None:
-            result['headers'] = self.headers
         return result
 
     def from_map(self, m: dict = None):
@@ -388,8 +383,6 @@ class QueryRequest(TeaModel):
                 self.sorts.append(temp_model.from_map(k))
         if m.get('onlyIds') is not None:
             self.only_ids = m.get('onlyIds')
-        if m.get('headers') is not None:
-            self.headers = m.get('headers')
         return self
 
 
@@ -671,7 +664,6 @@ class SearchRequest(TeaModel):
         knn: QueryRequest = None,
         text: TextQuery = None,
         rank: RankQuery = None,
-        headers: Dict[str, str] = None,
     ):
         # 数据源名
         self.table_name = table_name
@@ -689,8 +681,6 @@ class SearchRequest(TeaModel):
         self.text = text
         # 指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果
         self.rank = rank
-        # 检索的自定义 HTTP 请求头
-        self.headers = headers
 
     def validate(self):
         self.validate_required(self.table_name, 'table_name')
@@ -723,8 +713,6 @@ class SearchRequest(TeaModel):
             result['text'] = self.text.to_map()
         if self.rank is not None:
             result['rank'] = self.rank.to_map()
-        if self.headers is not None:
-            result['headers'] = self.headers
         return result
 
     def from_map(self, m: dict = None):
@@ -748,8 +736,6 @@ class SearchRequest(TeaModel):
         if m.get('rank') is not None:
             temp_model = RankQuery()
             self.rank = temp_model.from_map(m['rank'])
-        if m.get('headers') is not None:
-            self.headers = m.get('headers')
         return self
 
 

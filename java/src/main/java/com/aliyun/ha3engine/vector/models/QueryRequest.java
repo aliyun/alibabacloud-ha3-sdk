@@ -145,16 +145,10 @@ public class QueryRequest extends TeaModel {
     public java.util.List<Sort> sorts;
 
     /**
-     * <p>向量查询是否只返回文档 ID，服务端默认 false</p>
+     * <p>仅 query 接口支持，是否只返回文档 ID，服务端默认 false</p>
      */
     @NameInMap("onlyIds")
     public Boolean onlyIds;
-
-    /**
-     * <p>预测查询的自定义 HTTP 请求头</p>
-     */
-    @NameInMap("headers")
-    public java.util.Map<String, String> headers;
 
     public static QueryRequest build(java.util.Map<String, ?> map) throws Exception {
         QueryRequest self = new QueryRequest();
@@ -351,14 +345,6 @@ public class QueryRequest extends TeaModel {
     }
     public Boolean getOnlyIds() {
         return this.onlyIds;
-    }
-
-    public QueryRequest setHeaders(java.util.Map<String, String> headers) {
-        this.headers = headers;
-        return this;
-    }
-    public java.util.Map<String, String> getHeaders() {
-        return this.headers;
     }
 
 }
