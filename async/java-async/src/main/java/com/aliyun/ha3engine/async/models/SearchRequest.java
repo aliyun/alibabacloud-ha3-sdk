@@ -48,6 +48,10 @@ public class SearchRequest extends Request {
     @NameInMap("rankQuery")
     private RankQuery rank;
 
+    @Body
+    @NameInMap("scoreThreshold")
+    private Float scoreThreshold;
+
     private SearchRequest(Builder builder) {
         super(builder);
         this.tableName = builder.tableName;
@@ -58,6 +62,7 @@ public class SearchRequest extends Request {
         this.knn = builder.knn;
         this.text = builder.text;
         this.rank = builder.rank;
+        this.scoreThreshold = builder.scoreThreshold;
     }
 
     public static Builder builder() {
@@ -129,6 +134,10 @@ public class SearchRequest extends Request {
         return this.rank;
     }
 
+    public Float getScoreThreshold() {
+        return this.scoreThreshold;
+    }
+
     public static final class Builder extends Request.Builder<SearchRequest, Builder> {
         private String tableName; 
         private Integer size; 
@@ -138,6 +147,7 @@ public class SearchRequest extends Request {
         private QueryRequest knn; 
         private TextQuery text; 
         private RankQuery rank; 
+        private Float scoreThreshold;
 
         private Builder() {
             super();
@@ -153,6 +163,7 @@ public class SearchRequest extends Request {
             this.knn = request.knn;
             this.text = request.text;
             this.rank = request.rank;
+            this.scoreThreshold = request.scoreThreshold;
         } 
 
         /**
@@ -224,6 +235,15 @@ public class SearchRequest extends Request {
         public Builder rank(RankQuery rank) {
             this.putBodyParameter("rank", rank);
             this.rank = rank;
+            return this;
+        }
+
+        /**
+         * 过滤最终得分低于此阈值的结果；不设置时不过滤。
+         */
+        public Builder scoreThreshold(Float scoreThreshold) {
+            this.putBodyParameter("scoreThreshold", scoreThreshold);
+            this.scoreThreshold = scoreThreshold;
             return this;
         }
 
