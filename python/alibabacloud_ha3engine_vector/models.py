@@ -664,6 +664,7 @@ class SearchRequest(TeaModel):
         knn: QueryRequest = None,
         text: TextQuery = None,
         rank: RankQuery = None,
+        score_threshold: float = None,
     ):
         # 数据源名
         self.table_name = table_name
@@ -681,6 +682,8 @@ class SearchRequest(TeaModel):
         self.text = text
         # 指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果
         self.rank = rank
+        # 过滤低于该阈值的混合查询结果，不传时不过滤
+        self.score_threshold = score_threshold
 
     def validate(self):
         self.validate_required(self.table_name, 'table_name')
@@ -713,6 +716,8 @@ class SearchRequest(TeaModel):
             result['text'] = self.text.to_map()
         if self.rank is not None:
             result['rank'] = self.rank.to_map()
+        if self.score_threshold is not None:
+            result['scoreThreshold'] = self.score_threshold
         return result
 
     def from_map(self, m: dict = None):
@@ -736,6 +741,8 @@ class SearchRequest(TeaModel):
         if m.get('rank') is not None:
             temp_model = RankQuery()
             self.rank = temp_model.from_map(m['rank'])
+        if m.get('scoreThreshold') is not None:
+            self.score_threshold = m.get('scoreThreshold')
         return self
 
 
