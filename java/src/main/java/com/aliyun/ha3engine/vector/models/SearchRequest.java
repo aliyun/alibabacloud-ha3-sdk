@@ -53,6 +53,12 @@ public class SearchRequest extends TeaModel {
     @NameInMap("rank")
     public RankQuery rank;
 
+    /**
+     * <p>过滤低于该阈值的混合查询结果，不传时不过滤</p>
+     */
+    @NameInMap("scoreThreshold")
+    public Float scoreThreshold;
+
     public static SearchRequest build(java.util.Map<String, ?> map) throws Exception {
         SearchRequest self = new SearchRequest();
         return TeaModel.build(map, self);
@@ -120,6 +126,14 @@ public class SearchRequest extends TeaModel {
     }
     public RankQuery getRank() {
         return this.rank;
+    }
+
+    public SearchRequest setScoreThreshold(Float scoreThreshold) {
+        this.scoreThreshold = scoreThreshold;
+        return this;
+    }
+    public Float getScoreThreshold() {
+        return this.scoreThreshold;
     }
 
 }

@@ -564,6 +564,8 @@ type SearchRequest struct {
   Text *TextQuery `json:"text,omitempty" xml:"text,omitempty"`
   // 指定两路结果融合的方式，目前支持两种策略：默认策略：两路结果中相同pk的doc的分数按权重相加。按加权后的分数排序。rrf: 使用rrf融合两路结果
   Rank *RankQuery `json:"rank,omitempty" xml:"rank,omitempty"`
+  // 过滤低于该阈值的混合查询结果，不传时不过滤
+  ScoreThreshold *float32 `json:"scoreThreshold,omitempty" xml:"scoreThreshold,omitempty"`
 }
 
 func (s SearchRequest) String() string {
@@ -611,6 +613,11 @@ func (s *SearchRequest) SetText(v *TextQuery) *SearchRequest {
 
 func (s *SearchRequest) SetRank(v *RankQuery) *SearchRequest {
   s.Rank = v
+  return s
+}
+
+func (s *SearchRequest) SetScoreThreshold(v float32) *SearchRequest {
+  s.ScoreThreshold = &v
   return s
 }
 
