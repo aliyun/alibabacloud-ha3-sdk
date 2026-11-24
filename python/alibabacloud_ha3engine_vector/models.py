@@ -211,6 +211,7 @@ class QueryRequest(TeaModel):
         video_frame_top_k: int = None,
         sorts: List[Sort] = None,
         only_ids: bool = None,
+        ns_expression: str = None,
     ):
         # 数据源名
         self.table_name = table_name
@@ -260,6 +261,8 @@ class QueryRequest(TeaModel):
         self.sorts = sorts
         # 仅 query 接口支持，是否只返回文档 ID，服务端默认 false
         self.only_ids = only_ids
+        # 多命名空间查询的逻辑表达式
+        self.ns_expression = ns_expression
 
     def validate(self):
         self.validate_required(self.table_name, 'table_name')
@@ -327,6 +330,8 @@ class QueryRequest(TeaModel):
                 result['sorts'].append(k.to_map() if k else None)
         if self.only_ids is not None:
             result['onlyIds'] = self.only_ids
+        if self.ns_expression is not None:
+            result['nsExpression'] = self.ns_expression
         return result
 
     def from_map(self, m: dict = None):
@@ -383,6 +388,8 @@ class QueryRequest(TeaModel):
                 self.sorts.append(temp_model.from_map(k))
         if m.get('onlyIds') is not None:
             self.only_ids = m.get('onlyIds')
+        if m.get('nsExpression') is not None:
+            self.ns_expression = m.get('nsExpression')
         return self
 
 

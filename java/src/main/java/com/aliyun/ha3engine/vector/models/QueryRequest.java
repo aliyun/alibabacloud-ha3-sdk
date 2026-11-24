@@ -150,6 +150,12 @@ public class QueryRequest extends TeaModel {
     @NameInMap("onlyIds")
     public Boolean onlyIds;
 
+    /**
+     * <p>多命名空间查询的逻辑表达式</p>
+     */
+    @NameInMap("nsExpression")
+    public String nsExpression;
+
     public static QueryRequest build(java.util.Map<String, ?> map) throws Exception {
         QueryRequest self = new QueryRequest();
         return TeaModel.build(map, self);
@@ -345,6 +351,14 @@ public class QueryRequest extends TeaModel {
     }
     public Boolean getOnlyIds() {
         return this.onlyIds;
+    }
+
+    public QueryRequest setNsExpression(String nsExpression) {
+        this.nsExpression = nsExpression;
+        return this;
+    }
+    public String getNsExpression() {
+        return this.nsExpression;
     }
 
 }

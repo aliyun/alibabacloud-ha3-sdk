@@ -138,6 +138,8 @@ type QueryRequest struct {
   Sorts []*Sort `json:"sorts,omitempty" xml:"sorts,omitempty" type:"Repeated"`
   // 仅 query 接口支持，是否只返回文档 ID，服务端默认 false
   OnlyIds *bool `json:"onlyIds,omitempty" xml:"onlyIds,omitempty"`
+  // 多命名空间查询的逻辑表达式
+  NsExpression *string `json:"nsExpression,omitempty" xml:"nsExpression,omitempty"`
 }
 
 func (s QueryRequest) String() string {
@@ -265,6 +267,11 @@ func (s *QueryRequest) SetSorts(v []*Sort) *QueryRequest {
 
 func (s *QueryRequest) SetOnlyIds(v bool) *QueryRequest {
   s.OnlyIds = &v
+  return s
+}
+
+func (s *QueryRequest) SetNsExpression(v string) *QueryRequest {
+  s.NsExpression = &v
   return s
 }
 
