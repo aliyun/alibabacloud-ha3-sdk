@@ -33,6 +33,10 @@ public class QueryRequest extends Request {
     private String namespace;
 
     @Body
+    @NameInMap("nsExpression")
+    private String nsExpression;
+
+    @Body
     @NameInMap("topK")
     private Integer topK;
 
@@ -126,6 +130,7 @@ public class QueryRequest extends Request {
         this.tableName = builder.tableName;
         this.vector = builder.vector;
         this.namespace = builder.namespace;
+        this.nsExpression = builder.nsExpression;
         this.topK = builder.topK;
         this.indexName = builder.indexName;
         this.sparseData = builder.sparseData;
@@ -180,6 +185,10 @@ public class QueryRequest extends Request {
      */
     public String getNamespace() {
         return this.namespace;
+    }
+
+    public String getNsExpression() {
+        return this.nsExpression;
     }
 
     /**
@@ -323,6 +332,7 @@ public class QueryRequest extends Request {
         private String tableName; 
         private List < Float > vector;
         private String namespace; 
+        private String nsExpression;
         private Integer topK; 
         private String indexName; 
         private SparseData sparseData; 
@@ -353,6 +363,7 @@ public class QueryRequest extends Request {
             this.tableName = request.tableName;
             this.vector = request.vector;
             this.namespace = request.namespace;
+            this.nsExpression = request.nsExpression;
             this.topK = request.topK;
             this.indexName = request.indexName;
             this.sparseData = request.sparseData;
@@ -399,6 +410,12 @@ public class QueryRequest extends Request {
         public Builder namespace(String namespace) {
             this.putBodyParameter("namespace", namespace);
             this.namespace = namespace;
+            return this;
+        }
+
+        public Builder nsExpression(String nsExpression) {
+            this.putBodyParameter("nsExpression", nsExpression);
+            this.nsExpression = nsExpression;
             return this;
         }
 
