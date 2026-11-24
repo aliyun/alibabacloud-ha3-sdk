@@ -136,7 +136,8 @@ model QueryRequest {
   contentType?: string(name='contentType', description='视频预测数据类型：text、image、video_uri、video_base64'),
   videoFrameTopK?: integer(name='videoFrameTopK', description='召回帧的数量，默认值为100'),
   sorts?: [ Sort ](name='sorts', description='多维排序，配置sorts后，结果中的score字段会变成多值字段，对应每一维排序的分数'),
-  onlyIds?: boolean(name='onlyIds', description='仅 query 接口支持，是否只返回文档 ID，服务端默认 false')
+  onlyIds?: boolean(name='onlyIds', description='仅 query 接口支持，是否只返回文档 ID，服务端默认 false'),
+  nsExpression?: string(name='nsExpression', description='多命名空间查询的逻辑表达式')
 }
 
 model Sort {
